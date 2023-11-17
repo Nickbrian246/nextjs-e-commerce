@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <>
       {/* <MenuTop /> */}
-      <div className=" flex w-full  ">
+      <div className=" flex w-full bg-base-color  ">
         <div className="w-full flex  justify-between p-4 text-white  ">
           <button
             className="text-2xl text-white  md:hidden"

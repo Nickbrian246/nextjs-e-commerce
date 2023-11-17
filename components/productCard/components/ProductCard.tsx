@@ -62,7 +62,7 @@ export default function ProductCard(props: Product) {
           )}
         </div>
       )}
-      <Link href={"/"}>
+      <Link href={`/product/${id}`}>
         <div className="min-w-[208px] relative min-h-[208px] bg-white">
           <Image
             src={images[0]}
@@ -73,9 +73,12 @@ export default function ProductCard(props: Product) {
         </div>
       </Link>
       <div className="">
+        <h2>
+          {title} {id}
+        </h2>
         <h3>
           <Link
-            href={"/"}
+            href={`/product/${id}`}
             className="text-left
           text-productTextColor
             font-productTextFont

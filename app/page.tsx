@@ -1,8 +1,10 @@
+import Categories from "@/components/Categories/Categories";
+import MobileCategories from "@/components/Categories/MobileCategories";
+import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Products from "@/components/productCard/Products";
-import MobileCategories from "@/components/Categories/MobileCategories";
-import Categories from "@/components/Categories/Categories";
-import Footer from "@/components/Footer/Footer";
+import { Suspense } from "react";
+import Loading from "./loading";
 export default async function Home() {
   return (
     <>
@@ -22,7 +24,9 @@ export default async function Home() {
       >
         <MobileCategories />
         <Categories />
-        <Products />
+        <Suspense fallback={<Loading />}>
+          <Products />
+        </Suspense>
       </section>
       <footer className="w-full bg-black">
         <Footer />
