@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 import IndexBar from "./components/IndexBar/IndexBar";
 import { CarouselData } from "./interfaces";
-export default function Carousel({
+export default function Slider({
   groupOfProducts,
 }: {
   groupOfProducts: CarouselData[];

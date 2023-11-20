@@ -1,5 +1,5 @@
 import { getProductsByPagination } from "@/services/getProductsByPagination";
-import Carousel from "../Carousel/Carouse";
+import Slider from "../Carousel/Slider";
 import { extractImageAndIdFromGroupOFProducts } from "../Carousel/utils/filterDataForCarousel";
 import ProductCard from "./components/ProductCard";
 
@@ -13,7 +13,7 @@ export default async function Products() {
   return (
     <div className="flex  flex-col md:w-3/4  lg:max-w-5xl  p-1">
       <div className="w-full flex justify-center mb-5 ">
-        <Carousel groupOfProducts={filterDataForCarousel} />
+        <Slider groupOfProducts={filterDataForCarousel} />
       </div>
       <h2 className="text-base-color md:text-2xl font-bold text-lg">
         Productos Mas vendidos

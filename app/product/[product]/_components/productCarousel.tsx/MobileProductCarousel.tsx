@@ -7,7 +7,7 @@ interface Props {
   images: string[];
 }
 
-export default function ProductCarousel(props: Props) {
+export default function MobileProductCarousel(props: Props) {
   const { images } = props;
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -44,7 +44,7 @@ export default function ProductCarousel(props: Props) {
   }, [imageRefs]);
 
   return (
-    <div className="max-w-[300px] relative flex gap-2  bg-base-color overflow-hidden">
+    <div className="min-w-[300px] md:hidden w-full relative flex gap-2  bg-base-white overflow-hidden">
       <div className=" absolute   top-2 left-4 z-10  w-12 bg-science-blue-500 text-center rounded-lg text-white">
         {`${currentIndex + 1} / ${images.length}`}
       </div>
@@ -57,10 +57,10 @@ export default function ProductCarousel(props: Props) {
         {images.map((image, index) => (
           <div
             key={index}
-            className="relative min-w-[310px] min-h-[300px] max-h-[350px] max-w-[350px]"
+            className="relative w-full h-full min-w-[310px] min-h-[300px] "
             ref={imageRefs[index]}
           >
-            <Image src={image} alt="product" fill={true} />
+            <Image src={image} alt="product" fill={true} objectFit="contain" />
           </div>
         ))}
       </SwipeableViews>

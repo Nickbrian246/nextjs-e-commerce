@@ -7,6 +7,22 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      smMd: "520px",
+      sm: "640px",
+      // => @media (min-width: 640px) { ... }
+
+      md: "768px",
+      // => @media (min-width: 768px) { ... }
+
+      lg: "1024px",
+      // => @media (min-width: 1024px) { ... }
+
+      xl: "1280px",
+      // => @media (min-width: 1280px) { ... }
+
+      // => @media (min-width: 1536px) { ... }
+    },
     colors: {
       "base-color": "#1765be",
       "title-darkModeColor": "#fff",
@@ -29,6 +45,19 @@ const config: Config = {
         "800": "#144278",
         "900": "#163864",
         "950": "#0f2442",
+      },
+      red: {
+        "50": "#fff0f0",
+        "100": "#ffdddd",
+        "200": "#ffc0c0",
+        "300": "#ff9494",
+        "400": "#ff5757",
+        "500": "#ff2323",
+        "600": "#ff0000",
+        "700": "#d70000",
+        "800": "#b10303",
+        "900": "#920a0a",
+        "950": "#500000",
       },
     },
     fontFamily: {

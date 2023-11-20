@@ -18,7 +18,7 @@ export default function ProductTitleAndOffer({
   return (
     <>
       <div className="w-full flex flex-col p-1">
-        <h1 className="font-medium text-base self-start text-base-color mb-2">
+        <h1 className="font-medium text-xl md:text-2xl self-start text-base-color mb-2">
           {title}
         </h1>
         {hasOffer(price) && (
