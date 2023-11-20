@@ -4,7 +4,7 @@ import { Product } from "@/interfaces/product";
 import { smMdBreakpoint } from "@/utils/tailwind/tailwind";
 import { useEffect, useRef, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import SwipeableViews from "react-swipeable-views";
+import wrapperStyles from "./carousel.module.css";
 import CarouselProductCard from "./components/carouselProductCard/CarouselProductCard";
 
 export default function Carousel({
@@ -15,8 +15,7 @@ export default function Carousel({
   title: string;
 }) {
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [twoSlicesCarousel, setTwoSlicesCarousel] = useState<boolean>(false);
+  const [computerSize, setComputerSize] = useState<boolean>(false);
   const [fistElementIsVisible, setFistElementIsVisible] =
     useState<boolean>(false);
   const [lastElementIsVisible, setLastElementIsVisible] =
@@ -30,7 +29,7 @@ export default function Carousel({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (windowSize.width >= smMdBreakpoint) setTwoSlicesCarousel(true);
+      if (windowSize.width >= smMdBreakpoint) setComputerSize(true);
     }, 300);
     return () => clearTimeout(timer);
   }, [windowSize.width]);
@@ -54,9 +53,6 @@ export default function Carousel({
     if (lastElement.current) lastImageObserve.observe(lastElement.current);
   });
 
-  const handleIndexChange = (index: number) => {
-    setCurrentIndex(index);
-  };
   const handleNextBtn = () => {
     setCurrentPage((prevValue) => {
       return prevValue + 100;
@@ -70,7 +66,13 @@ export default function Carousel({
 
   return (
     <>
-      <section className=" flex-col w-full relative  ">
+      <section
+        className={
+          computerSize
+            ? wrapperStyles.carouselComputerSizeWrapper
+            : wrapperStyles.carouselMobileWrapper
+        }
+      >
         <p className="text-base-color text-start text-3xl font-semibold">
           {title}
         </p>
@@ -80,14 +82,11 @@ export default function Carousel({
           w-full
           p-1
           gap-2
-          smMd:flex
-          md:flex
+          flex
           mb-6
           mt-6
           transition-all
           duration-500
-          hidden
-          
           "
         >
           {truncateProducts.map((product, index) => {
@@ -132,23 +131,6 @@ export default function Carousel({
               );
           })}
         </div>
-        <SwipeableViews
-          index={currentIndex}
-          onChangeIndex={handleIndexChange}
-          enableMouseEvents
-          className="smMd:hidden"
-        >
-          {truncateProducts.map((product) => (
-            <CarouselProductCard
-              description={product.description}
-              image={product.images[0]}
-              title={product.title}
-              price={product.price}
-              id={product.id}
-              key={product.id}
-            />
-          ))}
-        </SwipeableViews>
         <button
           onClick={handleNextBtn}
           className={`
@@ -164,7 +146,7 @@ export default function Carousel({
         w-14
         h-14
         rounded-full
-        ${!fistElementIsVisible ? " smMd:flex" : "hidden"}
+        ${!fistElementIsVisible && computerSize ? " smMd:flex" : "hidden"}
         `}
         >
           <IoIosArrowBack />
@@ -184,7 +166,7 @@ export default function Carousel({
         w-14
         h-14
         rounded-full
-        ${!lastElementIsVisible ? "smMd:flex" : "hidden"}
+        ${!lastElementIsVisible && computerSize ? "smMd:flex" : "hidden"}
     
         `}
         >

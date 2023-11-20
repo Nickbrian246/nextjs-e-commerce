@@ -1,0 +1,19 @@
+.carouselMobileWrapper::-webkit-scrollbar {
+  width: 0;
+}
+
+.carouselMobileWrapper {
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  overflow-x: auto;
+}
+.carouselComputerSizeWrapper {
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
