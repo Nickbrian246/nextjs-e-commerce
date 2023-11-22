@@ -44,7 +44,7 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
         {...(reference ? { ref: reference as HTMLDivElement } : null)}
         className="flex flex-col gap-1 min-w-[278px] p-3 h-auto shadow-md justify-between"
       >
-        <Link href={`product/${id}`}>
+        <Link href={`/product/${id}`}>
           <div className=" relative w-full h-[300px]">
             <Image fill src={image} alt={`${title}`} />
             {itHasOffer && (

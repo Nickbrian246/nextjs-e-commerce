@@ -22,6 +22,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "placeimg.com",
       },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
     ],
   },
 };

@@ -11,7 +11,7 @@ export default function CollapsableCategoryBar() {
       top-[56px]
       left-0
       border
-    border-gray
+      border-[#f0f0f0]
       transition-all
       duration-1000
       block
@@ -20,7 +20,7 @@ export default function CollapsableCategoryBar() {
       md:flex-col
       `}
       >
-        <ul>
+        <ul className="flex flex-col ">
           {catagoriesLinksGroup.map((category) => (
             <li
               className={`
@@ -32,13 +32,15 @@ export default function CollapsableCategoryBar() {
             items-center
           text-textGray
           hover:text-base-color
-          border-b-gray
-            border-b-[1px]
+          border-b-[#f0f0f0]
+            border-b-[2px]
             `}
               key={category.titlesEn}
             >
-              <span className="m-0 p-0">{category.icon}</span>
-              <Link href={"/"}>{category.titleEs}</Link>
+              <span className="m-0 p-0 text-xl h-12 flex items-center ">
+                {category.icon}
+              </span>
+              <Link href={`/category/${category.id}`}>{category.titleEs}</Link>
             </li>
           ))}
         </ul>

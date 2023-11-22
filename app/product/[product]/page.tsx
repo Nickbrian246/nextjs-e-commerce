@@ -10,6 +10,8 @@ import QuantityToAddToCart from "./_components/productDetails/QuantityToAddToCar
 import Carousel from "@/components/Carousel/Carousel";
 import { getProduct } from "./_services";
 import { getProductsByCategory } from "@/components/Carousel/services/getProductByCategory";
+import { getProducts } from "@/services";
+
 import Error from "./error";
 export default async function ProductPage({
   params,
@@ -17,8 +19,10 @@ export default async function ProductPage({
   params: { product: string };
 }) {
   const product = await getProduct(params.product);
+  const groupProducts = await getProducts();
   const { category } = product;
   const { id } = category;
+  const truncateGroupOfProductsTo15 = groupProducts.slice(15, 30);
   const groupOfProductsByCategory = await getProductsByCategory(id);
 
   return (
@@ -36,10 +40,14 @@ export default async function ProductPage({
           <AddToCartAndBuyButtons />
         </div>
       </div>
-      <div className="w-full overflow-hidden">
+      <div className="w-full overflow-hidden flex flex-col gap-16">
         <Carousel
           title="Productos Relacionados"
           groupOfProducts={groupOfProductsByCategory}
+        />
+        <Carousel
+          title="Productos que te podrían  gustar"
+          groupOfProducts={truncateGroupOfProductsTo15}
         />
       </div>
     </ErrorBoundary>
