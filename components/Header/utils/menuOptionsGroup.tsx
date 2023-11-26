@@ -8,6 +8,8 @@ export interface HeaderMenuOptionGroup {
   titleEn: string;
   icon?: React.ReactNode;
   isLogged: boolean;
+  route: string;
+  id: string;
 }
 export const menuOptionsForLoggedUserGroup: HeaderMenuOptionGroup[] = [
   {
@@ -15,18 +17,24 @@ export const menuOptionsForLoggedUserGroup: HeaderMenuOptionGroup[] = [
     titleEs: "Cerrar sesión",
     icon: <FiLogOut />,
     isLogged: true,
+    route: "/",
+    id: "logout",
   },
   {
     titleEn: "shopping cart",
     titleEs: "Carrito de compras",
     icon: <AiOutlineShoppingCart />,
     isLogged: true,
+    route: "/shoppingcart",
+    id: "shoppingcart",
   },
   {
     titleEn: "User",
     titleEs: "Usuario",
     icon: <HiOutlineUserCircle />,
     isLogged: true,
+    route: "/",
+    id: "user",
   },
 ];
 export const menuOptionsForNotLoggedUserGroup: HeaderMenuOptionGroup[] = [
@@ -35,11 +43,15 @@ export const menuOptionsForNotLoggedUserGroup: HeaderMenuOptionGroup[] = [
     titleEs: "Carrito de compras",
     icon: <AiOutlineShoppingCart />,
     isLogged: true,
+    route: "/shoppingcart",
+    id: "shoppingcart",
   },
   {
     titleEn: "Login",
     titleEs: "Iniciar sesión.",
     icon: <BiLogIn />,
     isLogged: true,
+    route: "/",
+    id: "login",
   },
 ];

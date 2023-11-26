@@ -19,6 +19,8 @@ export default function OptionsForHeaderMenu(props: Props) {
               titleEs={option.titleEs}
               icon={option.icon}
               key={option.titleEn}
+              route={option.route}
+              id={option.id}
             />
           ))
         : menuOptionsForNotLoggedUserGroup.map((option) => (
@@ -28,6 +30,8 @@ export default function OptionsForHeaderMenu(props: Props) {
               titleEs={option.titleEs}
               icon={option.icon}
               key={option.titleEn}
+              route={option.route}
+              id={option.id}
             />
           ))}
     </div>

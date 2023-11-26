@@ -1,15 +1,22 @@
 "use client";
-import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Product } from "@/interfaces/product";
+import {
+  addItemToEntityInLocalStorage,
+  createEntityLikeArrayOfIdsInLocalStorage,
+} from "@/utils/localStorage/localStorage";
 import Image from "next/image";
 import Link from "next/link";
+import { MouseEventHandler, useEffect, useState } from "react";
+import useUpdateShoppingCartForLocalStorage from "@/hooks/useUpdateShoppingCartForLocalStorage";
+import { VscAdd } from "react-icons/vsc";
+import { useDispatch } from "react-redux";
 import {
-  hasOffer,
   discountAmount,
   hasFreeShipping,
+  hasOffer,
   newPriceWithDiscount,
 } from "../utils/hasOffer";
-import { VscAdd } from "react-icons/vsc";
+import { addItemToShoppingCart } from "@/redux/slices/ShoppingCart";
 export default function ProductCard(props: Product) {
   const { category, description, id, images, price, title } = props;
   const [hasDiscount, setHasDiscount] = useState<boolean>(false);
@@ -17,7 +24,8 @@ export default function ProductCard(props: Product) {
   const [savedMoney, setSavedMoney] = useState<number>(0);
   const [itHasFreeShipping, setItHasFreeShipping] = useState<boolean>();
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
-
+  const [hasChange, setHasChange] = useUpdateShoppingCartForLocalStorage();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (hasOffer(price)) {
       setHasDiscount(true);
@@ -32,6 +40,11 @@ export default function ProductCard(props: Product) {
   };
   const handleMouseleave: MouseEventHandler<HTMLDivElement> = (event) => {
     setIsMouseOver(false);
+  };
+  const handleAddCartBtn = (key: string, id: number) => {
+    dispatch(
+      addItemToShoppingCart({ key, products: { productId: id, quantity: 1 } })
+    );
   };
 
   return (
@@ -111,6 +124,9 @@ export default function ProductCard(props: Product) {
         )}
       </div>
       <button
+        onClick={() => {
+          handleAddCartBtn("shoppingCart", id);
+        }}
         title="agregar al carrito"
         className={`
         self-start
