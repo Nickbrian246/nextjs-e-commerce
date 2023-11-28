@@ -49,7 +49,7 @@ export function deleteItemFromEntityInLocalStorage(key: string, id: any) {
   if (dataStored === "entity not found" || !Array.isArray(dataStored)) {
     return "entity not found";
   }
-  const deleteItem = dataStored.filter((item: any) => item !== id);
+  const deleteItem = dataStored.filter((item) => item.productId !== id);
   localStorage.setItem(key, JSON.stringify(deleteItem));
   return "ok";
 }

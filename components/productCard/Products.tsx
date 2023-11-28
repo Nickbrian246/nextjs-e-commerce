@@ -1,15 +1,16 @@
-import { getProductsByPagination } from "@/services/getProductsByPagination";
+import { getProducts } from "@/services";
 import Slider from "../Carousel/Slider";
 import { extractImageAndIdFromGroupOFProducts } from "../Carousel/utils/filterDataForCarousel";
 import ProductCard from "./components/ProductCard";
 
 export default async function Products() {
-  const groupOfProducts = await getProductsByPagination("20");
+  const groupOfProducts = await getProducts();
 
-  const groupOfProductsForCarousel = await getProductsByPagination("5");
+  const groupOfProductsForCarousel = groupOfProducts.slice(0, 8);
   const filterDataForCarousel = extractImageAndIdFromGroupOFProducts(
     groupOfProductsForCarousel
   );
+
   return (
     <div className="flex  flex-col md:w-3/4  lg:max-w-5xl  p-1">
       <div className="w-full flex justify-center mb-5 ">
@@ -24,9 +25,10 @@ export default async function Products() {
             category={product.category}
             description={product.description}
             id={product.id}
-            images={product.images}
+            image={product.image}
             price={product.price}
             title={product.title}
+            rating={product.rating}
             key={product.id}
           />
         ))}

@@ -60,9 +60,6 @@ const config: Config = {
         "950": "#500000",
       },
     },
-    fontFamily: {
-      productTextFont: ["FjallaOneRegular"],
-    },
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

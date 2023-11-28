@@ -61,26 +61,34 @@ export default function Slider({
   }, [selectedIndex, groupOfImages]);
 
   return (
-    <Link className="w-full flex justify-center h-auto  " href={"/"}>
+    <Link className="w-full  h-auto xl:p-5  relative" href={"/"}>
       <div
+        className="w-full flex justify-center h-auto xl:p-5  relative"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="relative w-full flex flex-row overflow-hidden max-w-3xl aspect-[70/35]"
       >
-        <Image
-          onLoad={() => setLoaded(true)}
-          className={`object-fit ${
-            loaded ? "opacity-100" : "opacity-0"
-          } transition-all duration-500  `}
-          fill
-          src={selectedImage}
-          alt="carousel image"
-          quality={100}
-        />
+        <div className="relative w-full flex flex-row overflow-hidden max-w-3xl aspect-[30/20] ">
+          <Image
+            onLoad={() => setLoaded(true)}
+            className={`object-fit ${
+              loaded ? "opacity-100" : "opacity-0"
+            } transition-all duration-500  `}
+            fill
+            src={selectedImage}
+            alt="carousel image"
+            quality={100}
+          />
+          <IndexBar
+            isMouseOver={isMouseOver}
+            GroupOfProducts={groupOfProducts}
+            currentIndex={selectedIndex}
+            setSelectedIndex={setSelectedIndex}
+          />
+        </div>
         <button
-          className={`bg-white rounded-full text-base-color font-extrabold ${
+          className={`bg-textGray rounded-full text-base-color font-extrabold ${
             isMouseOver ? "flex" : "hidden"
-          } items-center justify-center absolute top-[45%] right-1 w-12 h-12`}
+          } items-center justify-center absolute top-[45%] right-4 w-12 h-12`}
           onClick={handleNextBtn}
         >
           <SlArrowRight />
@@ -88,17 +96,11 @@ export default function Slider({
         <button
           className={`bg-white rounded-full ${
             isMouseOver ? "flex" : "hidden"
-          } text-base-color font-extrabold  items-center justify-center absolute top-[45%]  left-1 w-12 h-12`}
+          } text-base-color font-extrabold  items-center justify-center absolute top-[45%]  left-4 w-12 h-12`}
           onClick={handlePreviousBtn}
         >
           <SlArrowLeft />
         </button>
-        <IndexBar
-          isMouseOver={isMouseOver}
-          GroupOfProducts={groupOfProducts}
-          currentIndex={selectedIndex}
-          setSelectedIndex={setSelectedIndex}
-        />
       </div>
     </Link>
   );

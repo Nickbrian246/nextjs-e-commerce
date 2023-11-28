@@ -8,7 +8,7 @@ export default function ProductResume({
   groupOfProducts: AdapterForPriceAndFreeShipping[];
 }) {
   return (
-    <div>
+    <div className="flex flex-col">
       {groupOfProducts.length > 0 &&
         groupOfProducts.map((product) => (
           <ProductResumeCard
@@ -18,7 +18,8 @@ export default function ProductResume({
             price={product.price}
             priceWithOffer={product.priceWithOffer}
             title={product.title}
-            imgSrc={product.images[0]}
+            imgSrc={product.image}
+            productId={product.id}
             key={product.id}
           />
         ))}

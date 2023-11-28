@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import QuantityToAddToCart from "@/app/product/[product]/_components/productDetails/QuantityToAddToCart";
-import { FaShippingFast } from "react-icons/fa";
-import { BiSolidOffer } from "react-icons/bi";
 import Image from "next/image";
+import { BiSolidOffer } from "react-icons/bi";
+import { FaShippingFast } from "react-icons/fa";
+import { deleteProductInShoppingCart } from "@/redux/slices/ShoppingCart";
+import { useDispatch } from "react-redux";
 
 interface Props {
   title: string;
@@ -13,6 +14,7 @@ interface Props {
   porcentageOfDiscount: string;
   hasFreeShipping: boolean;
   imgSrc: string;
+  productId: number;
 }
 export default function ProductResumeCard(props: Props) {
   const {
@@ -22,30 +24,51 @@ export default function ProductResumeCard(props: Props) {
     hasOffer,
     porcentageOfDiscount,
     priceWithOffer,
+    productId,
     imgSrc,
   } = props;
+  const dispatch = useDispatch();
+  const totalPrice = price.toLocaleString("es-MX", {
+    currency: "MXN",
+    style: "currency",
+  });
+  const offerPrice = priceWithOffer.toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  });
+
+  const handleDelete = (key: string, id: number) => {
+    dispatch(deleteProductInShoppingCart({ key, productId: id }));
+  };
 
   return (
     <div
       className="
   flex 
-  min-w-[700px] 
+  lg:min-w-[700px] 
   min-h-[140px]  
   items-center 
   justify-between 
-  p-2 
   border-b-2
 border-b-textGray
+  flex-wrap
+  gap-6
+  pt-2
 "
     >
-      <div className="flex gap-2">
-        <div className="flex gap-2 justify-start items-center  lg:min-w-[350px]">
+      <div className="flex gap-2 flex-wrap ">
+        <div className="flex gap-2 justify-start items-center flex-wrap lg:flex-nowrap  w-[300px]   lg:w-[380px]">
           <div>
             <Image src={imgSrc} alt={title} width={80} height={80} />
           </div>
           <div>
-            <p className="whitespace-nowrap font-medium">{title}</p>
-            <button className=" mr-4 text-base-color font-medium">
+            <p className="font-medium" title={title}>
+              {title.length > 75 ? title.substring(0, 38).concat("...") : title}
+            </p>
+            <button
+              onClick={() => handleDelete("shoppingCart", productId)}
+              className=" mr-4 text-base-color font-medium"
+            >
               Eliminar
             </button>
             <button className=" mr-4 text-base-color font-medium">
@@ -55,39 +78,49 @@ border-b-textGray
         </div>
         <QuantityToAddToCart />
       </div>
-      <div className="relative items-end">
-        <div className="relative flex gap-2">
+      <div className="relative flex  flex-col flex-wrap ">
+        <div className=" flex gap-1 flex-col">
           {hasOffer && (
-            <>
-              <span className="text-red-600 ">-20%</span>
-              <span className="line-through text-science-blue-300">
-                {price.toLocaleString("es-MX", {
-                  currency: "MXN",
-                  style: "currency",
-                })}
-              </span>
-
-              <span className="absolute text-2xl  text-red-600 -top-5 right-0">
-                <BiSolidOffer />
-              </span>
-            </>
+            <OfferAndFreeShipping
+              discount="%20"
+              hasFreeShipping
+              totalPrice={totalPrice}
+            />
           )}
         </div>
-        <span>
-          {(hasOffer ? priceWithOffer : price).toLocaleString("es-MX", {
-            style: "currency",
-            currency: "MXN",
-          })}
+        <span className="self-start font-medium">
+          {hasOffer ? offerPrice : totalPrice}
         </span>
+      </div>
+    </div>
+  );
+}
+interface OfferAndFreeShippingProps {
+  hasFreeShipping: boolean;
+  totalPrice: string;
+  discount: string;
+}
+function OfferAndFreeShipping(props: OfferAndFreeShippingProps) {
+  const { hasFreeShipping, discount, totalPrice } = props;
+  return (
+    <>
+      <div className=" flex gap-1">
         {hasFreeShipping && (
           <>
-            <span className="absolute text-2xl text-science-blue-400 -bottom-8 left-0 flex items-center gap-2">
+            <span className=" text-2xl text-science-blue-400   flex items-center sm:gap-2 gap-1">
               <FaShippingFast />
               <span className="text-xs">Envío gratis</span>
             </span>
           </>
         )}
+        <span className=" text-2xl  text-red-600  ">
+          <BiSolidOffer />
+        </span>
       </div>
-    </div>
+      <div className="flex gap-1">
+        <span className="text-red-600 ">{discount}</span>
+        <span className="line-through text-science-blue-300">{totalPrice}</span>
+      </div>
+    </>
   );
 }

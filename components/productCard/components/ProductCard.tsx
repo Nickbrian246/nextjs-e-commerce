@@ -1,13 +1,9 @@
 "use client";
 import { Product } from "@/interfaces/product";
-import {
-  addItemToEntityInLocalStorage,
-  createEntityLikeArrayOfIdsInLocalStorage,
-} from "@/utils/localStorage/localStorage";
+import { addProductToShoppingCart } from "@/redux/slices/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
 import { MouseEventHandler, useEffect, useState } from "react";
-import useUpdateShoppingCartForLocalStorage from "@/hooks/useUpdateShoppingCartForLocalStorage";
 import { VscAdd } from "react-icons/vsc";
 import { useDispatch } from "react-redux";
 import {
@@ -16,15 +12,13 @@ import {
   hasOffer,
   newPriceWithDiscount,
 } from "../utils/hasOffer";
-import { addItemToShoppingCart } from "@/redux/slices/ShoppingCart";
 export default function ProductCard(props: Product) {
-  const { category, description, id, images, price, title } = props;
+  const { category, description, id, image, price, title } = props;
   const [hasDiscount, setHasDiscount] = useState<boolean>(false);
   const [priceWithDiscount, setPriceWithDiscount] = useState<number>();
   const [savedMoney, setSavedMoney] = useState<number>(0);
   const [itHasFreeShipping, setItHasFreeShipping] = useState<boolean>();
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
-  const [hasChange, setHasChange] = useUpdateShoppingCartForLocalStorage();
   const dispatch = useDispatch();
   useEffect(() => {
     if (hasOffer(price)) {
@@ -43,10 +37,12 @@ export default function ProductCard(props: Product) {
   };
   const handleAddCartBtn = (key: string, id: number) => {
     dispatch(
-      addItemToShoppingCart({ key, products: { productId: id, quantity: 1 } })
+      addProductToShoppingCart({
+        key,
+        products: { productId: id, quantity: 1 },
+      })
     );
   };
-
   return (
     <div
       onMouseEnter={handleMouseEnter}
@@ -77,28 +73,26 @@ export default function ProductCard(props: Product) {
       )}
       <Link href={`/product/${id}`}>
         <div className="min-w-[208px] relative min-h-[208px] bg-white">
-          <Image
-            src={images[0]}
-            alt={title}
-            fill={true}
-            className="rounded-sm"
-          />
+          <Image src={image} alt={title} fill={true} className="rounded-sm" />
         </div>
       </Link>
       <div className="">
         <h2>
           {title} {id}
         </h2>
-        <h3>
+        <h3 className="">
           <Link
             href={`/product/${id}`}
-            className="text-left
+            className="
+            text-left
           text-productTextColor
-            font-productTextFont
-            font-bold
+            font-sans
+            leading-4
             "
           >
-            {description}
+            {description.length > 200
+              ? description.substring(0, 200)
+              : description}
           </Link>
         </h3>
       </div>

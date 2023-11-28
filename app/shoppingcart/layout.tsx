@@ -17,11 +17,12 @@ export default function ProdLayout({
       mt-11
       flex
       md:flex-row
+      flex-wrap
       flex-col
       w-full
       m-auto
       gap-5
-      p-4
+      p-1
       min-h-screen
       "
       >

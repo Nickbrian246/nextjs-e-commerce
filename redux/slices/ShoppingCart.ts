@@ -12,11 +12,12 @@ import { quantityOfItemsInShoppingCart } from "@/utils/localStorage/utils";
 const initialState = {
   productsInShoppingCart: 0,
 };
+
 export const ShoppingCart = createSlice({
   name: "productsInCart",
   initialState,
   reducers: {
-    addItemToShoppingCart: (
+    addProductToShoppingCart: (
       state,
       action: PayloadAction<{ key: string; products: ShoppingCartProduct }>
     ) => {
@@ -30,8 +31,20 @@ export const ShoppingCart = createSlice({
         quantityOfItemsInShoppingCart(groupOfProducts);
       state.productsInShoppingCart = itemsInShoppingCart;
     },
+    deleteProductInShoppingCart: (
+      state,
+      action: PayloadAction<{ productId: number; key: string }>
+    ) => {
+      const { productId, key } = action.payload;
+      deleteItemFromEntityInLocalStorage(key, productId);
+
+      const groupOfProducts = getEntityProductsFromLocalStorage(key);
+      state.productsInShoppingCart =
+        quantityOfItemsInShoppingCart(groupOfProducts);
+    },
     checkShoppingCart: (state, action: PayloadAction<{ key: string }>) => {
       const { key } = action.payload;
+
       const groupOfProducts = getEntityProductsFromLocalStorage(key);
       const itemsInShoppingCart =
         quantityOfItemsInShoppingCart(groupOfProducts);
@@ -42,5 +55,8 @@ export const ShoppingCart = createSlice({
 
 export default ShoppingCart.reducer;
 
-export const { addItemToShoppingCart, checkShoppingCart } =
-  ShoppingCart.actions;
+export const {
+  addProductToShoppingCart,
+  checkShoppingCart,
+  deleteProductInShoppingCart,
+} = ShoppingCart.actions;
