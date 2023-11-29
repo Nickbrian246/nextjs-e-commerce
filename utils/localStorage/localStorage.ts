@@ -44,6 +44,28 @@ export function addItemToEntityInLocalStorage(
   }
 }
 
+export function subtractItemFromEntityInLocalStorage(
+  key: string,
+  productId: number
+) {
+  const groupOfProducts = getEntityProductsFromLocalStorage(key);
+  if (
+    groupOfProducts === "entity not found" ||
+    !Array.isArray(groupOfProducts)
+  ) {
+    return "entity not found";
+  }
+  const products = groupOfProducts.map((product) => {
+    if (product.productId === productId) {
+      if (product.quantity === 1) return product;
+      else return { ...product, quantity: product.quantity - 1 };
+    }
+    return product;
+  });
+
+  localStorage.setItem(key, JSON.stringify(products));
+}
+
 export function deleteItemFromEntityInLocalStorage(key: string, id: any) {
   const dataStored = getEntityProductsFromLocalStorage(key);
   if (dataStored === "entity not found" || !Array.isArray(dataStored)) {

@@ -20,7 +20,7 @@ export function LinkButton({ children, ...linkProps }: LinkButtonProps) {
       "
       {...linkProps}
     >
-      <p>{children}</p>
+      <p className="tracking-wide">{children}</p>
     </Link>
   );
 }

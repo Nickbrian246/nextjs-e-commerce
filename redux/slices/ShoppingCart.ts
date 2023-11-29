@@ -5,6 +5,7 @@ import {
   deleteEntityFromLocalStorage,
   deleteItemFromEntityInLocalStorage,
   getEntityProductsFromLocalStorage,
+  subtractItemFromEntityInLocalStorage,
 } from "@/utils/localStorage/localStorage";
 import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { quantityOfItemsInShoppingCart } from "@/utils/localStorage/utils";
@@ -50,6 +51,27 @@ export const ShoppingCart = createSlice({
         quantityOfItemsInShoppingCart(groupOfProducts);
       state.productsInShoppingCart = itemsInShoppingCart;
     },
+    addOneItemToProductInShoppingCart: (
+      state,
+      action: PayloadAction<{ productId: ShoppingCartProduct; key: string }>
+    ) => {
+      const { key, productId } = action.payload;
+      addItemToEntityInLocalStorage(key, productId);
+      const groupOfProducts = getEntityProductsFromLocalStorage(key);
+      const itemsInShoppingCart =
+        quantityOfItemsInShoppingCart(groupOfProducts);
+      state.productsInShoppingCart = itemsInShoppingCart;
+    },
+    subtractOneItemToProductInShoppingCart: (
+      state,
+      action: PayloadAction<{ key: string; product: ShoppingCartProduct }>
+    ) => {
+      const { key, product } = action.payload;
+      subtractItemFromEntityInLocalStorage(key, product.productId);
+      const products = getEntityProductsFromLocalStorage(key);
+      const totalProducts = quantityOfItemsInShoppingCart(products);
+      state.productsInShoppingCart = totalProducts;
+    },
   },
 });
 
@@ -59,4 +81,6 @@ export const {
   addProductToShoppingCart,
   checkShoppingCart,
   deleteProductInShoppingCart,
+  addOneItemToProductInShoppingCart,
+  subtractOneItemToProductInShoppingCart,
 } = ShoppingCart.actions;

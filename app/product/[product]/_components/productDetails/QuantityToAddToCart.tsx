@@ -1,17 +1,39 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  addOneItemToProductInShoppingCart,
+  subtractOneItemToProductInShoppingCart,
+} from "@/redux/slices/ShoppingCart";
 
-export default function QuantityToAddToCart() {
+import { useDispatch } from "react-redux";
+interface Props {
+  quantityInShoppingCart: number;
+  productId: number;
+}
+export default function QuantityToAddToCart({
+  quantityInShoppingCart,
+  productId,
+}: Props) {
   const [quantity, setQuantity] = useState<number>(1);
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setQuantity(quantityInShoppingCart);
+  }, [quantityInShoppingCart]);
   const handleAddItem = () => {
-    setQuantity((preValue) => preValue + 1);
+    dispatch(
+      addOneItemToProductInShoppingCart({
+        key: "shoppingCart",
+        productId: { productId, quantity: 1 },
+      })
+    );
   };
   const handleSubtractItem = () => {
-    setQuantity((preValue) => {
-      if (preValue === 1) return 1;
-      return preValue - 1;
-    });
+    dispatch(
+      subtractOneItemToProductInShoppingCart({
+        key: "shoppingCart",
+        product: { productId, quantity: 1 },
+      })
+    );
   };
   return (
     <div className="flex items-center gap-3">

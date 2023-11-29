@@ -15,6 +15,7 @@ interface Props {
   hasFreeShipping: boolean;
   imgSrc: string;
   productId: number;
+  quantity: number;
 }
 export default function ProductResumeCard(props: Props) {
   const {
@@ -26,6 +27,7 @@ export default function ProductResumeCard(props: Props) {
     priceWithOffer,
     productId,
     imgSrc,
+    quantity,
   } = props;
   const dispatch = useDispatch();
   const totalPrice = price.toLocaleString("es-MX", {
@@ -76,7 +78,10 @@ border-b-textGray
             </button>
           </div>
         </div>
-        <QuantityToAddToCart />
+        <QuantityToAddToCart
+          productId={productId}
+          quantityInShoppingCart={quantity}
+        />
       </div>
       <div className="relative flex  flex-col flex-wrap ">
         <div className=" flex gap-1 flex-col">

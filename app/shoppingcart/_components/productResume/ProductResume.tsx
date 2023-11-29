@@ -12,6 +12,7 @@ export default function ProductResume({
       {groupOfProducts.length > 0 &&
         groupOfProducts.map((product) => (
           <ProductResumeCard
+            quantity={product.quantity || 1}
             hasFreeShipping={product.hasFreeShipping}
             hasOffer={product.hasOffer}
             porcentageOfDiscount={product.porcentageOfDiscount}
