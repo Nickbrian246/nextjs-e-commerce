@@ -6,6 +6,7 @@ import {
   deleteItemFromEntityInLocalStorage,
   getEntityProductsFromLocalStorage,
   subtractItemFromEntityInLocalStorage,
+  addProductsByAmountToEntityInLocalStorage,
 } from "@/utils/localStorage/localStorage";
 import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { quantityOfItemsInShoppingCart } from "@/utils/localStorage/utils";
@@ -70,6 +71,16 @@ export const ShoppingCart = createSlice({
       subtractItemFromEntityInLocalStorage(key, product.productId);
       const products = getEntityProductsFromLocalStorage(key);
       const totalProducts = quantityOfItemsInShoppingCart(products);
+      state.productsInShoppingCart = totalProducts;
+    },
+    addItemsToProductByAmount: (
+      state,
+      action: PayloadAction<{ key: string; product: ShoppingCartProduct }>
+    ) => {
+      const { key, product } = action.payload;
+      addProductsByAmountToEntityInLocalStorage(key, product);
+      const groupOfProducts = getEntityProductsFromLocalStorage(key);
+      const totalProducts = quantityOfItemsInShoppingCart(groupOfProducts);
       state.productsInShoppingCart = totalProducts;
     },
   },

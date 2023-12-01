@@ -3,8 +3,14 @@ import QuantityToAddToCart from "@/app/product/[product]/_components/productDeta
 import Image from "next/image";
 import { BiSolidOffer } from "react-icons/bi";
 import { FaShippingFast } from "react-icons/fa";
-import { deleteProductInShoppingCart } from "@/redux/slices/ShoppingCart";
+import {
+  addOneItemToProductInShoppingCart,
+  deleteProductInShoppingCart,
+  subtractOneItemToProductInShoppingCart,
+} from "@/redux/slices/ShoppingCart";
 import { useDispatch } from "react-redux";
+import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
+import { ChangeEvent, useEffect, useState } from "react";
 
 interface Props {
   title: string;
@@ -30,6 +36,13 @@ export default function ProductResumeCard(props: Props) {
     quantity,
   } = props;
   const dispatch = useDispatch();
+  const [productQuantity, setProductQuantity] = useState<number>(1);
+  const [debounce, setDebounce] = useState<number>(1);
+
+  useEffect(() => {
+    const time = setTimeout(() => {}, 500);
+    return () => clearTimeout(time);
+  }, [debounce]);
   const totalPrice = price.toLocaleString("es-MX", {
     currency: "MXN",
     style: "currency",
@@ -42,7 +55,27 @@ export default function ProductResumeCard(props: Props) {
   const handleDelete = (key: string, id: number) => {
     dispatch(deleteProductInShoppingCart({ key, productId: id }));
   };
-
+  const handleAddItem = (key: string, product: ShoppingCartProduct) => {
+    dispatch(
+      addOneItemToProductInShoppingCart({
+        key,
+        productId: { productId, quantity: 1 },
+      })
+    );
+  };
+  const handleSubtractItem = (key: string, product: ShoppingCartProduct) => {
+    dispatch(
+      subtractOneItemToProductInShoppingCart({
+        key,
+        product: { productId, quantity: 1 },
+      })
+    );
+  };
+  const handleQuantityToAddCart = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const filterValue = value.toString().replace(/[^0-9]g/, "");
+    setProductQuantity(Number(filterValue));
+  };
   return (
     <div
       className="
@@ -79,6 +112,11 @@ border-b-textGray
           </div>
         </div>
         <QuantityToAddToCart
+          handleOnChange={handleQuantityToAddCart}
+          quantity={productQuantity}
+          setQuantity={setProductQuantity}
+          handleSubtractItem={handleSubtractItem}
+          handleAddItem={handleAddItem}
           productId={productId}
           quantityInShoppingCart={quantity}
         />

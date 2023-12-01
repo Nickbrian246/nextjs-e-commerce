@@ -16,6 +16,7 @@ import {
   calculateTotalProducts,
   checkOfferAndAdaptPrice,
 } from "./utils";
+import { useRouter } from "next/router";
 
 export default function ShoppingCart() {
   const [groupOfProducts, setGroupOfProducts] = useState<
@@ -25,6 +26,7 @@ export default function ShoppingCart() {
   const [shippingCost, setShippingCost] = useState<number>(0);
   //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+  const router = useRouter();
 
   useEffect(() => {
     const groupOfIdsAndQuantitiesOfShoppingCart =
@@ -55,7 +57,9 @@ export default function ShoppingCart() {
         .catch((error) => console.error(error));
     }
   }, [productsInShoppingCart]);
-
+  const handleBtn = () => {
+    router.push("/shippingInformation/23");
+  };
   return (
     <>
       <section className="p-2 shadow-xl h-fit">
@@ -65,18 +69,15 @@ export default function ShoppingCart() {
           <NoProduct />
         )}
       </section>
-      <aside className=" flex flex-col gap-2">
+      <aside className=" flex flex-col gap-2 ">
         <SaleResume
           totalPrice={totalPrice}
           totalProducts={productsInShoppingCart}
           shippingCost={shippingCost}
         />
         <ButtonRouter
+          onClick={handleBtn}
           disabled={productsInShoppingCart === 0}
-          route={"/shoppingcart"}
-          className={
-            productsInShoppingCart === 0 ? "bg-textGray opacity-50" : ""
-          }
         >
           Comprar ahora
         </ButtonRouter>

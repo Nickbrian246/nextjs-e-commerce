@@ -44,6 +44,25 @@ export function addItemToEntityInLocalStorage(
   }
 }
 
+export function addProductsByAmountToEntityInLocalStorage(
+  key: string,
+  product: ShoppingCartProduct
+) {
+  const groupOfProducts = getEntityProductsFromLocalStorage(key);
+  if (Array.isArray(groupOfProducts)) {
+    const products = groupOfProducts.map((productItem) => {
+      if (productItem.productId === product.productId) {
+        return {
+          ...productItem,
+          quantity: (productItem.quantity = product.quantity),
+        };
+      }
+      return productItem;
+    });
+    localStorage.setItem(key, JSON.stringify(products));
+  }
+}
+
 export function subtractItemFromEntityInLocalStorage(
   key: string,
   productId: number

@@ -1,26 +1,22 @@
 "use client";
-import { useRouter } from "next/navigation";
+
 import React, { ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface ButtonRouter extends ComponentPropsWithRef<"button"> {
   children: string;
-  route: string;
   className?: string;
 }
 
 export function ButtonRouter({
   children,
-  route,
   className,
+  disabled,
   ...ButtonRouter
 }: ButtonRouter) {
-  const router = useRouter();
   return (
     <button
-      onClick={() => {
-        router.push(route);
-      }}
+      disabled
       className={twMerge(
         `
       p-4
@@ -28,7 +24,7 @@ export function ButtonRouter({
       rounded-lg
       flex
       justify-center
-      bg-science-blue-500
+      ${disabled ? "bg-textGray opacity-50" : "bg-science-blue-500"}
       font-semibold
       text-white
       active:bg-science-blue-700
