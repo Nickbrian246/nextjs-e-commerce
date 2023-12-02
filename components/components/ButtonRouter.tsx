@@ -16,7 +16,8 @@ export function ButtonRouter({
 }: ButtonRouter) {
   return (
     <button
-      disabled
+      {...ButtonRouter}
+      disabled={disabled}
       className={twMerge(
         `
       p-4
@@ -31,7 +32,6 @@ export function ButtonRouter({
       `,
         className
       )}
-      {...ButtonRouter}
     >
       {children}
     </button>

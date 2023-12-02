@@ -1,7 +1,8 @@
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import Modal from "@/modals/modal/Modal";
 
-export default function PaymentMethodLayout({
+export default function ShippingInformationLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -13,11 +14,9 @@ export default function PaymentMethodLayout({
       </header>
       <section
         className="
-      justify-center
+      items-center
       mt-11
       flex
-      md:flex-row
-      flex-wrap
       flex-col
       w-full
       m-auto

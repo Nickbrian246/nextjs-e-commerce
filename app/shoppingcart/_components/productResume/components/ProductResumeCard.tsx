@@ -11,6 +11,7 @@ import {
 import { useDispatch } from "react-redux";
 import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { ChangeEvent, useEffect, useState } from "react";
+import OfferAndFreeShipping from "./OfferAndFreeShipping";
 
 interface Props {
   title: string;
@@ -136,34 +137,5 @@ border-b-textGray
         </span>
       </div>
     </div>
-  );
-}
-interface OfferAndFreeShippingProps {
-  hasFreeShipping: boolean;
-  totalPrice: string;
-  discount: string;
-}
-function OfferAndFreeShipping(props: OfferAndFreeShippingProps) {
-  const { hasFreeShipping, discount, totalPrice } = props;
-  return (
-    <>
-      <div className=" flex gap-1">
-        {hasFreeShipping && (
-          <>
-            <span className=" text-2xl text-science-blue-400   flex items-center sm:gap-2 gap-1">
-              <FaShippingFast />
-              <span className="text-xs">Envío gratis</span>
-            </span>
-          </>
-        )}
-        <span className=" text-2xl  text-red-600  ">
-          <BiSolidOffer />
-        </span>
-      </div>
-      <div className="flex gap-1">
-        <span className="text-red-600 ">{discount}</span>
-        <span className="line-through text-science-blue-300">{totalPrice}</span>
-      </div>
-    </>
   );
 }

@@ -7,14 +7,17 @@ import { FormList } from "./interfaces/formList";
 import { addHyphensToPhoneNumber } from "./utils";
 import { formList } from "./utils/formList/formList";
 import { mexicoStatesList } from "./utils/stateList";
+import { useRouter } from "next/navigation";
 import { FaEdit } from "react-icons/fa";
 import {
   createEntityInLocalStorage,
   getEntityInLocalStorage,
   updateEntityInLocalStorage,
 } from "@/utils/localStorage/localStorageGeneric";
-
-export default function ShippingForm() {
+interface Props {
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function ShippingForm({ setIsEditable }: Props) {
   const [shippingForm, setShippingForm] = useState<ShippingForm>({
     Nombre: "",
     Apellidos: "",
@@ -27,6 +30,7 @@ export default function ShippingForm() {
   const [zipCode, setZipCode] = useState<string>("");
   const [stateSelected, setStateSelected] = useState("Tabasco");
   const [readOnly, setReadOnly] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     const localStorageData = getEntityInLocalStorage("shippingFormData");
@@ -43,6 +47,7 @@ export default function ShippingForm() {
       setStateSelected(localStorageData.stateSelected);
       setNeighborReference(localStorageData.neighborReference);
       setReadOnly(true);
+      setIsEditable(true);
     }
   }, []);
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -59,6 +64,7 @@ export default function ShippingForm() {
     };
 
     if (!readOnly) createEntityInLocalStorage("shippingFormData", formData);
+    router.push(`/paymentMethod/${"noauth"}`);
   };
   const handleOnInputChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -106,6 +112,7 @@ export default function ShippingForm() {
   };
   const handleEdit = () => {
     setReadOnly(false);
+    setIsEditable(false);
   };
   return (
     <form
@@ -126,6 +133,7 @@ export default function ShippingForm() {
             className="sm:w-80 w-64 p-1 border-2 border-b-textGray rounded-md"
             name={listItem.name}
             type="text"
+            //@ts-ignore
             value={shippingForm[listItem.id]}
             placeholder={listItem.name}
             onChange={(e) => handleOnInputChange(e, listItem.id)}
