@@ -9,11 +9,13 @@ import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneri
 import { BankCardDetail } from "@/app/paymentMethod/[user]/_interfaces";
 import { ButtonRouter } from "@/components/components/ButtonRouter";
 import Modal from "@/modals/modal/Modal";
+import PurchaseSuccessful from "./_components/purchaseSuccessful/PurchaseSuccessful";
 export default function ReviewAndConfirmOderPage({
   params,
 }: {
   params: { user: string };
 }) {
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [groupOfProducts, setGroupOfProducts] = useState<
@@ -52,8 +54,18 @@ export default function ReviewAndConfirmOderPage({
         </h2>
         <BankCard value={paymentMethodDetails} />
 
-        <ButtonRouter className="mt-10 w-full">Realizar compra.</ButtonRouter>
+        <ButtonRouter
+          onClick={() => setIsOpenModal(true)}
+          className="mt-10 w-full"
+        >
+          Realizar compra.
+        </ButtonRouter>
       </div>
+      {isOpenModal && (
+        <Modal className="flex  justify-center items-center">
+          <PurchaseSuccessful />
+        </Modal>
+      )}
     </section>
   );
 }

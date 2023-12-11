@@ -9,7 +9,7 @@ interface Props {
 
 export default function MobileProductCarousel(props: Props) {
   const { images } = props;
-
+  console.log(images);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const imageRefs = images.map(() => useRef<HTMLDivElement>(null));
 

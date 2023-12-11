@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 export default function QuantityIndicator() {
+  //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
 
   return (

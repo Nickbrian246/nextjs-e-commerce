@@ -47,7 +47,6 @@ export default function PaymentMethodPage({
       <ButtonRouter onClick={handleBtn} disabled={!isButtonDisable}>
         Continuar a la confirmación del pedido.
       </ButtonRouter>
-      <Modal>adsfasdf</Modal>
     </>
   );
 }

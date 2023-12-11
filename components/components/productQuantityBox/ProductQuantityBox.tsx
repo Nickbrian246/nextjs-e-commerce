@@ -1,10 +1,10 @@
 "use client";
+import React from "react";
 import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getEntityProductsFromLocalStorage } from "@/utils/localStorage/localStorage";
-// una funcion de lectura para saber cuantos productos suben
-// el dispatch para subir los productos
+
 interface Props {
   quantityInShoppingCart: number;
   productId: number;
@@ -14,7 +14,7 @@ interface Props {
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
   handleOnChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
-export default function QuantityToAddToCart({
+export default function ProductQuantityBox({
   quantityInShoppingCart,
   productId,
   handleAddItem,
@@ -24,6 +24,19 @@ export default function QuantityToAddToCart({
   handleOnChange,
 }: Props) {
   //@ts-ignore
+  const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+
+  useEffect(() => {
+    const groupOfProducts = getEntityProductsFromLocalStorage("shoppingCart");
+    if (Array.isArray(groupOfProducts)) {
+      const product = groupOfProducts.find(
+        (product) => product.productId === productId
+      );
+
+      if (product?.quantity) setQuantity(product.quantity);
+      else return;
+    }
+  }, [productsInShoppingCart]);
 
   return (
     <div className="flex items-center gap-3">

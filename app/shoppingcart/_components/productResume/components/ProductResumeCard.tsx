@@ -1,16 +1,14 @@
 "use client";
-import QuantityToAddToCart from "@/app/product/[product]/_components/productDetails/QuantityToAddToCart";
-import Image from "next/image";
-import { BiSolidOffer } from "react-icons/bi";
-import { FaShippingFast } from "react-icons/fa";
+import ProductQuantityBox from "@/components/components/productQuantityBox/ProductQuantityBox";
 import {
   addOneItemToProductInShoppingCart,
   deleteProductInShoppingCart,
   subtractOneItemToProductInShoppingCart,
 } from "@/redux/slices/ShoppingCart";
-import { useDispatch } from "react-redux";
 import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
+import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import OfferAndFreeShipping from "./OfferAndFreeShipping";
 
 interface Props {
@@ -112,7 +110,7 @@ border-b-textGray
             </button>
           </div>
         </div>
-        <QuantityToAddToCart
+        <ProductQuantityBox
           handleOnChange={handleQuantityToAddCart}
           quantity={productQuantity}
           setQuantity={setProductQuantity}
