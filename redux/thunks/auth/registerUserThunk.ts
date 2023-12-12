@@ -1,6 +1,8 @@
 import { RegisterUser } from "@/app/auth/register/_interfaces/register";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import axios from "axios";
+import { signin } from "@/redux/slices/auth/sliceForAuth";
 
 const config = {
   headers: {
@@ -10,7 +12,7 @@ const config = {
 const BASE_URL = process.env.NEXT_PUBLIC_NESTAPI_BASE_URL;
 export const UserRegister = createAsyncThunk(
   "registerUser",
-  async (userDetails: RegisterUser) => {
+  async (userDetails: RegisterUser, { dispatch }) => {
     try {
       const createUser = await axios.post(
         `${BASE_URL}/auth/signup`,
@@ -20,7 +22,20 @@ export const UserRegister = createAsyncThunk(
 
       return createUser.data;
     } catch (error) {
-      console.log(error);
+      dispatch(
+        activeWarning({
+          duration: 5000,
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${error}`,
+        })
+      );
+      dispatch(
+        signin({
+          updateStore: { isLogged: false, isLoading: false, error: null },
+          token: null,
+        })
+      );
     }
   }
 );

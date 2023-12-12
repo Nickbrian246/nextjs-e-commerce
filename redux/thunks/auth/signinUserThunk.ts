@@ -2,6 +2,7 @@ import { Signin } from "@/app/auth/signin/_interfaces/signin";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { signin } from "../../slices/auth/sliceForAuth";
 import axios from "axios";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 
 const config = {
   headers: {
@@ -33,7 +34,20 @@ export const UserSignin = createAsyncThunk(
       );
       return createUser.data;
     } catch (error) {
-      console.log(error);
+      dispatch(
+        activeWarning({
+          duration: 5000,
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${error}`,
+        })
+      );
+      dispatch(
+        signin({
+          updateStore: { isLogged: false, isLoading: false, error: null },
+          token: null,
+        })
+      );
     }
   }
 );

@@ -21,8 +21,11 @@ export const loggedUser = createSlice({
   initialState,
   reducers: {
     logOut: (state) => {
-      state.isLogged = false;
       removeEntityInLocalStorage("userToken");
+      return {
+        ...state,
+        isLogged: false,
+      };
     },
     signin: (
       state,
@@ -32,7 +35,7 @@ export const loggedUser = createSlice({
       if (token) {
         createEntityInLocalStorage("userToken", token);
       }
-      state = updateStore;
+      return { ...state, ...updateStore };
     },
   },
   extraReducers: (builder) => {
