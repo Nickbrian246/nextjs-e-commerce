@@ -5,11 +5,14 @@ import {
   newPriceWithDiscount,
 } from "@/components/productCard/utils/hasOffer";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { BiSolidOffer } from "react-icons/bi";
 import { FaShippingFast } from "react-icons/fa";
 import { sliceText } from "../../utils";
 import Link from "next/link";
+import { addItemsToProductByAmount } from "@/redux/slices/ShoppingCart";
+import { Button } from "@/components/components/Button";
+import { useDispatch } from "react-redux";
 
 interface CarouselProductCardProps {
   image: string;
@@ -24,11 +27,9 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
   const [itHasOffer, setItHasOffer] = useState<boolean>(false);
   const [priceWithOffer, setPriceWithOffer] = useState<number>();
   const [itHasFreeShipping, setItHasFreeShipping] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
 
-  let standardPrice = price.toLocaleString("es-MX", {
-    style: "currency",
-    currency: "MXN",
-  });
   useEffect(() => {
     if (hasOffer(price)) {
       setItHasOffer(hasOffer(price));
@@ -36,7 +37,42 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
       setPriceWithOffer(newPriceWithDiscount(price, 20));
     }
   }, []);
+
+  let standardPrice = price.toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  });
   const descriptionTruncated = sliceText(description, 0, 100, true);
+
+  const handleAddItem = () => {
+    setQuantity((prev) => (!isNaN(prev) ? prev + 1 : 1));
+  };
+
+  const handleSubtractItem = () => {
+    setQuantity((prev) => {
+      if (prev === 1) return 1;
+      if (isNaN(prev)) return 1;
+      return prev - 1;
+    });
+  };
+
+  const handleOnInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const filterOnlyNumbers = value.replace(/[^0-9]/gi, "");
+    setQuantity((prev) => {
+      if (parseFloat(filterOnlyNumbers) <= 1) return 1;
+      return parseFloat(value);
+    });
+  };
+
+  const handleAddToCart = () => {
+    dispatch(
+      addItemsToProductByAmount({
+        key: "shoppingCart",
+        product: { productId: id, quantity },
+      })
+    );
+  };
 
   return (
     <>
@@ -96,11 +132,17 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
         </div>
         <div className="flex flex-col items-start justify-center gap-2 ">
           <span>
-            <QuantityToAddToCart />
+            <QuantityToAddToCart
+              handleAddItem={handleAddItem}
+              handleOnChange={handleOnInputChange}
+              handleSubtractItem={handleSubtractItem}
+              quantity={quantity}
+              setQuantity={setQuantity}
+            />
           </span>
-          <button className="bg-science-blue-500 p-2 rounded-lg text-white active:bg-science-blue-700">
+          <Button onClick={handleAddToCart} className="p-2">
             Agregar al carrito
-          </button>
+          </Button>
         </div>
       </div>
     </>

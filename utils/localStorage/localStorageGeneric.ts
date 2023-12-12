@@ -6,6 +6,9 @@ export function getEntityInLocalStorage(entityName: string) {
   const data = localStorage.getItem(entityName);
   if (data) return JSON.parse(data);
 }
+export function removeEntityInLocalStorage(entityName: string) {
+  const data = localStorage.removeItem(entityName);
+}
 export function updateEntityInLocalStorage(entityName: string, data: Data) {
   const localStorageData = getEntityInLocalStorage(entityName);
   if (localStorageData) createEntityInLocalStorage(entityName, data);

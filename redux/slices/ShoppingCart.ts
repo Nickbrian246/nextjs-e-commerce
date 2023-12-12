@@ -78,6 +78,7 @@ export const ShoppingCart = createSlice({
       action: PayloadAction<{ key: string; product: ShoppingCartProduct }>
     ) => {
       const { key, product } = action.payload;
+
       addProductsByAmountToEntityInLocalStorage(key, product);
       const groupOfProducts = getEntityProductsFromLocalStorage(key);
       const totalProducts = quantityOfItemsInShoppingCart(groupOfProducts);
@@ -94,4 +95,5 @@ export const {
   deleteProductInShoppingCart,
   addOneItemToProductInShoppingCart,
   subtractOneItemToProductInShoppingCart,
+  addItemsToProductByAmount,
 } = ShoppingCart.actions;

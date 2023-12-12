@@ -51,7 +51,15 @@ export const menuOptionsForNotLoggedUserGroup: HeaderMenuOptionGroup[] = [
     titleEs: "Iniciar sesión.",
     icon: <BiLogIn />,
     isLogged: true,
-    route: "/",
+    route: "/auth/signin",
     id: "login",
+  },
+  {
+    titleEn: "signup",
+    titleEs: "Registrarse",
+    icon: <BiLogIn />,
+    isLogged: true,
+    route: "/auth/register",
+    id: "signup",
   },
 ];

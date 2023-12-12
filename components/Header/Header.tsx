@@ -1,10 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import OptionHeader from "./components/optionHeader";
 import OptionsForHeaderMenu from "./components/optionsForMenu/OptionsForHeaderMenu";
-
+import { useSelector } from "react-redux";
 export default function Header() {
+  const { isLogged } = useSelector((state) => state.loggedUser);
+
   const [isOpenCollapsableMenu, setIsOpenCollapsableMenu] =
     useState<boolean>(false);
   return (
@@ -18,7 +20,7 @@ export default function Header() {
           >
             <AiOutlineMenu />
           </button>
-          <OptionsForHeaderMenu isLogged={true} />
+          <OptionsForHeaderMenu isLogged={isLogged} />
         </div>
       </div>
     </>

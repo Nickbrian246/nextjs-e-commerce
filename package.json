@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
+    "axios": "^1.6.2",
     "install": "^0.13.0",
     "next": "14.0.1",
     "npm": "^10.2.4",

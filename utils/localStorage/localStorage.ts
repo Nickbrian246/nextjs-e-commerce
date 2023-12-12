@@ -1,5 +1,5 @@
 import { ShoppingCartProduct } from "./interfaces";
-import { checkIfProductExist } from "./utils";
+import { checkIfProductExist, addProductByAmount } from "./utils";
 import { addProduct } from "./utils/Product";
 export function createEntityLikeArrayOfIdsInLocalStorage(
   key: string,
@@ -49,17 +49,19 @@ export function addProductsByAmountToEntityInLocalStorage(
   product: ShoppingCartProduct
 ) {
   const groupOfProducts = getEntityProductsFromLocalStorage(key);
+
   if (Array.isArray(groupOfProducts)) {
-    const products = groupOfProducts.map((productItem) => {
-      if (productItem.productId === product.productId) {
-        return {
-          ...productItem,
-          quantity: (productItem.quantity = product.quantity),
-        };
-      }
-      return productItem;
-    });
-    localStorage.setItem(key, JSON.stringify(products));
+    const checkPrevExistences = checkIfProductExist(groupOfProducts, product);
+    if (checkPrevExistences) {
+      const updateGroupOfProducts = addProductByAmount(
+        groupOfProducts,
+        product
+      );
+      localStorage.setItem(key, JSON.stringify(updateGroupOfProducts));
+    } else {
+      const products = groupOfProducts.concat(product);
+      localStorage.setItem(key, JSON.stringify(products));
+    }
   }
 }
 

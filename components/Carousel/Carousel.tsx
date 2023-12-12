@@ -94,7 +94,7 @@ export default function Carousel({
               return (
                 <CarouselProductCard
                   description={product.description}
-                  image={product.images[0]}
+                  image={product.image}
                   title={product.title}
                   price={product.price}
                   id={product.id}
@@ -107,7 +107,7 @@ export default function Carousel({
               return (
                 <CarouselProductCard
                   description={product.description}
-                  image={product.images[0]}
+                  image={product.image}
                   title={product.title}
                   price={product.price}
                   id={product.id}
@@ -120,7 +120,7 @@ export default function Carousel({
               return (
                 <CarouselProductCard
                   description={product.description}
-                  image={product.images[0]}
+                  image={product.image}
                   title={product.title}
                   price={product.price}
                   id={product.id}

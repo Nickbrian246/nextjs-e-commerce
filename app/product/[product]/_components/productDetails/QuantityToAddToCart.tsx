@@ -1,26 +1,17 @@
 "use client";
-import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
-import { ChangeEvent, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { getEntityProductsFromLocalStorage } from "@/utils/localStorage/localStorage";
-// una funcion de lectura para saber cuantos productos suben
-// el dispatch para subir los productos
+import { ChangeEvent } from "react";
+
 interface Props {
-  quantityInShoppingCart: number;
-  productId: number;
-  handleAddItem: (key: string, product: ShoppingCartProduct) => void;
-  handleSubtractItem: (key: string, product: ShoppingCartProduct) => void;
+  handleAddItem: () => void;
+  handleSubtractItem: () => void;
   quantity: number;
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
   handleOnChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 export default function QuantityToAddToCart({
-  quantityInShoppingCart,
-  productId,
   handleAddItem,
   handleSubtractItem,
   quantity,
-  setQuantity,
   handleOnChange,
 }: Props) {
   //@ts-ignore
@@ -32,13 +23,13 @@ export default function QuantityToAddToCart({
         <button
           className=" scale-150"
           onClick={() => {
-            handleSubtractItem("shoppingCart", { productId, quantity: 1 });
+            handleSubtractItem();
           }}
         >
           -
         </button>
         <input
-          onChange={() => handleOnChange}
+          onChange={handleOnChange}
           value={quantity}
           placeholder="0"
           className="min-w-[50px] text-center outline-none"
@@ -47,7 +38,7 @@ export default function QuantityToAddToCart({
         <button
           className="scale-150"
           onClick={() => {
-            handleAddItem("shoppingCart", { productId, quantity: 1 });
+            handleAddItem();
           }}
         >
           +

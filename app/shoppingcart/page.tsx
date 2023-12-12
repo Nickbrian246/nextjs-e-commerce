@@ -9,6 +9,7 @@ import { AdapterForPriceAndFreeShipping } from "./interfaces";
 import { ButtonRouter } from "@/components/components/ButtonRouter";
 import { FaShoppingBag } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { Button } from "@/components/components/Button";
 import {
   addQuantityOfCartItems,
   calculateShippingCost,
@@ -75,12 +76,9 @@ export default function ShoppingCart() {
           totalProducts={productsInShoppingCart}
           shippingCost={shippingCost}
         />
-        <ButtonRouter
-          onClick={handleBtn}
-          disabled={productsInShoppingCart === 0}
-        >
+        <Button onClick={handleBtn} disabled={productsInShoppingCart === 0}>
           Comprar ahora
-        </ButtonRouter>
+        </Button>
       </aside>
     </>
   );
