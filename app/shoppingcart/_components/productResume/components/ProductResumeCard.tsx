@@ -1,14 +1,21 @@
 "use client";
+import {
+  addOneItemToShoppingCart,
+  decreaseOneItemToShoppingCart,
+} from "@/app/shoppingcart/_services";
 import ProductQuantityBox from "@/components/components/productQuantityBox/ProductQuantityBox";
 import {
   addOneItemToProductInShoppingCart,
   deleteProductInShoppingCart,
   subtractOneItemToProductInShoppingCart,
+  updateShoppingCartCounter,
 } from "@/redux/slices/ShoppingCart";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import OfferAndFreeShipping from "./OfferAndFreeShipping";
 
 interface Props {
@@ -38,14 +45,18 @@ export default function ProductResumeCard(props: Props) {
   const [productQuantity, setProductQuantity] = useState<number>(1);
   const [debounce, setDebounce] = useState<number>(1);
 
+  const { isLogged } = useSelector((state) => state.loggedUser);
+
   useEffect(() => {
     const time = setTimeout(() => {}, 500);
     return () => clearTimeout(time);
   }, [debounce]);
+
   const totalPrice = price.toLocaleString("es-MX", {
     currency: "MXN",
     style: "currency",
   });
+
   const offerPrice = priceWithOffer.toLocaleString("es-MX", {
     style: "currency",
     currency: "MXN",
@@ -54,7 +65,28 @@ export default function ProductResumeCard(props: Props) {
   const handleDelete = (key: string, id: number) => {
     dispatch(deleteProductInShoppingCart({ key, productId: id }));
   };
-  const handleAddItem = (key: string, product: ShoppingCartProduct) => {
+  const handleAddItem = async (key: string, product: ShoppingCartProduct) => {
+    if (isLogged) {
+      try {
+        const token = getEntityInLocalStorage("userToken");
+        const counter = await addOneItemToShoppingCart(
+          { productId, quantity },
+          token.token_access
+        );
+
+        dispatch(updateShoppingCartCounter({ count: counter }));
+        return;
+      } catch (error) {
+        dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${error}`,
+          })
+        );
+      }
+    }
+
     dispatch(
       addOneItemToProductInShoppingCart({
         key,
@@ -62,7 +94,31 @@ export default function ProductResumeCard(props: Props) {
       })
     );
   };
-  const handleSubtractItem = (key: string, product: ShoppingCartProduct) => {
+  const handleSubtractItem = async (
+    key: string,
+    product: ShoppingCartProduct
+  ) => {
+    if (isLogged) {
+      try {
+        const token = getEntityInLocalStorage("userToken");
+        const counter = await decreaseOneItemToShoppingCart(
+          String(productId),
+          token.token_access
+        );
+
+        dispatch(updateShoppingCartCounter({ count: counter }));
+        return;
+      } catch (error) {
+        dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${error}`,
+          })
+        );
+      }
+    }
+
     dispatch(
       subtractOneItemToProductInShoppingCart({
         key,

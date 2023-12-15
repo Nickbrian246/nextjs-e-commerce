@@ -5,13 +5,14 @@ import {
   removeEntityInLocalStorage,
 } from "@/utils/localStorage/localStorageGeneric";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 interface InitialState {
   isLogged: boolean;
   isLoading: boolean;
   error: null;
 }
 const initialState: InitialState = {
-  isLogged: false,
+  isLogged: !!getEntityInLocalStorage("userToken"),
   isLoading: false,
   error: null,
 };

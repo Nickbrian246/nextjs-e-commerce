@@ -1,15 +1,17 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/components/Button";
-import { RegisterUser } from "./_interfaces/register";
-import { useCheckPassword } from "./_hooks/useCheckPassword";
+import LoadingSpinner from "@/components/components/LoadingSpinner";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
+import { UserRegister } from "@/redux/thunks/auth/registerUserThunk";
+import { updateShoppingCartUserLogged } from "@/utils/shoppingCartForUserLogged/updateShoppingCartUserLogged";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { BiShow } from "react-icons/bi";
 import { GrHide } from "react-icons/gr";
-import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { UserRegister } from "@/redux/thunks/auth/registerUserThunk";
-import { useRouter } from "next/navigation";
-import LoadingSpinner from "@/components/components/LoadingSpinner";
+import { useCheckPassword } from "./_hooks/useCheckPassword";
+import { RegisterUser } from "./_interfaces/register";
 
 export default function RegisterPage() {
   const [isWriting, setIsWriting] = useState<boolean>(false);
@@ -49,8 +51,23 @@ export default function RegisterPage() {
     }
     setIsAvailableToSubmit(false);
   }, [registerUser]);
+
   useEffect(() => {
-    if (isLogged) router.replace("/");
+    if (isLogged) {
+      updateShoppingCartUserLogged().catch((err) => {
+        dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${err}`,
+            duration: 4000,
+            warningSubMessage: "",
+          })
+        );
+      });
+
+      router.replace("/");
+    }
   }, [isLogged]);
 
   const handleInputs = (e: ChangeEvent<HTMLInputElement>) => {
@@ -148,12 +165,12 @@ export default function RegisterPage() {
             name="password"
             value={registerUser.password}
           />
-          <button
+          <div
             onClick={handleShowPass}
             className="scale-150 absolute  lg:-right-5 right-2 bg-white"
           >
             {showPass ? <BiShow /> : <GrHide />}
-          </button>
+          </div>
         </div>
         <div className="flex  flex-wrap max-w-[400px]">
           <span

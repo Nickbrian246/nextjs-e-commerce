@@ -5,7 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { MouseEventHandler, useEffect, useState } from "react";
 import { VscAdd } from "react-icons/vsc";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { addOneItemProductToShoppingCartInDb } from "@/redux/thunks/shoppingCartdb/addOneItemProductInShoppingCartAndUpdateCounter";
 import {
   discountAmount,
   hasFreeShipping,
@@ -19,7 +21,9 @@ export default function ProductCard(props: Product) {
   const [savedMoney, setSavedMoney] = useState<number>(0);
   const [itHasFreeShipping, setItHasFreeShipping] = useState<boolean>();
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
+  const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (hasOffer(price)) {
       setHasDiscount(true);
@@ -36,12 +40,23 @@ export default function ProductCard(props: Product) {
     setIsMouseOver(false);
   };
   const handleAddCartBtn = (key: string, id: number) => {
-    dispatch(
-      addProductToShoppingCart({
-        key,
-        products: { productId: id, quantity: 1 },
-      })
-    );
+    if (isLogged) {
+      const token = getEntityInLocalStorage("userToken");
+      dispatch(
+        addOneItemProductToShoppingCartInDb({
+          productId: id,
+          quantity: 1,
+          token: token.token_access,
+        })
+      );
+    } else {
+      dispatch(
+        addProductToShoppingCart({
+          key,
+          products: { productId: id, quantity: 1 },
+        })
+      );
+    }
   };
   return (
     <div

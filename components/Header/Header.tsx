@@ -1,13 +1,21 @@
 "use client";
-import { disableWarning } from "@/redux/slices/globalWarning/globalWarning";
+import { updateShoppingCartCounter } from "@/redux/slices/ShoppingCart";
+import {
+  activeWarning,
+  disableWarning,
+} from "@/redux/slices/globalWarning/globalWarning";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import Warning from "../components/Warning";
 import OptionsForHeaderMenu from "./components/optionsForMenu/OptionsForHeaderMenu";
-
+import { getShoppingCartCounter } from "./services/getShoppingCartCounter";
 export default function Header() {
+  const [isOpenCollapsableMenu, setIsOpenCollapsableMenu] =
+    useState<boolean>(false);
   const { isLogged } = useSelector((state) => state.loggedUser);
+  const dispatch = useDispatch();
   const {
     duration,
     severity,
@@ -15,9 +23,6 @@ export default function Header() {
     warningSubMessage,
     isActiveWarning,
   } = useSelector((state) => state.globalWarning);
-  const [isOpenCollapsableMenu, setIsOpenCollapsableMenu] =
-    useState<boolean>(false);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isActiveWarning) {
@@ -26,6 +31,25 @@ export default function Header() {
       }, duration);
     }
   }, [isActiveWarning]);
+
+  useEffect(() => {
+    if (isLogged) {
+      const token = getEntityInLocalStorage("userToken");
+      getShoppingCartCounter(token.token_access)
+        .then((res) => {
+          dispatch(updateShoppingCartCounter({ count: res }));
+        })
+        .catch((err) => {
+          return dispatch(
+            activeWarning({
+              isActiveWarning: true,
+              severity: "error",
+              warningMessage: `${err.message}`,
+            })
+          );
+        });
+    }
+  }, []);
 
   return (
     <>

@@ -33,6 +33,13 @@ export const ShoppingCart = createSlice({
         quantityOfItemsInShoppingCart(groupOfProducts);
       state.productsInShoppingCart = itemsInShoppingCart;
     },
+    updateShoppingCartCounter: (
+      state,
+      action: PayloadAction<{ count: number }>
+    ) => {
+      const { count } = action.payload;
+      state.productsInShoppingCart = count;
+    },
     deleteProductInShoppingCart: (
       state,
       action: PayloadAction<{ productId: number; key: string }>
@@ -96,4 +103,5 @@ export const {
   addOneItemToProductInShoppingCart,
   subtractOneItemToProductInShoppingCart,
   addItemsToProductByAmount,
+  updateShoppingCartCounter,
 } = ShoppingCart.actions;

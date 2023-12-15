@@ -9,6 +9,8 @@ import LoadingSpinner from "@/components/components/LoadingSpinner";
 import { useSelector, useDispatch } from "react-redux";
 import { UserSignin } from "@/redux/thunks/auth/signinUserThunk";
 import { useRouter } from "next/navigation";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
+import { updateShoppingCartUserLogged } from "@/utils/shoppingCartForUserLogged/updateShoppingCartUserLogged";
 
 export default function SigninPage() {
   const [signinUser, setSigninUser] = useState<Signin>({
@@ -21,8 +23,23 @@ export default function SigninPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (isLogged) router.replace("/");
+    if (isLogged) {
+      updateShoppingCartUserLogged().catch((err) => {
+        dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${err}`,
+            duration: 4000,
+            warningSubMessage: "",
+          })
+        );
+      });
+
+      router.replace("/");
+    }
   }, [isLogged]);
+
   const handleInputs = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     const name = e.target.name;

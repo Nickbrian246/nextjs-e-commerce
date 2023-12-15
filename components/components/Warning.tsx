@@ -11,7 +11,18 @@ export default function Warning(props: WarningInitialState) {
   const color = colorOptions[severity];
   return (
     <div
-      className={`flex absolute z-10 p-4 justify-center items-center -bottom-28  m-auto left-0 right-0  `}
+      className={`
+      flex 
+      absolute
+      z-10
+      p-4
+      justify-center
+      items-center
+      -bottom-28 
+      m-auto
+      left-0
+      right-0
+      `}
     >
       <div
         className={`
@@ -20,17 +31,20 @@ export default function Warning(props: WarningInitialState) {
         rounded-lg
         justify-center 
         items-center 
-        bg-[${color}] p-4`}
+        bg-[#dc2626]
+        p-4
+        sm:min-w-[300px]
+        `}
       >
         <p
-          className={`text-lg font-medium ${
+          className={`text-lg sm:text-xl font-medium ${
             severity === "error" && "text-white"
           }  `}
         >
           {warningMessage}
         </p>
         <p
-          className={`text-xs font-medium ${
+          className={`text-xs sm:text-lg  font-medium ${
             severity === "error" && "text-white"
           }  `}
         >

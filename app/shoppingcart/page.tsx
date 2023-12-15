@@ -7,6 +7,7 @@ import ProductResume from "./_components/productResume/ProductResume";
 import SaleResume from "./_components/shoppingProductCard/SaleResume";
 import { AdapterForPriceAndFreeShipping } from "./interfaces";
 import { ButtonRouter } from "@/components/components/ButtonRouter";
+import { getShoppingCartProductsDb } from "@/services/shoppingCartdb/getShoppingCartProductsdb";
 import { FaShoppingBag } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/components/Button";
@@ -18,46 +19,26 @@ import {
   checkOfferAndAdaptPrice,
 } from "./utils";
 import { useRouter } from "next/navigation";
+import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { useShoppingCart } from "@/hooks/useShoppingCart";
 
 export default function ShoppingCart() {
-  const [groupOfProducts, setGroupOfProducts] = useState<
-    AdapterForPriceAndFreeShipping[]
-  >([]);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [shippingCost, setShippingCost] = useState<number>(0);
-  //@ts-ignore
-  const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
   const router = useRouter();
+  const {
+    calculateShoppingCart,
+    groupOfProducts,
+    productsInShoppingCart,
+    shippingCost,
+    totalPrice,
+  } = useShoppingCart();
 
   useEffect(() => {
-    const groupOfIdsAndQuantitiesOfShoppingCart =
-      getEntityProductsFromLocalStorage("shoppingCart");
-    if (Array.isArray(groupOfIdsAndQuantitiesOfShoppingCart)) {
-      const promises = groupOfIdsAndQuantitiesOfShoppingCart.map(
-        async (product) => {
-          return await getProductById(product.productId);
-        }
-      );
+    console.log("cambiando  o entrando");
 
-      Promise.all(promises)
-        .then((res) => {
-          const addQuantityToEachProduct = addQuantityOfCartItems(
-            groupOfIdsAndQuantitiesOfShoppingCart,
-            res
-          );
-          const groupOfCartProducts = checkOfferAndAdaptPrice(
-            addQuantityToEachProduct
-          );
-          const totalPrice = calculateTotalPrice(groupOfCartProducts);
-          const shippingCost = calculateShippingCost(groupOfCartProducts);
-
-          setShippingCost(shippingCost);
-          setTotalPrice(totalPrice);
-          setGroupOfProducts(groupOfCartProducts);
-        })
-        .catch((error) => console.error(error));
-    }
+    calculateShoppingCart();
   }, [productsInShoppingCart]);
+
   const handleBtn = () => {
     router.push("/shippingInformation/23");
   };

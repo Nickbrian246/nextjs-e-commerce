@@ -4,6 +4,7 @@ import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getEntityProductsFromLocalStorage } from "@/utils/localStorage/localStorage";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface Props {
   quantityInShoppingCart: number;
@@ -41,7 +42,7 @@ export default function ProductQuantityBox({
   return (
     <div className="flex items-center gap-3">
       <p>Cantidad: </p>
-      <div className="p-2 gap-2 border-[2px] border-science-blue-500 flex items-center max-w-[100px] rounded-md">
+      <div className="p-2 gap-2 border-[2px] border-science-blue-500 flex items-center max-w-[100px] rounded-md relative ">
         <button
           className=" scale-150"
           onClick={() => {
@@ -52,7 +53,7 @@ export default function ProductQuantityBox({
         </button>
         <input
           onChange={() => handleOnChange}
-          value={quantity}
+          value={quantityInShoppingCart}
           placeholder="0"
           className="min-w-[50px] text-center outline-none"
           type="number"
@@ -65,6 +66,10 @@ export default function ProductQuantityBox({
         >
           +
         </button>
+
+        {/* <div className="absolute left-0 right-0 scale-125 inset-y-0 flex items-center justify-center">
+          <LoadingSpinner />
+        </div> */}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { ShoppingCartProduct } from "./interfaces";
 import { checkIfProductExist, addProductByAmount } from "./utils";
 import { addProduct } from "./utils/Product";
+
 export function createEntityLikeArrayOfIdsInLocalStorage(
   key: string,
   data: ShoppingCartProduct
