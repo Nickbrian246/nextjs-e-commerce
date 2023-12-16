@@ -1,19 +1,18 @@
 "use client";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
+import { createUserAddress } from "@/services/address/createUserAddress";
+import { AddressDb } from "@/services/address/interfaces";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { ShippingForm } from "./interfaces/ShippingForm";
+import { useDispatch } from "react-redux";
 import { twMerge } from "tailwind-merge";
 import OptionSelect from "../components/OptionSelect";
+import { ShippingForm } from "./interfaces/ShippingForm";
 import { FormList } from "./interfaces/formList";
 import { addHyphensToPhoneNumber } from "./utils";
 import { formList } from "./utils/formList/formList";
 import { mexicoStatesList } from "./utils/stateList";
-import { useRouter } from "next/navigation";
-import { FaEdit } from "react-icons/fa";
-import {
-  createEntityInLocalStorage,
-  getEntityInLocalStorage,
-  updateEntityInLocalStorage,
-} from "@/utils/localStorage/localStorageGeneric";
 interface Props {
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -31,6 +30,7 @@ export default function ShippingForm({ setIsEditable }: Props) {
   const [stateSelected, setStateSelected] = useState("Tabasco");
   const [readOnly, setReadOnly] = useState<boolean>(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const localStorageData = getEntityInLocalStorage("shippingFormData");
@@ -53,18 +53,37 @@ export default function ShippingForm({ setIsEditable }: Props) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = {
+    const deliveryAddresses: AddressDb = {
       city,
       colony,
       neighborReference,
       email,
       zipCode,
-      stateSelected,
-      ...shippingForm,
+      state: stateSelected,
+      name: shippingForm.Nombre,
+      lastName: shippingForm.Apellidos,
+      phoneNumber: shippingForm.Teléfono,
+      deliveryAddressId: "1",
     };
+    const token = getEntityInLocalStorage("userToken");
 
-    if (!readOnly) createEntityInLocalStorage("shippingFormData", formData);
-    router.push(`/paymentMethod/${"noauth"}`);
+    createUserAddress(
+      {
+        deliveryAddresses: [{ ...deliveryAddresses }],
+      },
+      token.token_access
+    )
+      .then((res) => router.push(`/paymentMethod/${"noauth"}`))
+      .catch((err) => {
+        dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${err.response.data.message}`,
+          })
+        );
+      });
+    // if (!readOnly) createEntityInLocalStorage("shippingFormData", formData);
   };
   const handleOnInputChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -257,9 +276,9 @@ export default function ShippingForm({ setIsEditable }: Props) {
       `
         )}
       >
-        Guardar y continuar con el pedido
+        Guardar y continuar
       </button>
-      {readOnly && (
+      {/* {readOnly && (
         <button
           onClick={handleEdit}
           title="Editar "
@@ -270,7 +289,7 @@ export default function ShippingForm({ setIsEditable }: Props) {
           </span>
           <p className="text-white font-medium">Editar formulario</p>
         </button>
-      )}
+      )} */}
     </form>
   );
 }

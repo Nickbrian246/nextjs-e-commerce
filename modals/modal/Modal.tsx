@@ -3,12 +3,17 @@ import { twMerge } from "tailwind-merge";
 interface Props {
   children: ReactNode;
   className?: string;
+  handleCloseModal?: () => void;
 }
 
-export default function Modal({ children, className }: Props) {
+export default function Modal({
+  children,
+  className,
+  handleCloseModal,
+}: Props) {
   return (
     <section
-      className={twMerge("", className)}
+      className={twMerge("z-10", className)}
       style={{
         position: "fixed",
         width: "100vw",
@@ -17,9 +22,10 @@ export default function Modal({ children, className }: Props) {
         bottom: 0,
         left: 0,
         background: "rgb(0,0,0,.5)",
+        overflow: "hidden",
       }}
     >
-      {children}
+      <div className="z-20">{children}</div>
     </section>
   );
 }

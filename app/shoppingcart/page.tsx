@@ -1,27 +1,12 @@
 "use client";
+import { Button } from "@/components/components/Button";
 import { LinkButton } from "@/components/components/LinkButton";
-import { getProductById } from "@/services/getProductById";
-import { getEntityProductsFromLocalStorage } from "@/utils/localStorage/localStorage";
-import { useEffect, useState } from "react";
+import { useShoppingCart } from "@/hooks/useShoppingCart";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { FaShoppingBag } from "react-icons/fa";
 import ProductResume from "./_components/productResume/ProductResume";
 import SaleResume from "./_components/shoppingProductCard/SaleResume";
-import { AdapterForPriceAndFreeShipping } from "./interfaces";
-import { ButtonRouter } from "@/components/components/ButtonRouter";
-import { getShoppingCartProductsDb } from "@/services/shoppingCartdb/getShoppingCartProductsdb";
-import { FaShoppingBag } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { Button } from "@/components/components/Button";
-import {
-  addQuantityOfCartItems,
-  calculateShippingCost,
-  calculateTotalPrice,
-  calculateTotalProducts,
-  checkOfferAndAdaptPrice,
-} from "./utils";
-import { useRouter } from "next/navigation";
-import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
-import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
-import { useShoppingCart } from "@/hooks/useShoppingCart";
 
 export default function ShoppingCart() {
   const router = useRouter();
@@ -34,14 +19,13 @@ export default function ShoppingCart() {
   } = useShoppingCart();
 
   useEffect(() => {
-    console.log("cambiando  o entrando");
-
     calculateShoppingCart();
-  }, [productsInShoppingCart]);
+  }, []);
 
   const handleBtn = () => {
     router.push("/shippingInformation/23");
   };
+
   return (
     <>
       <section className="p-2 shadow-xl h-fit">
@@ -57,7 +41,7 @@ export default function ShoppingCart() {
           totalProducts={productsInShoppingCart}
           shippingCost={shippingCost}
         />
-        <Button onClick={handleBtn} disabled={productsInShoppingCart === 0}>
+        <Button onClick={handleBtn} disabled={!!!productsInShoppingCart}>
           Comprar ahora
         </Button>
       </aside>

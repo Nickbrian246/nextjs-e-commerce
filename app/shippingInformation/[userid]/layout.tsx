@@ -24,6 +24,7 @@ export default function PaymentMethodLayout({
       gap-5
       p-1
       min-h-screen
+      mb-11
       "
       >
         {children}
