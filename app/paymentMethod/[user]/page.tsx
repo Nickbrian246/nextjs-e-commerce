@@ -12,9 +12,9 @@ import { createEntityInLocalStorage } from "@/utils/localStorage/localStorageGen
 import { useRouter } from "next/navigation";
 import Modal from "@/modals/modal/Modal";
 export default function PaymentMethodPage({
-  params,
+  searchParams,
 }: {
-  params: { user: string };
+  searchParams: { user: string };
 }) {
   const [cartInformation, setCartInformation] = useState<BankCardDetail>({
     name: "",

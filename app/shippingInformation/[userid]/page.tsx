@@ -1,20 +1,19 @@
 "use client";
-import ShippingForm from "@/components/ShippingFrom/ShippingForm";
 import SigninPage from "@/app/auth/signin/page";
+import ShippingForm from "@/components/ShippingFrom/ShippingForm";
 import { Button } from "@/components/components/Button";
 import Modal from "@/modals/modal/Modal";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { getUserAddress } from "@/services/address/getUserAddress";
 import { AddressDb } from "@/services/address/interfaces";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { MdAddCircle } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
+import AddAddress from "./_components/addAddress/AddAddress";
 import AddressesDirectory from "./_components/addressesDirectory/AddressesDirectory";
 import EditAddress from "./_components/editAddress/EditAddress";
-import { MdAddCircle } from "react-icons/md";
-import AddAddress from "./_components/addAddress/AddAddress";
-import { useRouter } from "next/navigation";
-import { log } from "console";
 type ModalType = "Edit" | "addone";
 export default function ShippingInformationPage({
   params,
@@ -82,7 +81,7 @@ export default function ShippingInformationPage({
   };
 
   const handleContinueBtn = () => {
-    router.push(`/paymentMethod/${"?sc"}`);
+    router.push(`/paymentMethod/${"sc=12&addressId=23"}`);
   };
   return (
     <>
