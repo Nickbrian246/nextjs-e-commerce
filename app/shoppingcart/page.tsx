@@ -23,7 +23,7 @@ export default function ShoppingCart() {
   }, []);
 
   const handleBtn = () => {
-    router.push("/shippingInformation/23");
+    router.push(`/delivery-address?product=sc`);
   };
 
   return (

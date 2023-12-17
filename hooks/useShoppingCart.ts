@@ -1,36 +1,29 @@
 import { AdapterForPriceAndFreeShipping } from "@/app/shoppingcart/interfaces";
 import {
   addQuantityOfCartItems,
-  checkOfferAndAdaptPrice,
-  calculateTotalPrice,
   calculateShippingCost,
+  calculateTotalPrice,
+  checkOfferAndAdaptPrice,
 } from "@/app/shoppingcart/utils";
-import { getProductById } from "@/services/getProductById";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { getProductsWithPromiseAll } from "@/services/getProductsWithPromiseAll";
 import { getShoppingCartProductsDb } from "@/services/shoppingCartdb/getShoppingCartProductsdb";
-import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { getEntityProductsFromLocalStorage } from "@/utils/localStorage/localStorage";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
-import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
 export function useShoppingCart() {
   const [groupOfProducts, setGroupOfProducts] = useState<
     AdapterForPriceAndFreeShipping[]
   >([]);
-  const [
-    groupOfIdsAndQuantitiesOfShoppingCart,
-    setGroupOfIdsAndQuantitiesOfShoppingCart,
-  ] = useState<ShoppingCartProduct[]>();
+
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [shippingCost, setShippingCost] = useState<number>(0);
   //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
-  console.log(isLogged);
   const dispatch = useDispatch();
-  const router = useRouter();
 
   function calculateShoppingCart() {
     if (isLogged) {
@@ -38,7 +31,7 @@ export function useShoppingCart() {
       getShoppingCartProductsDb(token.token_access)
         .then((res) => {
           const dbProducts = res.productsCart;
-          setGroupOfIdsAndQuantitiesOfShoppingCart(dbProducts);
+
           getProductsWithPromiseAll(res.productsCart).then((res) => {
             const addQuantityToEachProduct = addQuantityOfCartItems(
               dbProducts,
@@ -73,7 +66,6 @@ export function useShoppingCart() {
       const productFromLocalStorage =
         getEntityProductsFromLocalStorage("shoppingCart");
       if (Array.isArray(productFromLocalStorage)) {
-        setGroupOfIdsAndQuantitiesOfShoppingCart(productFromLocalStorage);
         getProductsWithPromiseAll(productFromLocalStorage)
           .then((res) => {
             const addQuantityToEachProduct = addQuantityOfCartItems(
@@ -90,7 +82,15 @@ export function useShoppingCart() {
             setTotalPrice(totalPrice);
             setGroupOfProducts(groupOfCartProducts);
           })
-          .catch((error) => console.error(error));
+          .catch((error) => {
+            dispatch(
+              activeWarning({
+                isActiveWarning: true,
+                severity: "error",
+                warningMessage: `${error.response.data.message}`,
+              })
+            );
+          });
       }
     }
   }
