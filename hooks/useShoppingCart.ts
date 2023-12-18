@@ -1,4 +1,7 @@
-import { AdapterForPriceAndFreeShipping } from "@/app/shoppingcart/interfaces";
+import {
+  AdapterForPriceAndFreeShipping,
+  ProductWithQuantity,
+} from "@/app/shoppingcart/interfaces";
 import {
   addQuantityOfCartItems,
   calculateShippingCost,
@@ -12,6 +15,7 @@ import { getEntityProductsFromLocalStorage } from "@/utils/localStorage/localSto
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getProductById } from "@/services/getProductById";
 export function useShoppingCart() {
   const [groupOfProducts, setGroupOfProducts] = useState<
     AdapterForPriceAndFreeShipping[]
@@ -94,6 +98,33 @@ export function useShoppingCart() {
       }
     }
   }
+  function calculateShoppingCartForOneProduct(id: number, quantity: number) {
+    try {
+      if (isLogged && quantity) {
+        getProductById(id).then((res) => {
+          console.log(res);
+          const addQuantity: ProductWithQuantity = { ...res, quantity };
+          const adaptToArray = new Array(addQuantity);
+          const groupOfCartProducts = checkOfferAndAdaptPrice(adaptToArray);
+          const totalPrice = calculateTotalPrice(groupOfCartProducts);
+          const shippingCost = calculateShippingCost(groupOfCartProducts);
+          console.log(groupOfCartProducts);
+
+          setShippingCost(shippingCost);
+          setTotalPrice(totalPrice);
+          setGroupOfProducts(groupOfCartProducts);
+        });
+      }
+    } catch (error) {
+      dispatch(
+        activeWarning({
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${error.response.data.message}`,
+        })
+      );
+    }
+  }
 
   return {
     groupOfProducts,
@@ -101,5 +132,6 @@ export function useShoppingCart() {
     shippingCost,
     productsInShoppingCart,
     calculateShoppingCart,
+    calculateShoppingCartForOneProduct,
   };
 }

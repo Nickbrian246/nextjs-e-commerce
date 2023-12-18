@@ -6,7 +6,12 @@ import { MyOrderProduct } from "../_interfaces/myOrderProduct";
 export function createOrderAdapter(
   address: AddressDb,
   groupOfCardProducts: MyOrderProduct[],
-  date: string
+  date: string,
+  totalCost: string,
+  totalProducts: string,
+  totalShippingPrice: string,
+  paymentMethod: string,
+  paymentMethodNameOwner: string
 ): CreateOrder {
   return {
     myOrders: [
@@ -15,6 +20,11 @@ export function createOrderAdapter(
         date,
         deliveryAddress: { ...address },
         products: groupOfCardProducts,
+        totalCost,
+        totalProducts,
+        totalShippingPrice,
+        paymentMethod,
+        paymentMethodNameOwner,
       },
     ],
   };

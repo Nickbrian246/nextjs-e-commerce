@@ -31,6 +31,8 @@ export default function DeliveryAddressPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const product = searchParams.get("product");
+  const quantity = searchParams.get("quantity");
+
   useEffect(() => {
     if (isLogged) {
       const token = getEntityInLocalStorage("userToken");
@@ -81,8 +83,13 @@ export default function DeliveryAddressPage() {
   };
 
   const handleContinueBtn = () => {
+    if (!quantity) {
+      return router.push(
+        `/payment-method?product=${product}&address=${addressIdSelected}`
+      );
+    }
     router.push(
-      `/payment-method?product=${product}&address=${addressIdSelected}`
+      `/payment-method?product=${product}&quantity=${quantity}&address=${addressIdSelected}`
     );
   };
   return (

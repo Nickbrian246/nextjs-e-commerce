@@ -5,4 +5,5 @@ export interface MyOrderProduct extends AdapterForPriceAndFreeShipping {
   paymentMethodNameOwner: string;
   date: string;
   subTotal: string;
+  productId: number;
 }

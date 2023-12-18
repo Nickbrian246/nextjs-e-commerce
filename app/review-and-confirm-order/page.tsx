@@ -19,11 +19,15 @@ import AddressCardReadOnly from "@/components/Address/AddressCard/AddressCardRea
 import { adapterFromPriceAndShippingToMyOrder } from "./_adapter/adapterFromPriceAndShippingToMyOrder";
 import { getTodayDateInFormatMMDDYYYY } from "@/utils/date";
 import { MyOrderProduct } from "./_interfaces/myOrderProduct";
-
+interface CardInfo {
+  name: string;
+  cardNumber: string;
+}
 export default function ReviewAndConfirmOderPage() {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [userAddress, setUserAddress] = useState<AddressDb>();
   const [myOrderProducts, setMyOrdersProducts] = useState<MyOrderProduct[]>();
+  const [cartInfo, setCartInfo] = useState<CardInfo>();
   const [paymentMethodDetails, setPaymentMethodDetails] =
     useState<BankCardDetail>({
       cardNumber: "",
@@ -37,11 +41,26 @@ export default function ReviewAndConfirmOderPage() {
     productsInShoppingCart,
     shippingCost,
     totalPrice,
+    calculateShoppingCartForOneProduct,
   } = useShoppingCart();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
+
   const product = searchParams.get("product");
   const addressId = searchParams.get("address") ?? "";
+  const quantity = searchParams.get("quantity");
+
+  const totalCost = (
+    shippingCost ? totalPrice + shippingCost : totalPrice
+  ).toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  });
+
+  const shippingCostFormatted = shippingCost.toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  });
 
   useEffect(() => {
     const cardData: PaymentMethodCardSelected =
@@ -49,8 +68,13 @@ export default function ReviewAndConfirmOderPage() {
     const { token_access } = getEntityInLocalStorage("userToken");
     setPaymentMethodDetails(cardData);
     if (product === "sc") {
+      console.log("entrando");
+
       calculateShoppingCart();
+    } else {
+      calculateShoppingCartForOneProduct(Number(product), Number(quantity));
     }
+
     getOneUserAddress(addressId, token_access)
       .then((res) => setUserAddress(res))
       .catch((err) => {
@@ -75,8 +99,10 @@ export default function ReviewAndConfirmOderPage() {
       name,
       currentDate
     );
+    setCartInfo({ name, cardNumber: numberFixedTo4Digits });
     setMyOrdersProducts(toMyOrderAdapter);
   }, [groupOfProducts]);
+
   return (
     <section className="flex flex-wrap gap-4 justify-center">
       <div className="flex flex-col gap-5 flex-wrap">
@@ -110,11 +136,16 @@ export default function ReviewAndConfirmOderPage() {
           Realizar compra.
         </ButtonRouter>
       </div>
-      {isOpenModal && userAddress && myOrderProducts && (
+      {isOpenModal && userAddress && myOrderProducts && cartInfo && (
         <Modal className="flex  justify-center items-center">
           <PurchaseSuccessful
+            totalCost={totalCost}
+            totalProducts={productsInShoppingCart}
+            totalShippingPrice={shippingCostFormatted}
             address={userAddress}
             groupOfCardProducts={myOrderProducts}
+            paymentMethod={cartInfo?.cardNumber}
+            paymentMethodNameOwner={cartInfo?.name}
           />
         </Modal>
       )}

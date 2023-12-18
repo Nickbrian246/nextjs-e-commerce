@@ -23,6 +23,7 @@ export default function PaymentMethodPage() {
   const searchParams = useSearchParams();
   const product = searchParams.get("product");
   const addressId = searchParams.get("address");
+  const quantity = searchParams.get("quantity");
 
   const isButtonDisable =
     cartInformation.cardNumber.length === 23 &&
@@ -30,8 +31,13 @@ export default function PaymentMethodPage() {
     cartInformation.expirationDate.length === 7;
   const handleBtn = () => {
     createEntityInLocalStorage("paymentMethod", cartInformation);
+    if (!quantity) {
+      router.push(
+        `/review-and-confirm-order?product=${product}&address=${addressId}`
+      );
+    }
     router.push(
-      `/review-and-confirm-order?product=${product}&address=${addressId}`
+      `/review-and-confirm-order?product=${product}&quantity=${quantity}&address=${addressId}`
     );
   };
   return (

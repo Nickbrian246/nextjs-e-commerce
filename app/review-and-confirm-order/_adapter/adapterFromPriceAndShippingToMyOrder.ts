@@ -21,6 +21,7 @@ export function adapterFromPriceAndShippingToMyOrder(
           paymentMethodNameOwner,
           date,
           subTotal,
+          productId: product.id,
         };
       }
       return {
@@ -29,6 +30,7 @@ export function adapterFromPriceAndShippingToMyOrder(
         paymentMethodNameOwner,
         date,
         subTotal: "",
+        productId: product.id,
       };
     }
   );

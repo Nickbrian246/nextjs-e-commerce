@@ -10,10 +10,13 @@ import {
   subtractOneItemToProductInShoppingCart,
   updateShoppingCartCounter,
 } from "@/redux/slices/ShoppingCart";
+import { activeGlobalSpinner } from "@/redux/slices/globalSpinner/globalSpinner";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
+import { deleteOneProductFromShoppingCart } from "@/services/shoppingCartdb/deleteOneProductFromShoppingCart";
 import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OfferAndFreeShipping from "./OfferAndFreeShipping";
@@ -44,7 +47,7 @@ export default function ProductResumeCard(props: Props) {
   const dispatch = useDispatch();
   const [productQuantity, setProductQuantity] = useState<number>(1);
   const [debounce, setDebounce] = useState<number>(1);
-
+  const router = useRouter();
   const { isLogged } = useSelector((state) => state.loggedUser);
 
   useEffect(() => {
@@ -62,18 +65,52 @@ export default function ProductResumeCard(props: Props) {
     currency: "MXN",
   });
 
-  const handleDelete = (key: string, id: number) => {
+  const handleDelete = async (key: string, id: number) => {
+    if (isLogged) {
+      try {
+        dispatch(
+          activeGlobalSpinner({ isActiveLoadingSpinner: true, itemID: "" })
+        );
+        const token = getEntityInLocalStorage("userToken");
+        const counter = await deleteOneProductFromShoppingCart(
+          productId,
+          token.token_access
+        );
+        dispatch(updateShoppingCartCounter({ count: counter }));
+        return;
+      } catch (error) {
+        dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${error}`,
+          })
+        );
+      }
+    }
+
+    dispatch(
+      addOneItemToProductInShoppingCart({
+        key,
+        productId: { productId, quantity: 1 },
+      })
+    );
     dispatch(deleteProductInShoppingCart({ key, productId: id }));
   };
   const handleAddItem = async (key: string, product: ShoppingCartProduct) => {
     if (isLogged) {
       try {
+        dispatch(
+          activeGlobalSpinner({
+            isActiveLoadingSpinner: true,
+            itemID: "",
+          })
+        );
         const token = getEntityInLocalStorage("userToken");
         const counter = await addOneItemToShoppingCart(
           { productId, quantity },
           token.token_access
         );
-
         dispatch(updateShoppingCartCounter({ count: counter }));
         return;
       } catch (error) {
@@ -100,6 +137,12 @@ export default function ProductResumeCard(props: Props) {
   ) => {
     if (isLogged) {
       try {
+        dispatch(
+          activeGlobalSpinner({
+            isActiveLoadingSpinner: true,
+            itemID: "",
+          })
+        );
         const token = getEntityInLocalStorage("userToken");
         const counter = await decreaseOneItemToShoppingCart(
           String(productId),
@@ -131,6 +174,10 @@ export default function ProductResumeCard(props: Props) {
     const filterValue = value.toString().replace(/[^0-9]g/, "");
     setProductQuantity(Number(filterValue));
   };
+
+  const handleBuyNowBtn = (id: number) => {
+    router.push(`/delivery-address?product=${id}&quantity=${quantity}`);
+  };
   return (
     <div
       className="
@@ -161,7 +208,10 @@ border-b-textGray
             >
               Eliminar
             </button>
-            <button className=" mr-4 text-base-color font-medium">
+            <button
+              onClick={() => handleBuyNowBtn(productId)}
+              className=" mr-4 text-base-color font-medium"
+            >
               Comprar ahora
             </button>
           </div>

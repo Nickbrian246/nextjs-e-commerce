@@ -14,18 +14,18 @@ export default function ReviewAndConfirmOrderLayout({
       <section
         className="
       items-center
-      mt-11
+      
       flex
       flex-col
       w-full
       m-auto
-      gap-5
       p-1
       min-h-screen
-      justify-center
+      justify-start
+      
       "
       >
-        <h2 className="text-3xl font-semibold">Resumen de compra</h2>
+        <h2 className="text-3xl font-semibold mb-5 mt-5 ">Resumen de compra</h2>
         {children}
       </section>
       <footer>

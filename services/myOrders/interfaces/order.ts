@@ -5,4 +5,9 @@ export interface Order {
   date: string;
   uniqueId: string;
   products: MyOrderProduct[];
+  totalCost: string;
+  totalProducts: string;
+  totalShippingPrice: string;
+  paymentMethod: string;
+  paymentMethodNameOwner: string;
 }

@@ -7,20 +7,24 @@ import { useEffect } from "react";
 import { FaShoppingBag } from "react-icons/fa";
 import ProductResume from "./_components/productResume/ProductResume";
 import SaleResume from "./_components/shoppingProductCard/SaleResume";
+import { useSelector, useDispatch } from "react-redux";
+import LoadingSpinner from "@/components/components/LoadingSpinner";
+import { disableGlobalSpinner } from "@/redux/slices/globalSpinner/globalSpinner";
 
 export default function ShoppingCart() {
   const router = useRouter();
-  const {
-    calculateShoppingCart,
-    groupOfProducts,
-    productsInShoppingCart,
-    shippingCost,
-    totalPrice,
-  } = useShoppingCart();
+  const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+  const { isActiveLoadingSpinner } = useSelector(
+    (state) => state.globalSpinner
+  );
+  const dispatch = useDispatch();
+  const { calculateShoppingCart, groupOfProducts, shippingCost, totalPrice } =
+    useShoppingCart();
 
   useEffect(() => {
     calculateShoppingCart();
-  }, []);
+    dispatch(disableGlobalSpinner());
+  }, [productsInShoppingCart]);
 
   const handleBtn = () => {
     router.push(`/delivery-address?product=sc`);
@@ -28,11 +32,18 @@ export default function ShoppingCart() {
 
   return (
     <>
-      <section className="p-2 shadow-xl h-fit">
+      <section className="p-2 shadow-xl h-fit relative">
         {productsInShoppingCart > 0 ? (
           <ProductResume groupOfProducts={groupOfProducts} />
         ) : (
           <NoProduct />
+        )}
+        {isActiveLoadingSpinner && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="scale-150 text-lg text-science-blue-500">
+              <LoadingSpinner />
+            </span>
+          </div>
         )}
       </section>
       <aside className=" flex flex-col gap-2 ">
