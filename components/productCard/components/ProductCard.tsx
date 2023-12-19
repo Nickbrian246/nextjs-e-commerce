@@ -14,6 +14,7 @@ import {
   hasOffer,
   newPriceWithDiscount,
 } from "../utils/hasOffer";
+
 export default function ProductCard(props: Product) {
   const { category, description, id, image, price, title } = props;
   const [hasDiscount, setHasDiscount] = useState<boolean>(false);
@@ -58,11 +59,31 @@ export default function ProductCard(props: Product) {
       );
     }
   };
+
+  let discountPrice = priceWithDiscount?.toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  });
+
+  let productPrice = price.toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  });
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseleave}
-      className="w-full shadow-md p-1 sm:max-w-[290px] md:max-w-[200px]  lg:max-w-[320px]  flex flex-col gap-1 items-center "
+      className="
+      w-full
+      shadow-md 
+      p-1 
+      sm:max-w-[290px] 
+      md:max-w-[200px]  
+      lg:max-w-[320px]  
+      flex flex-col 
+      gap-1 
+      items-center "
     >
       {hasDiscount && (
         <div className="flex w-full flex-row justify-between">
@@ -113,22 +134,11 @@ export default function ProductCard(props: Product) {
       </div>
       <div className=" font-bold flex items-start w-full gap-2">
         <span className="text-priceColor text-base leading-8">
-          {hasDiscount
-            ? priceWithDiscount?.toLocaleString("es-MX", {
-                style: "currency",
-                currency: "MXN",
-              })
-            : price.toLocaleString("es-MX", {
-                style: "currency",
-                currency: "MXN",
-              })}
+          {hasDiscount ? discountPrice : productPrice}
         </span>
         {hasDiscount && (
           <span className="text-textGray  text-xs line-through leading-8">
-            {savedMoney.toLocaleString("es-MX", {
-              style: "currency",
-              currency: "MXN",
-            })}
+            {productPrice}
           </span>
         )}
       </div>

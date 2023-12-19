@@ -10,9 +10,17 @@ import { BiSolidOffer } from "react-icons/bi";
 import { FaShippingFast } from "react-icons/fa";
 import { sliceText } from "../../utils";
 import Link from "next/link";
-import { addItemsToProductByAmount } from "@/redux/slices/ShoppingCart";
+import {
+  addItemsToProductByAmount,
+  updateShoppingCartCounter,
+} from "@/redux/slices/ShoppingCart";
 import { Button } from "@/components/components/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { adapterForAddProductForAmount } from "@/app/product/[product]/_adapter";
+import { activeGlobalSpinner } from "@/redux/slices/globalSpinner/globalSpinner";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
+import { addProductToShippingCartByAmount } from "@/services/shoppingCartdb/addProductToShoppingCartByAmount";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 
 interface CarouselProductCardProps {
   image: string;
@@ -28,6 +36,7 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
   const [priceWithOffer, setPriceWithOffer] = useState<number>();
   const [itHasFreeShipping, setItHasFreeShipping] = useState<boolean>(false);
   const [quantity, setQuantity] = useState(1);
+  const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -65,7 +74,38 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
     });
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (isLogged) {
+      try {
+        dispatch(
+          activeGlobalSpinner({
+            isActiveLoadingSpinner: true,
+            itemID: "",
+          })
+        );
+        const token = getEntityInLocalStorage("userToken");
+        const adapterForAddByAmount = adapterForAddProductForAmount({
+          productId: id,
+          quantity,
+        });
+        const counter = await addProductToShippingCartByAmount(
+          adapterForAddByAmount,
+          token.token_access
+        );
+        dispatch(updateShoppingCartCounter({ count: counter }));
+        return;
+      } catch (error) {
+        console.log(error);
+
+        return dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${error.response.data.message}`,
+          })
+        );
+      }
+    }
     dispatch(
       addItemsToProductByAmount({
         key: "shoppingCart",

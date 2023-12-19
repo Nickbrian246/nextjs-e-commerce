@@ -1,25 +1,31 @@
 "use client";
+import Carousel from "@/components/Carousel/Carousel";
+import { getProductsByCategory } from "@/components/Carousel/services/getProductByCategory";
+import { Button } from "@/components/components/Button";
+import { Product } from "@/interfaces/product";
+import {
+  addItemsToProductByAmount,
+  updateShoppingCartCounter,
+} from "@/redux/slices/ShoppingCart";
+import { getProducts } from "@/services";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MobileProductCarousel from "./_components/productCarousel.tsx/MobileProductCarousel";
-import AddToCartAndBuyButtons from "./_components/productDetails/AddToCartAndBuyButtons";
 import ProductCostDetails from "./_components/productDetails/ProductCostDetails";
+import ProductDescription from "./_components/productDetails/ProductDescription";
 import ProductTitleAndOffer from "./_components/productDetails/ProductTitleAndOffer";
+import QuantityToAddToCart from "./_components/productDetails/QuantityToAddToCart";
 import ShippingDetails from "./_components/productDetails/ShippingDetails";
 import ProductViewer from "./_components/productViewer/ProductViewer";
-import ProductDescription from "./_components/productDetails/ProductDescription";
-import QuantityToAddToCart from "./_components/productDetails/QuantityToAddToCart";
-import Carousel from "@/components/Carousel/Carousel";
 import { getProduct } from "./_services";
-import { getProductsByCategory } from "@/components/Carousel/services/getProductByCategory";
-import { getProducts } from "@/services";
-import { Product } from "@/interfaces/product";
 import Error from "./error";
-import { ChangeEvent, useEffect, useState } from "react";
-import { ButtonRouter } from "@/components/components/ButtonRouter";
-import { useRouter } from "next/navigation";
-import { addItemsToProductByAmount } from "@/redux/slices/ShoppingCart";
-import { useDispatch } from "react-redux";
-import { Button } from "@/components/components/Button";
+import { activeGlobalSpinner } from "@/redux/slices/globalSpinner/globalSpinner";
+import { adapterForAddProductForAmount } from "./_adapter";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { addProductToShippingCartByAmount } from "@/services/shoppingCartdb/addProductToShoppingCartByAmount";
 export default function ProductPage({
   params,
 }: {
@@ -34,6 +40,7 @@ export default function ProductPage({
     Product[]
   >([]);
   const [quantity, setQuantity] = useState(1);
+  const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -58,7 +65,8 @@ export default function ProductPage({
     };
     getData();
   }, []);
-  const handleAddItem = () => {
+
+  const handleAddItem = async () => {
     setQuantity((prev) => (!isNaN(prev) ? prev + 1 : 1));
   };
   const handleSubtractItem = () => {
@@ -76,7 +84,39 @@ export default function ProductPage({
       return parseFloat(value);
     });
   };
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (isLogged) {
+      try {
+        dispatch(
+          activeGlobalSpinner({
+            isActiveLoadingSpinner: true,
+            itemID: "",
+          })
+        );
+        const token = getEntityInLocalStorage("userToken");
+        const adapterForAddByAmount = adapterForAddProductForAmount({
+          productId: Number(params.product),
+          quantity,
+        });
+        const counter = await addProductToShippingCartByAmount(
+          adapterForAddByAmount,
+          token.token_access
+        );
+        dispatch(updateShoppingCartCounter({ count: counter }));
+        return;
+      } catch (error) {
+        console.log(error);
+
+        return dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${error.response.data.message}`,
+          })
+        );
+      }
+    }
+
     dispatch(
       addItemsToProductByAmount({
         key: "shoppingCart",
@@ -84,11 +124,17 @@ export default function ProductPage({
       })
     );
   };
+
+  const handleBuy = () => {
+    router.push(
+      `/delivery-address?product=${params.product}&quantity=${quantity}`
+    );
+  };
   return (
     <>
       {groupOfProducts?.length > 1 ? (
         <ErrorBoundary errorComponent={<Error />}>
-          <div className=" w-full flex flex-col md:flex-row items-center lg:max-w-6xl">
+          <div className=" w-full flex flex-col md:flex-row items-start lg:max-w-6xl mt-5">
             {extractThreeImages?.length > 1 && (
               <MobileProductCarousel images={extractThreeImages} />
             )}
@@ -111,12 +157,7 @@ export default function ProductPage({
                 quantity={quantity}
                 setQuantity={setQuantity}
               />
-              <Button
-                onClick={() =>
-                  router.push(`/shippingInformation/${params.product}`)
-                }
-                className=" min-w-[400px] m-auto"
-              >
+              <Button onClick={handleBuy} className=" min-w-[400px] m-auto">
                 Comprar
               </Button>
               <Button
@@ -128,7 +169,7 @@ export default function ProductPage({
               {/* <AddToCartAndBuyButtons /> */}
             </div>
           </div>
-          <div className="w-full overflow-hidden flex flex-col gap-16">
+          <div className="w-full overflow-hidden flex flex-col gap-16 mt-8">
             {groupOfProductsByCategory?.length > 1 && (
               <Carousel
                 title="Productos Relacionados"

@@ -10,6 +10,7 @@ import SaleResume from "./_components/shoppingProductCard/SaleResume";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "@/components/components/LoadingSpinner";
 import { disableGlobalSpinner } from "@/redux/slices/globalSpinner/globalSpinner";
+import SavedProducts from "./_components/savedProducts/SavedProducts";
 
 export default function ShoppingCart() {
   const router = useRouter();
@@ -32,20 +33,26 @@ export default function ShoppingCart() {
 
   return (
     <>
-      <section className="p-2 shadow-xl h-fit relative">
-        {productsInShoppingCart > 0 ? (
-          <ProductResume groupOfProducts={groupOfProducts} />
-        ) : (
-          <NoProduct />
-        )}
-        {isActiveLoadingSpinner && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="scale-150 text-lg text-science-blue-500">
-              <LoadingSpinner />
-            </span>
-          </div>
-        )}
+      <section className="flex flex-col gap-44">
+        <div className="p-2 shadow-xl h-fit relative">
+          {productsInShoppingCart > 0 ? (
+            <ProductResume groupOfProducts={groupOfProducts} />
+          ) : (
+            <NoProduct />
+          )}
+          {isActiveLoadingSpinner && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="scale-150 text-lg text-science-blue-500">
+                <LoadingSpinner />
+              </span>
+            </div>
+          )}
+        </div>
+        <section>
+          <SavedProducts />
+        </section>
       </section>
+
       <aside className=" flex flex-col gap-2 ">
         <SaleResume
           totalPrice={totalPrice}

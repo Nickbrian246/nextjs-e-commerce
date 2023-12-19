@@ -20,6 +20,8 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OfferAndFreeShipping from "./OfferAndFreeShipping";
+import { adapterForSavedProduct } from "@/app/shoppingcart/adapters";
+import { createSavedProduct } from "@/app/shoppingcart/_services/savedProducts/createSavedProduct";
 
 interface Props {
   title: string;
@@ -175,6 +177,21 @@ export default function ProductResumeCard(props: Props) {
     setProductQuantity(Number(filterValue));
   };
 
+  const handleSaveProduct = async () => {
+    try {
+      const token = getEntityInLocalStorage("userToken");
+      const savedProductAdapter = adapterForSavedProduct({
+        productId,
+        quantity,
+      });
+      const response = await createSavedProduct(
+        savedProductAdapter,
+        token.token_access
+      );
+      console.log(response);
+    } catch (error) {}
+  };
+
   const handleBuyNowBtn = (id: number) => {
     router.push(`/delivery-address?product=${id}&quantity=${quantity}`);
   };
@@ -207,6 +224,12 @@ border-b-textGray
               className=" mr-4 text-base-color font-medium"
             >
               Eliminar
+            </button>
+            <button
+              onClick={handleSaveProduct}
+              className=" mr-4 text-base-color font-medium"
+            >
+              Guardar
             </button>
             <button
               onClick={() => handleBuyNowBtn(productId)}
