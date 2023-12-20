@@ -179,6 +179,9 @@ export default function ProductResumeCard(props: Props) {
 
   const handleSaveProduct = async () => {
     try {
+      dispatch(
+        activeGlobalSpinner({ isActiveLoadingSpinner: true, itemID: "" })
+      );
       const token = getEntityInLocalStorage("userToken");
       const savedProductAdapter = adapterForSavedProduct({
         productId,
@@ -188,8 +191,21 @@ export default function ProductResumeCard(props: Props) {
         savedProductAdapter,
         token.token_access
       );
+      const counter = await deleteOneProductFromShoppingCart(
+        productId,
+        token.token_access
+      );
+      dispatch(updateShoppingCartCounter({ count: counter }));
       console.log(response);
-    } catch (error) {}
+    } catch (error) {
+      dispatch(
+        activeWarning({
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${error}`,
+        })
+      );
+    }
   };
 
   const handleBuyNowBtn = (id: number) => {

@@ -1,7 +1,13 @@
 import React from "react";
 import OfferAndFreeShipping from "@/app/shoppingcart/_components/productResume/components/OfferAndFreeShipping";
 import Image from "next/image";
-
+import { adapterForAddProductForAmount } from "@/app/product/[product]/_adapter";
+import { updateShoppingCartCounter } from "@/redux/slices/ShoppingCart";
+import { addProductToShippingCartByAmount } from "@/services/shoppingCartdb/addProductToShoppingCartByAmount";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { useDispatch } from "react-redux";
+import { deleteSavedProduct } from "../../_services/savedProducts/deleteSavedProduct";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 interface Props {
   title: string;
   price: number;
@@ -13,6 +19,7 @@ interface Props {
   productId: number;
   quantity: number;
   reference: React.RefObject<HTMLDivElement>;
+  handleUpdateGroupOfProducts: () => void;
 }
 export default function ViewOnlyProductCardWithRef(props: Props) {
   const {
@@ -26,8 +33,9 @@ export default function ViewOnlyProductCardWithRef(props: Props) {
     quantity,
     title,
     reference,
+    handleUpdateGroupOfProducts,
   } = props;
-
+  const dispatch = useDispatch();
   const totalPrice = price.toLocaleString("es-MX", {
     currency: "MXN",
     style: "currency",
@@ -39,6 +47,46 @@ export default function ViewOnlyProductCardWithRef(props: Props) {
   const subTotal = (
     hasOffer ? priceWithOffer * quantity : price * quantity
   ).toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+
+  const handleAddToShoppingCart = async () => {
+    try {
+      const token = getEntityInLocalStorage("userToken");
+      const adapterForAddByAmount = adapterForAddProductForAmount({
+        productId,
+        quantity,
+      });
+      await deleteSavedProduct(productId, token.token_access);
+      const counter = await addProductToShippingCartByAmount(
+        adapterForAddByAmount,
+        token.token_access
+      );
+      dispatch(updateShoppingCartCounter({ count: counter }));
+    } catch (error) {
+      dispatch(
+        activeWarning({
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${error}`,
+        })
+      );
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const token = getEntityInLocalStorage("userToken");
+      await deleteSavedProduct(productId, token.token_access);
+      handleUpdateGroupOfProducts();
+    } catch (error) {
+      dispatch(
+        activeWarning({
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${error}`,
+        })
+      );
+    }
+  };
 
   return (
     <div
@@ -65,6 +113,18 @@ pt-2
             <p className="font-medium" title={title}>
               {title.length > 75 ? title.substring(0, 38).concat("...") : title}
             </p>
+            <button
+              onClick={handleAddToShoppingCart}
+              className=" mr-4 text-base-color font-medium"
+            >
+              Agregar al carrito
+            </button>
+            <button
+              onClick={handleDelete}
+              className=" mr-4 text-base-color font-medium"
+            >
+              Eliminar
+            </button>
           </div>
         </div>
         <div className="flex items-center">

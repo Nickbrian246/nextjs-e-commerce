@@ -1,52 +1,65 @@
-import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
-import { IoIosArrowDown } from "react-icons/io";
-import { getSavedProduct } from "../../_services/savedProducts/getSavedProducts";
 import { getProductsWithPromiseAll } from "@/services/getProductsWithPromiseAll";
-import { addQuantityOfCartItems, checkOfferAndAdaptPrice } from "../../utils";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { useEffect, useRef, useState } from "react";
+import { IoIosArrowDown } from "react-icons/io";
+import { useSelector } from "react-redux";
+import { getSavedProduct } from "../../_services/savedProducts/getSavedProducts";
 import { AdapterForPriceAndFreeShipping } from "../../interfaces";
-import ViewOnlyProductCardWithRef from "../ViewOnlyProductCartWithRef/ViewOnlyProductCartWithRef";
+import { addQuantityOfCartItems, checkOfferAndAdaptPrice } from "../../utils";
+import ResumeImages from "./components/ResumeImages";
+import SavedProductsViewer from "./components/SavedProductsViewer";
+import { useDispatch } from "react-redux";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
+
 export default function SavedProducts() {
   const [groupOfSavedProducts, setGroupOfSavedProducts] =
     useState<AdapterForPriceAndFreeShipping[]>();
   const [startArrowTransition, setStartArrowTransition] =
     useState<boolean>(false);
-  const handleStartArrowTransition = () => {
-    setStartArrowTransition((prev) => !prev);
-  };
+  const [isEmptyGroupOfProducts, setIsEmptyGroupOfProducts] =
+    useState<boolean>(false);
   const [savedProductElementHeigh, setSavedProductElementHeigh] =
     useState<number>();
+  const [updateGroupOfProducts, setUpdateGroupOfProducts] =
+    useState<boolean>(false);
   const [images, setImages] = useState<AdapterForPriceAndFreeShipping[]>();
+  const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+  const dispatch = useDispatch();
   const productsRef = useRef([]);
   productsRef.current = [];
 
   useEffect(() => {
     const token = getEntityInLocalStorage("userToken");
     try {
-      getSavedProduct(token.token_access)
-        .then((savedProducts) => {
+      getSavedProduct(token.token_access).then((savedProducts) => {
+        if (savedProducts.length === 0) {
+          return setIsEmptyGroupOfProducts(true);
+        }
+        setIsEmptyGroupOfProducts(false);
+        //@ts-ignore
+        getProductsWithPromiseAll(savedProducts).then((products) => {
           //@ts-ignore
-          getProductsWithPromiseAll(savedProducts)
-            .then((products) => {
-              const addQuantity = addQuantityOfCartItems(
-                savedProducts,
-                products
-              );
-              const addOffers = checkOfferAndAdaptPrice(addQuantity);
-              setGroupOfSavedProducts(addOffers);
-            })
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
+          const addQuantity = addQuantityOfCartItems(savedProducts, products);
+          const addOffers = checkOfferAndAdaptPrice(addQuantity);
+          setGroupOfSavedProducts(addOffers);
+        });
+      });
     } catch (err) {
-      console.log(err);
+      dispatch(
+        activeWarning({
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${err}`,
+        })
+      );
     }
-  }, []);
+  }, [productsInShoppingCart, updateGroupOfProducts, isEmptyGroupOfProducts]);
 
   useEffect(() => {
-    if (groupOfSavedProducts && groupOfSavedProducts?.length >= 3) {
+    if (groupOfSavedProducts && groupOfSavedProducts?.length >= 2) {
       setImages(groupOfSavedProducts.slice(0, 3));
+    } else {
+      setImages(groupOfSavedProducts);
     }
     if (productsRef.current.length >= 1) {
       const heights = productsRef.current.map((elementRef) => {
@@ -57,7 +70,6 @@ export default function SavedProducts() {
         (prevVal, currenVal) => currenVal + prevVal,
         0
       );
-      console.log(totalElementHeight);
 
       setSavedProductElementHeigh(totalElementHeight);
     }
@@ -71,92 +83,70 @@ export default function SavedProducts() {
     }
   };
 
-  return (
-    <section onClick={handleStartArrowTransition} className="mb-24">
-      <div
-        className="
-      
-      flex 
-      items-center 
-      justify-between
-      p-2 
-      min-w-[700px] 
-      min-h-[130px] 
-      shadow-lg 
-      rounded-md 
-      border 
-      border-[#e5e7eb]
-      cursor-pointer"
-      >
-        <div className="flex flex-col gap-1">
-          <p className="text-base font-semibold">Productos guardados</p>
-          <p className="flex text-sm font-medium text-science-blue-500 items-center gap-1">
-            Ver Productos
-            <span
-              className={`${
-                startArrowTransition
-                  ? "rotate-180 transition-all duration-150"
-                  : "duration-150"
-              }`}
-            >
-              <IoIosArrowDown />
-            </span>
-          </p>
-        </div>
+  const handleStartArrowTransition = () => {
+    setStartArrowTransition((prev) => !prev);
+  };
 
-        <div className="flex">
-          {images &&
-            images.length >= 1 &&
-            images?.map((product) => {
-              return (
-                <div
-                  key={product.id}
-                  className="relative rounded-full border w-16 h-16  flex justify-center bg-white border-[#d1d5db] -ml-3"
-                >
-                  <Image
-                    className="rounded-full object-contain"
-                    src={product.image}
-                    alt={product.title}
-                    height={40}
-                    width={40}
-                  />
-                </div>
-              );
-            })}
-          {images && images.length >= 3 && groupOfSavedProducts && (
-            <div className="relative rounded-full border w-16 h-16  flex justify-center bg-white border-[#d1d5db] -ml-3">
-              <span className="flex justify-center items-center scale-150">
-                +{groupOfSavedProducts?.length - images.length}
-              </span>
+  const handleUpdateGroupOfProducts = () => {
+    setUpdateGroupOfProducts((prev) => !prev);
+  };
+
+  return (
+    <>
+      {!isEmptyGroupOfProducts && (
+        <>
+          <section onClick={handleStartArrowTransition}>
+            <div
+              className="
+              flex 
+              items-center 
+              justify-between
+              p-2 
+              min-w-[700px] 
+              min-h-[130px] 
+              shadow-lg 
+              rounded-md 
+              border 
+              border-[#e5e7eb]
+              cursor-pointer"
+            >
+              <div className="flex flex-col gap-1">
+                <p className="text-base font-semibold">Productos guardados</p>
+                <p className="flex text-sm font-medium text-science-blue-500 items-center gap-1">
+                  Ver Productos
+                  <span
+                    className={`${
+                      startArrowTransition
+                        ? "rotate-180 transition-all duration-150"
+                        : "duration-150"
+                    }`}
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </p>
+              </div>
+
+              {groupOfSavedProducts && images && (
+                <ResumeImages
+                  groupOfSavedProducts={groupOfSavedProducts}
+                  images={images}
+                  startArrowTransition={startArrowTransition}
+                />
+              )}
             </div>
-          )}
-        </div>
-      </div>
-      <div
-        className={` w-full transition-[height] duration-1000  ${
-          startArrowTransition
-            ? `h-[${savedProductElementHeigh}px]`
-            : "h-0 overflow-hidden "
-        } p-1 bg-white border border-[#e5e7eb] border-t-0`}
-      >
-        {groupOfSavedProducts &&
-          groupOfSavedProducts.map((product, index) => (
-            <ViewOnlyProductCardWithRef
-              hasFreeShipping={product.hasFreeShipping}
-              hasOffer={product.hasOffer}
-              imgSrc={product.image}
-              porcentageOfDiscount={product.porcentageOfDiscount}
-              price={product.price}
-              priceWithOffer={product.priceWithOffer}
-              productId={product.id}
-              quantity={product.quantity ?? 1}
-              title={product.title}
-              key={product.id}
+          </section>
+          {groupOfSavedProducts && (
+            <SavedProductsViewer
+              groupOfSavedProducts={groupOfSavedProducts}
+              handleUpdateGroupOfProducts={handleUpdateGroupOfProducts}
+              savedProductElementHeigh={savedProductElementHeigh ?? 0}
+              startArrowTransition={startArrowTransition}
               //@ts-ignore
-              reference={addRef}
+              addRef={addRef}
             />
-          ))}
-      </div>
-    </section>
+          )}
+        </>
+      )}
+    </>
   );
 }

@@ -4,7 +4,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_NESTAPI_BASE_URL;
 
 export async function getSavedProduct(
   token: string
-): Promise<GetSavedProducts> {
+): Promise<GetSavedProducts[]> {
   const config = {
     headers: {
       "Content-Type": "application/json",
