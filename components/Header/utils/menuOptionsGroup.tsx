@@ -2,7 +2,9 @@ import { HiOutlineUserCircle } from "react-icons/hi";
 import { BiLogIn } from "react-icons/bi";
 import { FiLogOut } from "react-icons/fi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-
+import { IoBagOutline } from "react-icons/io5";
+import { IoBag } from "react-icons/io5";
+import { FiShoppingBag } from "react-icons/fi";
 export interface HeaderMenuOptionGroup {
   titleEs: string;
   titleEn: string;
@@ -27,6 +29,14 @@ export const menuOptionsForLoggedUserGroup: HeaderMenuOptionGroup[] = [
     isLogged: true,
     route: "/shoppingcart",
     id: "shoppingcart",
+  },
+  {
+    titleEn: "Orders",
+    titleEs: "Pedidos",
+    icon: <FiShoppingBag />,
+    isLogged: true,
+    route: "/my-orders",
+    id: "myOrders",
   },
   {
     titleEn: "User",

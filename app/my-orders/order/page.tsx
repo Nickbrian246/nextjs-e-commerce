@@ -1,28 +1,26 @@
 "use client";
-import { BankCardDetail } from "../payment-method/_interfaces";
+import { BankCardDetail } from "@/app/payment-method/_interfaces";
+import GroupOfProducts from "@/app/review-and-confirm-order/_components/groupOfProducts/GroupOfProducts";
+import { MyOrderProduct } from "@/app/review-and-confirm-order/_interfaces/myOrderProduct";
 import AddressCardReadOnly from "@/components/Address/AddressCard/AddressCardReadOnly";
 import BankCardReadOnly from "@/components/BankCardReadOnly/BankCardReadOnly";
 import Divider from "@/components/Divider/Divider";
 import TotalCostResume from "@/components/TotalCostResume/TotalCostResume";
-import { LinkButton } from "@/components/components/LinkButton";
 import { AddressDb } from "@/services/address";
 import { getOneMyOrder } from "@/services/myOrders/getOneOrder";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import GroupOfProducts from "../review-and-confirm-order/_components/groupOfProducts/GroupOfProducts";
-import { MyOrderProduct } from "../review-and-confirm-order/_interfaces/myOrderProduct";
 
-export default function CheckPurchaseProducts() {
+export default function OrderPage() {
   const [deliveryAddress, setDeliveryAddress] = useState<AddressDb>();
   const [totalCost, setTotalCost] = useState<string>("");
   const [totalProducts, setTotalProducts] = useState<string>();
   const [totalShippingPrice, setTotalShippingPrice] = useState<string>("");
-
+  const [date, setDate] = useState<string>("");
   const [groupOfProducts, setGroupOfProducts] = useState<MyOrderProduct[]>([]);
   //@ts-ignore
-  const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+
   const [paymentMethodDetails, setPaymentMethodDetails] = useState<
     Pick<BankCardDetail, "cardNumber" | "name">
   >({
@@ -30,13 +28,14 @@ export default function CheckPurchaseProducts() {
     name: "",
   });
   const searchParams = useSearchParams();
-  const purchasedId = searchParams.get("purchasedId");
+  const id = searchParams.get("id");
 
   useEffect(() => {
-    if (purchasedId) {
+    if (id) {
       const { token_access } = getEntityInLocalStorage("userToken");
-      getOneMyOrder(purchasedId, token_access)
+      getOneMyOrder(id, token_access)
         .then((res) => {
+          setDate(res.date);
           setDeliveryAddress(res.deliveryAddress);
           setTotalCost(res.totalCost);
           setTotalProducts(res.totalProducts);
@@ -53,7 +52,7 @@ export default function CheckPurchaseProducts() {
   return (
     <section className="flex justify-center flex-col items-center">
       <h2 className="text-center  text-4xl text-science-blue-700 font-semibold">
-        ¡Gracias por su compra!
+        Fecha: {date}
       </h2>
       <Divider className="mt-5" />
       <div className="flex flex-wrap gap-4 justify-center">
@@ -80,9 +79,6 @@ export default function CheckPurchaseProducts() {
             Método de pago seleccionado.
           </h2>
           <BankCardReadOnly value={paymentMethodDetails} />
-          <LinkButton className="mt-3" href={"/"}>
-            Regresar al inicio
-          </LinkButton>
         </div>
       </div>
     </section>
