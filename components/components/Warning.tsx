@@ -4,9 +4,9 @@ import { WarningInitialState } from "@/redux/slices/globalWarning/globalWarning"
 export default function Warning(props: WarningInitialState) {
   const { duration, severity, warningMessage, warningSubMessage } = props;
   const colorOptions = {
-    warning: "#facc15",
-    success: "#22c55e",
-    error: "#dc2626",
+    warning: `[#facc15]`,
+    success: `[#22c55e]`,
+    error: `[#dc2626]`,
   };
   const color = colorOptions[severity];
   return (
@@ -14,7 +14,7 @@ export default function Warning(props: WarningInitialState) {
       className={`
       flex 
       absolute
-      z-10
+      z-20
       p-4
       justify-center
       items-center
@@ -31,7 +31,7 @@ export default function Warning(props: WarningInitialState) {
         rounded-lg
         justify-center 
         items-center 
-        bg-[#dc2626]
+        bg-${color}
         p-4
         sm:min-w-[300px]
         `}

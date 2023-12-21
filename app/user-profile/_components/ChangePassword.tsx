@@ -4,23 +4,17 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import { BiShow } from "react-icons/bi";
 import { GrHide } from "react-icons/gr";
 import { IoCloseCircleSharp } from "react-icons/io5";
+import PasswordValidationMessages from "@/components/PasswordValidationMessages/PasswordValidationMessages";
+import { replacePassword } from "../_services/replacePassword";
+import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
+import { ReplacePassword } from "../_interfaces";
+import { useDispatch } from "react-redux";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 interface Props {
   handlePassModal: () => void;
 }
 export default function ChangePassword(props: Props) {
   const { handlePassModal } = props;
-  const {
-    checkPassword,
-    atLeastOneUppercase,
-    hasNoWhiteSpace,
-    hasOneEspecialCharacter,
-    isLengthCorrect,
-  } = useCheckPassword();
-
-  const [newPassWord, setNewPassWord] = useState({
-    oldPassword: "",
-    newPassWord: "",
-  });
   const [matchPassword, setMatchPassword] = useState<string>("");
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>(true);
@@ -30,8 +24,20 @@ export default function ChangePassword(props: Props) {
     useState<boolean>(false);
   const [isShowPassForConfirmNewPassword, setIsShowPassForConfirmNewPassword] =
     useState<boolean>(false);
-  const [ErrorMessage, setErrorMessage] = useState<string>("");
+
   const [isWriting, setIsWriting] = useState<boolean>(false);
+  const [newPassWord, setNewPassWord] = useState({
+    oldPassword: "",
+    newPassWord: "",
+  });
+  const dispatch = useDispatch();
+  const {
+    checkPassword,
+    atLeastOneUppercase,
+    hasNoWhiteSpace,
+    hasOneEspecialCharacter,
+    isLengthCorrect,
+  } = useCheckPassword();
 
   const handleInputPasswordChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -39,11 +45,14 @@ export default function ChangePassword(props: Props) {
   ) => {
     const value = e.target.value;
     if (name === "matchPassword") {
-      console.log("entrando");
-
+      setIsPasswordMatch(true);
       return setMatchPassword(value);
     }
+    if (name === "oldPassword") {
+      setIsWrongPassword(false);
+    }
     if (name === "newPassWord") {
+      setIsPasswordMatch(true);
       setIsWriting(true);
       checkPassword(value);
     }
@@ -55,11 +64,62 @@ export default function ChangePassword(props: Props) {
     });
   };
 
-  const handleChangePasswordBtn = (e: FormEvent<HTMLFormElement>) => {
+  const handleChangePasswordBtn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (matchPassword !== newPassWord.newPassWord) {
       setIsPasswordMatch(false);
-      setErrorMessage("Las contraseñas no coinciden");
+
+      return;
+    }
+    if (newPassWord.oldPassword === newPassWord.newPassWord) {
+      return dispatch(
+        activeWarning({
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage:
+            "La nueva contraseña debe ser distinta a la contraseña anterior.",
+        })
+      );
+    }
+
+    try {
+      const token = getEntityInLocalStorage("userToken");
+      const adapter: ReplacePassword = {
+        currentPassword: newPassWord.oldPassword,
+        newPassword: newPassWord.newPassWord,
+      };
+      const data = await replacePassword(adapter, token.token_access);
+      if (data === 202) {
+        handlePassModal();
+        return dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "success",
+            warningMessage: "Contraseña actualizada con éxito.",
+          })
+        );
+      }
+    } catch (error) {
+      if (
+        error.response.data.message ===
+        "ForbiddenException: Contraseña incorrecta"
+      ) {
+        setIsWrongPassword(true);
+        return dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${error.response.data.message.split(":")[1]}`,
+          })
+        );
+      }
+      dispatch(
+        activeWarning({
+          isActiveWarning: true,
+          severity: "error",
+          warningMessage: `${error}`,
+        })
+      );
     }
   };
 
@@ -78,17 +138,20 @@ export default function ChangePassword(props: Props) {
       onSubmit={handleChangePasswordBtn}
       className="bg-white p-2 flex flex-col gap-6 relative"
     >
-      <div className="flex items-center p-4 gap-2 flex-wrap">
+      <div className="flex flex-col items-center p-4 gap-2 flex-wrap">
         <div className="flex gap-4 items-center relative">
           <label>Contraseña actual</label>
           <input
             type={isShowPassForCurrentPassword ? "text" : "password"}
-            className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
+            className={`lg:w-[380px] w-[200px] border-2 ${
+              isWrongPassword ? "border-red-500" : "border-borderGray"
+            } p-2 rounded-md`}
             placeholder="Contraseña actual"
             value={newPassWord.oldPassword}
             onChange={(e) => handleInputPasswordChange(e, "oldPassword")}
             name="oldPassword"
           />
+
           <div
             onClick={handleShowPassForCurrentPass}
             className="scale-150 absolute   right-2 bg-white"
@@ -96,13 +159,18 @@ export default function ChangePassword(props: Props) {
             {isShowPassForCurrentPassword ? <BiShow /> : <GrHide />}
           </div>
         </div>
+        {isWrongPassword && (
+          <p className={`text-sm text-red-600  `}>Contraseñas incorrecta</p>
+        )}
       </div>
       <div className="flex items-center p-4 gap-2 flex-wrap">
         <div className="flex gap-4 items-center relative">
           <label>Contraseña Nueva</label>
           <input
-            type={isShowPassForCurrentPassword ? "text" : "password"}
-            className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
+            type={isShowPassForNewPassword ? "text" : "password"}
+            className={`lg:w-[380px] w-[200px] border-2 ${
+              !isPasswordMatch ? "border-red-500" : "border-borderGray"
+            } p-2 rounded-md`}
             placeholder="Contraseña nueva"
             value={newPassWord.newPassWord}
             onChange={(e) => handleInputPasswordChange(e, "newPassWord")}
@@ -121,7 +189,9 @@ export default function ChangePassword(props: Props) {
           <label>Confirme contraseña nueva</label>
           <input
             type={isShowPassForConfirmNewPassword ? "text" : "password"}
-            className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
+            className={`lg:w-[380px] w-[200px] border-2 ${
+              !isPasswordMatch ? "border-red-500" : "border-borderGray"
+            } p-2 rounded-md`}
             placeholder=" Confirme contraseña nueva"
             value={matchPassword}
             onChange={(e) => handleInputPasswordChange(e, "matchPassword")}
@@ -139,53 +209,13 @@ export default function ChangePassword(props: Props) {
           <p className={`text-sm text-red-600  `}>Contraseñas no coinciden</p>
         )}
       </div>
-
-      <div className="flex  flex-wrap max-w-[400px]">
-        <span
-          className={`text-sm  ${
-            isWriting
-              ? isLengthCorrect
-                ? "text-[#22c55e]"
-                : "text-red-600"
-              : "text-textGray"
-          }`}
-        >
-          * La contraseña debe tener al menos 8 caracteres.
-        </span>
-        <span
-          className={`text-sm  ${
-            isWriting
-              ? atLeastOneUppercase
-                ? "text-[#22c55e]"
-                : "text-red-600"
-              : "text-textGray"
-          }`}
-        >
-          * La contraseña debe contener al menos una letra mayúscula.
-        </span>
-        <span
-          className={`text-sm  ${
-            isWriting
-              ? hasOneEspecialCharacter
-                ? "text-[#22c55e]"
-                : "text-red-600"
-              : "text-textGray"
-          }`}
-        >
-          * La contraseña debe contener al menos un carácter especial como ?*.
-        </span>
-        <span
-          className={`text-sm  ${
-            isWriting
-              ? hasNoWhiteSpace
-                ? "text-[#22c55e]"
-                : "text-red-600"
-              : "text-textGray"
-          }`}
-        >
-          * La contraseña no debe contener espacios.
-        </span>
-      </div>
+      <PasswordValidationMessages
+        atLeastOneUppercase={atLeastOneUppercase}
+        hasNoWhiteSpace={hasNoWhiteSpace}
+        hasOneEspecialCharacter={hasOneEspecialCharacter}
+        isLengthCorrect={isLengthCorrect}
+        isWriting={isWriting}
+      />
       <Button
         disabled={
           !(

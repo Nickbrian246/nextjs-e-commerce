@@ -91,12 +91,12 @@ export default function SigninPage() {
             name="password"
             value={signinUser.password}
           />
-          <button
+          <div
             onClick={handleShowPass}
-            className="scale-150 absolute  sm:-right-5 right-2 bg-white "
+            className="scale-150 absolute  sm:-right-5 right-2 bg-white cursor-pointer "
           >
             {showPass ? <BiShow /> : <GrHide />}
-          </button>
+          </div>
         </div>
       </div>
       <Button className="m-auto">Iniciar sesión</Button>
