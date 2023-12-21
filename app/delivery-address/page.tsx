@@ -26,6 +26,7 @@ export default function DeliveryAddressPage() {
   const [modalType, setModalType] = useState<ModalType>("Edit");
   const [addressUserData, setAddressUserData] = useState<AddressDb[]>();
   const [addressDataToEdit, setAddressDataToEdit] = useState<AddressDb>();
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
   const router = useRouter();

@@ -2,7 +2,8 @@ import React from "react";
 import { AddressDb } from "@/services/address/interfaces/Address";
 import { Button } from "@/components/components/Button";
 interface Props extends AddressDb {
-  addressSelected: (id: string) => void;
+  addressSelected?: (id: string) => void;
+  deleteAddress?: (id: string) => void;
   editAddressId: (id: string) => void;
   addressIdSelected: string;
 }
@@ -21,6 +22,7 @@ export default function AddressCard(props: Props) {
     addressSelected,
     editAddressId,
     addressIdSelected,
+    deleteAddress,
   } = props;
 
   return (
@@ -71,14 +73,26 @@ export default function AddressCard(props: Props) {
         </div>
       </div>
       <div className="w-full flex justify-between flex-wrap items-center">
-        <Button
-          onClick={() => {
-            addressSelected(deliveryAddressId);
-          }}
-          className=" mt-3 p-2 sm:p-4"
-        >
-          Seleccionar esta dirección de envío
-        </Button>
+        {addressSelected && (
+          <Button
+            onClick={() => {
+              addressSelected(deliveryAddressId);
+            }}
+            className=" mt-3 p-2 sm:p-4"
+          >
+            Seleccionar esta dirección de envío
+          </Button>
+        )}
+        {deleteAddress && (
+          <Button
+            onClick={() => {
+              deleteAddress(deliveryAddressId);
+            }}
+            className=" mt-3 p-2 sm:p-4 bg-red-500"
+          >
+            Eliminar
+          </Button>
+        )}
         <Button
           onClick={() => {
             editAddressId(deliveryAddressId);

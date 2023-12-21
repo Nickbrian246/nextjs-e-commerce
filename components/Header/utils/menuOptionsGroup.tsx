@@ -43,7 +43,7 @@ export const menuOptionsForLoggedUserGroup: HeaderMenuOptionGroup[] = [
     titleEs: "Usuario",
     icon: <HiOutlineUserCircle />,
     isLogged: true,
-    route: "/",
+    route: "/user-profile",
     id: "user",
   },
 ];

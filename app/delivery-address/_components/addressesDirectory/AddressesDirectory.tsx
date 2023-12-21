@@ -3,7 +3,8 @@ import AddressCard from "../addressCard/AddressCard";
 import { AddressDb } from "@/services/address/interfaces/Address";
 interface DeliveryAddresses {
   deliveryAddresses: AddressDb[];
-  addressSelected: (id: string) => void;
+  addressSelected?: (id: string) => void;
+  deleteAddressId?: (id: string) => void;
   editAddressId: (id: string) => void;
   addressIdSelected: string;
 }
@@ -12,6 +13,7 @@ export default function AddressesDirectory({
   addressSelected,
   editAddressId,
   addressIdSelected,
+  deleteAddressId,
 }: DeliveryAddresses) {
   return (
     <div className="flex flex-col gap-4">
@@ -30,6 +32,7 @@ export default function AddressesDirectory({
           phoneNumber={address.phoneNumber}
           state={address.state}
           zipCode={address.zipCode}
+          deleteAddress={deleteAddressId}
         />
       ))}
     </div>

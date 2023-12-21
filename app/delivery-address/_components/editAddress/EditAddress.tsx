@@ -63,7 +63,7 @@ export default function EditAddress(props: Props) {
       name: shippingForm.Nombre,
       lastName: shippingForm.Apellidos,
       phoneNumber: shippingForm.Teléfono,
-      deliveryAddressId: "1",
+      deliveryAddressId: UserAddress.deliveryAddressId,
     };
     const token = getEntityInLocalStorage("userToken");
 

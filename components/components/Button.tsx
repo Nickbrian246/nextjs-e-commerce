@@ -1,10 +1,10 @@
 "use client";
 
-import React, { ComponentPropsWithRef } from "react";
+import React, { ComponentPropsWithRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface Button extends ComponentPropsWithRef<"button"> {
-  children: string;
+  children: ReactNode;
   className?: string;
 }
 
