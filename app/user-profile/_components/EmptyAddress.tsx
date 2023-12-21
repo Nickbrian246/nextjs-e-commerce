@@ -4,16 +4,12 @@ import Modal from "@/modals/modal/Modal";
 import React from "react";
 import { FaTruck } from "react-icons/fa";
 interface Props {
-  handleOpenAddAddressModal: () => void;
-  handleCloseAddAddressModal: () => void;
+  handleAddressModal: () => void;
+
   isAddAddress: boolean;
 }
 export default function EmptyAddress(props: Props) {
-  const {
-    handleCloseAddAddressModal,
-    handleOpenAddAddressModal,
-    isAddAddress,
-  } = props;
+  const { handleAddressModal, isAddAddress } = props;
   return (
     <section className="w-full max-w-2xl mx-auto bg-white p-6 shadow-md rounded-md">
       <p className="text-2xl text-center font-light text-[#71717a]">
@@ -27,12 +23,12 @@ export default function EmptyAddress(props: Props) {
           <FaTruck />
         </span>
       </div>
-      <Button onClick={handleOpenAddAddressModal} className="m-auto">
+      <Button onClick={handleAddressModal} className="m-auto">
         Agregar Direccíon
       </Button>
       {isAddAddress && (
         <Modal className="flex justify-center items-center">
-          <AddAddress handleCloseModal={handleCloseAddAddressModal} />
+          <AddAddress handleCloseModal={handleAddressModal} />
         </Modal>
       )}
     </section>

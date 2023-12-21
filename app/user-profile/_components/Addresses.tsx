@@ -15,9 +15,8 @@ interface Props {
   isOpenEditAddressModal: boolean;
   addressUserData: AddressDb | undefined;
   isAddAddress: boolean;
-  handleOpenAddAddressModal: () => void;
-  handleCloseEditAddressModal: () => void;
-  handleCloseAddAddressModal: () => void;
+  handleAddAddressModal: () => void;
+  handleEditAddressModal: () => void;
   isSpinnerActive: boolean;
 }
 export default function Addresses(props: Props) {
@@ -26,11 +25,10 @@ export default function Addresses(props: Props) {
     addresses,
     deleteAddress,
     handleEditAddressId,
-    handleOpenAddAddressModal,
+    handleAddAddressModal,
     isAddAddress,
     isOpenEditAddressModal,
-    handleCloseEditAddressModal,
-    handleCloseAddAddressModal,
+    handleEditAddressModal,
     isSpinnerActive,
   } = props;
   return (
@@ -52,13 +50,13 @@ export default function Addresses(props: Props) {
           <Modal className="flex justify-center items-center">
             <EditAddress
               UserAddress={addressUserData}
-              handleCloseModal={handleCloseEditAddressModal}
+              handleCloseModal={handleEditAddressModal}
             />
           </Modal>
         )}
         {isAddAddress && (
           <Modal className="flex justify-center items-center">
-            <AddAddress handleCloseModal={handleCloseAddAddressModal} />
+            <AddAddress handleCloseModal={handleAddAddressModal} />
           </Modal>
         )}
       </div>
@@ -70,10 +68,7 @@ export default function Addresses(props: Props) {
         </div>
       )}
       <div className="flex w-full justify-end mt-5">
-        <Button
-          onClick={handleOpenAddAddressModal}
-          className="items-center gap-2"
-        >
+        <Button onClick={handleAddAddressModal} className="items-center gap-2">
           Agregar una nueva direccíon
         </Button>
       </div>

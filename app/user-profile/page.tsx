@@ -1,15 +1,17 @@
 "use client";
 import Divider from "@/components/Divider/Divider";
+import { Button } from "@/components/components/Button";
+import Modal from "@/modals/modal/Modal";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { AddressDb, deleteUserAddress } from "@/services/address";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Addresses from "./_components/Addresses";
 import EmptyAddress from "./_components/EmptyAddress";
 import { User } from "./_interfaces/user";
 import { getUserInfo } from "./_services/getuserInfo";
-import Addresses from "./_components/Addresses";
-import { Button } from "@/components/components/Button";
+import ChangePassword from "./_components/ChangePassword";
 
 export default function UserProfilePage() {
   const [userInfo, setUserInfo] = useState<User>();
@@ -17,6 +19,8 @@ export default function UserProfilePage() {
   const [addressUserData, setAddressUserData] = useState<AddressDb>();
   const [isSpinnerActive, setIsActiveSpinner] = useState<boolean>(false);
   const [isAddAddress, setIsAddAddress] = useState<boolean>(false);
+  const [isChangePassModalOpen, setIsChangePassModalOpen] =
+    useState<boolean>(false);
   const [isOpenEditAddressModal, setIsOpenEditAddressModal] =
     useState<boolean>(false);
   const dispatch = useDispatch();
@@ -37,17 +41,17 @@ export default function UserProfilePage() {
         (address) => address.deliveryAddressId === id
       );
       setAddressUserData(addresses[addressIndex]);
-      handleOpenEditAddressModal();
+      handleEditAddressModal();
     }
   };
 
   const deleteAddress = async (id: string) => {
     try {
-      handleActiveSpinner();
+      handleSpinner();
       const token = getEntityInLocalStorage("userToken");
 
       const status = await deleteUserAddress(id, token.token_access);
-      handleDisableSpinner();
+      handleSpinner();
       console.log(status);
     } catch (error) {
       dispatch(
@@ -60,23 +64,20 @@ export default function UserProfilePage() {
     }
   };
 
-  const handleActiveSpinner = () => {
-    setIsActiveSpinner(true);
+  const handleSpinner = () => {
+    setIsActiveSpinner((prev) => !prev);
   };
-  const handleDisableSpinner = () => {
-    setIsActiveSpinner(false);
+
+  const handleEditAddressModal = () => {
+    setIsOpenEditAddressModal((prev) => !prev);
   };
-  const handleCloseEditAddressModal = () => {
-    setIsOpenEditAddressModal(false);
+
+  const handleAddAddressModal = () => {
+    setIsAddAddress((prev) => !prev);
   };
-  const handleOpenEditAddressModal = () => {
-    setIsOpenEditAddressModal(true);
-  };
-  const handleCloseAddAddressModal = () => {
-    setIsAddAddress(false);
-  };
-  const handleOpenAddAddressModal = () => {
-    setIsAddAddress(true);
+
+  const handlePassModal = () => {
+    setIsChangePassModalOpen((prev) => !prev);
   };
 
   return (
@@ -110,14 +111,18 @@ export default function UserProfilePage() {
             />
           </div>
           <div className="flex justify-end">
-            <Button>Cambiar Contraseña</Button>
+            <Button onClick={handlePassModal}>Cambiar Contraseña</Button>
           </div>
+          {isChangePassModalOpen && (
+            <Modal className="flex justify-center items-center">
+              <ChangePassword handlePassModal={handlePassModal} />
+            </Modal>
+          )}
         </div>
       </section>
       {addresses?.length === 0 ? (
         <EmptyAddress
-          handleCloseAddAddressModal={handleCloseAddAddressModal}
-          handleOpenAddAddressModal={handleOpenAddAddressModal}
+          handleAddressModal={handleAddAddressModal}
           isAddAddress={isAddAddress}
         />
       ) : (
@@ -126,10 +131,9 @@ export default function UserProfilePage() {
             addressUserData={addressUserData}
             addresses={addresses}
             deleteAddress={deleteAddress}
-            handleCloseAddAddressModal={handleCloseAddAddressModal}
-            handleCloseEditAddressModal={handleCloseEditAddressModal}
             handleEditAddressId={handleEditAddressId}
-            handleOpenAddAddressModal={handleOpenAddAddressModal}
+            handleAddAddressModal={handleAddAddressModal}
+            handleEditAddressModal={handleEditAddressModal}
             isAddAddress={isAddAddress}
             isOpenEditAddressModal={isOpenEditAddressModal}
             isSpinnerActive={isSpinnerActive}
