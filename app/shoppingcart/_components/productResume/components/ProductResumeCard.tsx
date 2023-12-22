@@ -241,12 +241,14 @@ border-b-textGray
             >
               Eliminar
             </button>
-            <button
-              onClick={handleSaveProduct}
-              className=" mr-4 text-base-color font-medium"
-            >
-              Guardar
-            </button>
+            {isLogged && (
+              <button
+                onClick={handleSaveProduct}
+                className=" mr-4 text-base-color font-medium"
+              >
+                Guardar
+              </button>
+            )}
             <button
               onClick={() => handleBuyNowBtn(productId)}
               className=" mr-4 text-base-color font-medium"

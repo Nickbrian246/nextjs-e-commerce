@@ -138,12 +138,12 @@ export default function ChangePassword(props: Props) {
       onSubmit={handleChangePasswordBtn}
       className="bg-white p-2 flex flex-col gap-6 relative"
     >
-      <div className="flex flex-col items-center p-4 gap-2 flex-wrap">
-        <div className="flex gap-4 items-center relative">
+      <div className="flex flex-col items-center p-1 md:p-4 gap-2 flex-wrap">
+        <div className="flex gap-4 items-center flex-wrap relative ">
           <label>Contraseña actual</label>
           <input
             type={isShowPassForCurrentPassword ? "text" : "password"}
-            className={`lg:w-[380px] w-[200px] border-2 ${
+            className={`sm:w-[380px] w-full border-2 ${
               isWrongPassword ? "border-red-500" : "border-borderGray"
             } p-2 rounded-md`}
             placeholder="Contraseña actual"
@@ -151,10 +151,9 @@ export default function ChangePassword(props: Props) {
             onChange={(e) => handleInputPasswordChange(e, "oldPassword")}
             name="oldPassword"
           />
-
           <div
             onClick={handleShowPassForCurrentPass}
-            className="scale-150 absolute   right-2 bg-white"
+            className="scale-150 absolute   sm:right-2 right-2 bottom-4 bg-white"
           >
             {isShowPassForCurrentPassword ? <BiShow /> : <GrHide />}
           </div>
@@ -163,12 +162,12 @@ export default function ChangePassword(props: Props) {
           <p className={`text-sm text-red-600  `}>Contraseñas incorrecta</p>
         )}
       </div>
-      <div className="flex items-center p-4 gap-2 flex-wrap">
-        <div className="flex gap-4 items-center relative">
+      <div className="flex items-center p-1 md:p-4  gap-2 flex-wrap">
+        <div className="flex gap-4 items-center flex-wrap relative">
           <label>Contraseña Nueva</label>
           <input
             type={isShowPassForNewPassword ? "text" : "password"}
-            className={`lg:w-[380px] w-[200px] border-2 ${
+            className={`sm:w-[380px] w-full border-2 ${
               !isPasswordMatch ? "border-red-500" : "border-borderGray"
             } p-2 rounded-md`}
             placeholder="Contraseña nueva"
@@ -178,18 +177,18 @@ export default function ChangePassword(props: Props) {
           />
           <div
             onClick={handleShowPassForNewPass}
-            className="scale-150 absolute   right-2 bg-white"
+            className="scale-150 absolute   sm:right-2 right-2 bottom-4 bg-white"
           >
             {isShowPassForNewPassword ? <BiShow /> : <GrHide />}
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center p-4  flex-wrap">
-        <div className="flex gap-4 items-center relative">
+      <div className="flex flex-col items-center p-1 md:p-4   flex-wrap">
+        <div className="flex gap-4 items-center flex-wrap relative">
           <label>Confirme contraseña nueva</label>
           <input
             type={isShowPassForConfirmNewPassword ? "text" : "password"}
-            className={`lg:w-[380px] w-[200px] border-2 ${
+            className={`sm:w-[380px] w-full border-2 ${
               !isPasswordMatch ? "border-red-500" : "border-borderGray"
             } p-2 rounded-md`}
             placeholder=" Confirme contraseña nueva"
@@ -200,7 +199,7 @@ export default function ChangePassword(props: Props) {
 
           <div
             onClick={handleShowPassForConfirmNewPass}
-            className="scale-150 absolute   right-2 bg-white"
+            className="scale-150 absolute    sm:right-2 right-2 bottom-4 bg-white"
           >
             {isShowPassForConfirmNewPassword ? <BiShow /> : <GrHide />}
           </div>

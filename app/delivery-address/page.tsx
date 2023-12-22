@@ -153,18 +153,20 @@ export default function DeliveryAddressPage() {
           </Modal>
         )}
 
-        <div className="flex w-full justify-end mt-4">
-          <button
-            className="scale-125 flex items-center gap-1 "
-            title="Agregar otra dirección"
-            onClick={() => handleOpenAddAddressModal("addone")}
-          >
-            Agregar dirección
-            <span className="text-4xl text-science-blue-600">
-              <MdAddCircle />
-            </span>
-          </button>
-        </div>
+        {isLogged && (
+          <div className="flex w-full justify-end mt-4">
+            <button
+              className="scale-125 flex items-center gap-1 "
+              title="Agregar otra dirección"
+              onClick={() => handleOpenAddAddressModal("addone")}
+            >
+              Agregar dirección
+              <span className="text-4xl text-science-blue-600">
+                <MdAddCircle />
+              </span>
+            </button>
+          </div>
+        )}
       </section>
       <Button
         onClick={handleContinueBtn}

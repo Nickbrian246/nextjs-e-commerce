@@ -18,6 +18,7 @@ export default function ShoppingCart() {
   const { isActiveLoadingSpinner } = useSelector(
     (state) => state.globalSpinner
   );
+  const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
   const { calculateShoppingCart, groupOfProducts, shippingCost, totalPrice } =
     useShoppingCart();
@@ -48,9 +49,7 @@ export default function ShoppingCart() {
             </div>
           )}
         </div>
-        <section>
-          <SavedProducts />
-        </section>
+        <section>{isLogged && <SavedProducts />}</section>
       </section>
 
       <aside className=" flex flex-col gap-2 ">

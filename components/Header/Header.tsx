@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Warning from "../components/Warning";
 import OptionsForHeaderMenu from "./components/optionsForMenu/OptionsForHeaderMenu";
 import { getShoppingCartCounter } from "./services/getShoppingCartCounter";
+import CollapsableMenu from "./collapsableMenu/CollapsableMenu";
+
 export default function Header() {
   const [isOpenCollapsableMenu, setIsOpenCollapsableMenu] =
     useState<boolean>(false);
@@ -64,6 +66,10 @@ export default function Header() {
           </button>
           <OptionsForHeaderMenu isLogged={isLogged} />
         </div>
+        <CollapsableMenu
+          isLogged={isLogged}
+          isOpenCollapsableMenu={isOpenCollapsableMenu}
+        />
         {isActiveWarning && (
           <Warning
             duration={duration}
@@ -75,7 +81,4 @@ export default function Header() {
       </div>
     </>
   );
-}
-{
-  /* <CollapsableMenu isOpenCollapsableMenu={isOpenCollapsableMenu} />; */
 }

@@ -55,7 +55,7 @@ export default function Addresses(props: Props) {
           </Modal>
         )}
         {isAddAddress && (
-          <Modal className="flex justify-center items-center">
+          <Modal className="flex justify-center items-center ">
             <AddAddress handleCloseModal={handleAddAddressModal} />
           </Modal>
         )}

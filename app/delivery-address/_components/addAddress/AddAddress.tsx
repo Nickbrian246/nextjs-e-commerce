@@ -115,7 +115,7 @@ export default function AddAddress(props: Props) {
     setReadOnly(false);
   };
   return (
-    <div className="position relative p-5 bg-white rounded-lg">
+    <div className="relative   sm:p-5 p-2 bg-white rounded-lg  ">
       <button
         onClick={handleCloseModal}
         className="absolute right-0 top-0 text-4xl text-red-500 "

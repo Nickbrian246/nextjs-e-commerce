@@ -36,40 +36,40 @@ export default function AddressCard(props: Props) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <p className="font-semibold">Nombre:</p>
-          <p>{name}</p>
+          <p className="break-words ">{name}</p>
         </div>
         <div>
           <p className="font-semibold">Email:</p>
-          <p>{email}</p>
+          <p className="break-words">{email}</p>
         </div>
         <div>
           <p className="font-semibold">Apellido:</p>
-          <p>{lastName}</p>
+          <p className="break-words">{lastName}</p>
         </div>
         <div>
           <p className="font-semibold">Ciudad:</p>
-          <p>{city}</p>
+          <p className="break-words">{city}</p>
         </div>
         <div>
           <p className="font-semibold">Colonia:</p>
-          <p>{colony}</p>
+          <p className="break-words">{colony}</p>
         </div>
         <div>
           <p className="font-semibold">Teléfono:</p>
-          <p>{phoneNumber}</p>
+          <p className="break-words">{phoneNumber}</p>
         </div>
 
         <div>
           <p className="font-semibold">Referencia Vecinal:</p>
-          <p>{neighborReference}</p>
+          <p className="break-words">{neighborReference}</p>
         </div>
         <div>
           <p className="font-semibold">Estado:</p>
-          <p>{state}</p>
+          <p className="break-words">{state}</p>
         </div>
         <div>
           <p className="font-semibold">Código Postal:</p>
-          <p>{zipCode}</p>
+          <p className="break-words">{zipCode}</p>
         </div>
       </div>
       <div className="w-full flex justify-between flex-wrap items-center">

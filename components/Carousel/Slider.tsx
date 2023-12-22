@@ -86,7 +86,7 @@ export default function Slider({
           />
         </div>
         <button
-          className={`bg-textGray rounded-full text-base-color font-extrabold ${
+          className={` rounded-full text-base-color font-extrabold ${
             isMouseOver ? "flex" : "hidden"
           } items-center justify-center absolute top-[45%] right-4 w-12 h-12`}
           onClick={handleNextBtn}

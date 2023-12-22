@@ -22,7 +22,7 @@ export default function Modal({
         bottom: 0,
         left: 0,
         background: "rgb(0,0,0,.5)",
-        overflow: "hidden",
+        overflow: "auto",
       }}
     >
       <div className="z-20">{children}</div>

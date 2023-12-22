@@ -1,40 +1,91 @@
 import Link from "next/link";
-import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { groupOfLinks } from "./utils/groupOfLinks";
-
+import {
+  menuOptionsForLoggedUserGroup,
+  menuOptionsForNotLoggedUserGroup,
+} from "../utils";
+import QuantityIndicator from "@/components/components/quantityIndicator/QuantityIndicator";
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "@/redux/slices/auth/sliceForAuth";
+import { checkShoppingCart } from "@/redux/slices/ShoppingCart";
+import { useEffect } from "react";
 interface Props {
   isOpenCollapsableMenu: boolean;
+  isLogged: boolean;
 }
-export default function CollapsableMenu({ isOpenCollapsableMenu }: Props) {
+export default function CollapsableMenu({
+  isOpenCollapsableMenu,
+  isLogged,
+}: Props) {
+  const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkShoppingCart({ key: "shoppingCart" }));
+  }, []);
+
+  const handleLogOut = (title: string) => {
+    if (title === "Cerrar sesión") dispatch(logOut());
+  };
   return (
     <nav
-      className={`
-    w-full
-    p-4
-    z-[-1]
-    absolute 
-    bg-base-color
-    border-t-[1px]
-    border-t-white 
-    transition-all 
-    duration-500
-    ease-out
-    ${isOpenCollapsableMenu ? "top-[56px]" : "top-[-399px] "} 
-    `}
+      style={isOpenCollapsableMenu ? { height: "200px" } : { height: "0px" }}
+      className="md:hidden flex flex-col overflow-hidden transition-all top-12 ease-linear duration-300 left-0 right-0 absolute z-20 bg-base-color"
     >
       <ul className="flex  flex-col gap-4  text-sm text-white  uppercase">
-        <Link href={"/"} className="">
-          <BiHomeAlt />
-        </Link>
-        {groupOfLinks.map((link) => (
-          <Link key={link.titleEs} href={"/"}>
-            {link.titleEs}
-          </Link>
-        ))}
-        <Link href={"/"}>
-          <AiOutlineShoppingCart />
-        </Link>
+        {isLogged
+          ? menuOptionsForLoggedUserGroup.map((option) => (
+              <Link href={option.route}>
+                <button onClick={() => handleLogOut(option.titleEs)}>
+                  <div className=" flex gap-4 p-2 items-center">
+                    <div
+                      className={`text-xl relative ${
+                        option.titleEs === "Cerrar sesión"
+                          ? "text-[#fea3a7]"
+                          : ""
+                      }`}
+                    >
+                      {option.icon}
+                      {option.id === "shoppingcart" &&
+                        productsInShoppingCart > 0 && (
+                          <span className="absolute -top-3 -right-3">
+                            <QuantityIndicator />
+                          </span>
+                        )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold">{option.titleEs}</p>
+                    </div>
+                  </div>
+                </button>
+              </Link>
+            ))
+          : menuOptionsForNotLoggedUserGroup.map((option) => (
+              <Link href={option.route}>
+                <button onClick={() => handleLogOut(option.titleEs)}>
+                  <div className=" flex gap-4 p-2 items-center">
+                    <div
+                      className={`text-xl relative ${
+                        option.titleEs === "Cerrar sesión"
+                          ? "text-[#fea3a7]"
+                          : ""
+                      }`}
+                    >
+                      {option.icon}
+                      {option.id === "shoppingcart" &&
+                        productsInShoppingCart > 0 && (
+                          <span className="absolute -top-3 -right-3">
+                            <QuantityIndicator />
+                          </span>
+                        )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold">{option.titleEs}</p>
+                    </div>
+                  </div>
+                </button>
+              </Link>
+            ))}
       </ul>
     </nav>
   );

@@ -114,7 +114,7 @@ export default function UserProfilePage() {
             <Button onClick={handlePassModal}>Cambiar Contraseña</Button>
           </div>
           {isChangePassModalOpen && (
-            <Modal className="flex justify-center items-center">
+            <Modal className="flex justify-center items-center p-1">
               <ChangePassword handlePassModal={handlePassModal} />
             </Modal>
           )}

@@ -64,6 +64,7 @@ export default function SavedProducts() {
     if (productsRef.current.length >= 1) {
       const heights = productsRef.current.map((elementRef) => {
         //@ts-ignore
+
         return elementRef.clientHeight;
       });
       const totalElementHeight = heights.reduce(
@@ -102,7 +103,7 @@ export default function SavedProducts() {
               items-center 
               justify-between
               p-2 
-              min-w-[700px] 
+              md:min-w-[700px] 
               min-h-[130px] 
               shadow-lg 
               rounded-md 
