@@ -2,6 +2,8 @@ import { getProducts } from "@/services";
 import Slider from "../Carousel/Slider";
 import { extractImageAndIdFromGroupOFProducts } from "../Carousel/utils/filterDataForCarousel";
 import ProductCard from "./components/ProductCard";
+import { Suspense } from "react";
+import ProductsCardLoading from "./components/loading";
 
 export default async function Products() {
   const groupOfProducts = await getProducts();
@@ -20,18 +22,20 @@ export default async function Products() {
         Productos Mas vendidos
       </h2>
       <div className="w-full flex flex-wrap gap-9 md:gap-6     items-center mt-5">
-        {groupOfProducts.map((product) => (
-          <ProductCard
-            category={product.category}
-            description={product.description}
-            id={product.id}
-            image={product.image}
-            price={product.price}
-            title={product.title}
-            rating={product.rating}
-            key={product.id}
-          />
-        ))}
+        <Suspense fallback={<ProductsCardLoading />}>
+          {groupOfProducts.map((product) => (
+            <ProductCard
+              category={product.category}
+              description={product.description}
+              id={product.id}
+              image={product.image}
+              price={product.price}
+              title={product.title}
+              rating={product.rating}
+              key={product.id}
+            />
+          ))}
+        </Suspense>
       </div>
     </div>
   );

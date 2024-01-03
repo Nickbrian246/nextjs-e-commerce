@@ -37,12 +37,15 @@ export default function SavedProducts() {
         }
         setIsEmptyGroupOfProducts(false);
         //@ts-ignore
-        getProductsWithPromiseAll(savedProducts).then((products) => {
-          //@ts-ignore
-          const addQuantity = addQuantityOfCartItems(savedProducts, products);
-          const addOffers = checkOfferAndAdaptPrice(addQuantity);
-          setGroupOfSavedProducts(addOffers);
-        });
+
+        if (Array.isArray(savedProducts)) {
+          getProductsWithPromiseAll(savedProducts).then((products) => {
+            //@ts-ignore
+            const addQuantity = addQuantityOfCartItems(savedProducts, products);
+            const addOffers = checkOfferAndAdaptPrice(addQuantity);
+            setGroupOfSavedProducts(addOffers);
+          });
+        }
       });
     } catch (err) {
       dispatch(
@@ -112,19 +115,34 @@ export default function SavedProducts() {
               cursor-pointer"
             >
               <div className="flex flex-col gap-1">
-                <p className="text-base font-semibold">Productos guardados</p>
-                <p className="flex text-sm font-medium text-science-blue-500 items-center gap-1">
-                  Ver Productos
-                  <span
-                    className={`${
-                      startArrowTransition
-                        ? "rotate-180 transition-all duration-150"
-                        : "duration-150"
-                    }`}
-                  >
-                    <IoIosArrowDown />
-                  </span>
-                </p>
+                {groupOfSavedProducts && groupOfSavedProducts?.length >= 1 ? (
+                  <>
+                    <p className="text-base font-semibold">
+                      Productos guardados
+                    </p>
+                    <p className="flex text-sm font-medium text-science-blue-500 items-center gap-1">
+                      Ver Productos
+                      <span
+                        className={`${
+                          startArrowTransition
+                            ? "rotate-180 transition-all duration-150"
+                            : "duration-150"
+                        }`}
+                      >
+                        <IoIosArrowDown />
+                      </span>
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-base font-semibold">
+                      Productos guardados
+                    </p>
+                    <p className="text-base font-semibold text-[#a3a3a3]">
+                      No tienes productos guardados
+                    </p>
+                  </>
+                )}
               </div>
 
               {groupOfSavedProducts && images && (
