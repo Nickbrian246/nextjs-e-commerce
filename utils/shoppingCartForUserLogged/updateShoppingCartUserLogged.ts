@@ -10,7 +10,7 @@ export async function updateShoppingCartUserLogged() {
   try {
     const groupOfProducts = getEntityProductsFromLocalStorage("shoppingCart");
 
-    if (Array.isArray(groupOfProducts) && groupOfProducts.length > 1) {
+    if (Array.isArray(groupOfProducts) && groupOfProducts.length >= 1) {
       const token = getEntityInLocalStorage("userToken");
       const shoppingProductsCartAdapter =
         adapterForUpdateShoppingCart(groupOfProducts);

@@ -29,7 +29,6 @@ export const deleteOneItemProductToShoppingCartInDb = createAsyncThunk(
       dispatch(updateShoppingCartCounter({ count: addProduct.data }));
       return addProduct.data;
     } catch (error) {
-      console.log(error.response);
       dispatch(
         activeWarning({
           severity: "error",

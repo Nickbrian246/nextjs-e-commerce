@@ -1,5 +1,5 @@
 "use client";
-import SigninPage from "@/app/auth/signin/page";
+
 import ShippingForm from "@/components/ShippingFrom/ShippingForm";
 import { Button } from "@/components/components/Button";
 import Modal from "@/modals/modal/Modal";
@@ -57,7 +57,8 @@ export default function DeliveryAddressPage() {
         });
       return;
     }
-  }, [isOpenModal]);
+    router.push("/auth/signin");
+  }, [isOpenModal, isLogged]);
 
   const handleAddressSelected = (id: string) => {
     setAddressIdSelected(id);
@@ -113,19 +114,15 @@ export default function DeliveryAddressPage() {
               </p>
             )
           : ""}
-        {isLogged ? (
-          addressUserData && addressUserData?.length >= 1 ? (
-            <AddressesDirectory
-              addressSelected={handleAddressSelected}
-              editAddressId={handleEditAddress}
-              deliveryAddresses={addressUserData}
-              addressIdSelected={addressIdSelected}
-            />
-          ) : (
-            <ShippingForm setIsEditable={setIsEditable} />
-          )
+        {isLogged && addressUserData && addressUserData?.length >= 1 ? (
+          <AddressesDirectory
+            addressSelected={handleAddressSelected}
+            editAddressId={handleEditAddress}
+            deliveryAddresses={addressUserData}
+            addressIdSelected={addressIdSelected}
+          />
         ) : (
-          <SigninPage />
+          <ShippingForm setIsEditable={setIsEditable} />
         )}
 
         {isLogged && thereIsAddressData && (

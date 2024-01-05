@@ -8,7 +8,6 @@ export default function ProductViewer(props: Props) {
   const { images } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [image, setImage] = useState(images[currentIndex]);
-  console.log(images);
 
   const handleChangeImg = (newIndex: number) => {
     setImage(images[newIndex]);

@@ -26,6 +26,7 @@ export default function Header() {
     isActiveWarning,
   } = useSelector((state) => state.globalWarning);
 
+  // disable global warning
   useEffect(() => {
     if (isActiveWarning) {
       setTimeout(() => {
@@ -34,9 +35,11 @@ export default function Header() {
     }
   }, [isActiveWarning]);
 
+  // once user is logged get the counter for shopping cart
   useEffect(() => {
     if (isLogged) {
       const token = getEntityInLocalStorage("userToken");
+
       getShoppingCartCounter(token.token_access)
         .then((res) => {
           dispatch(updateShoppingCartCounter({ count: res }));

@@ -68,8 +68,6 @@ export default function ReviewAndConfirmOderPage() {
     const { token_access } = getEntityInLocalStorage("userToken");
     setPaymentMethodDetails(cardData);
     if (product === "sc") {
-      console.log("entrando");
-
       calculateShoppingCart();
     } else {
       calculateShoppingCartForOneProduct(Number(product), Number(quantity));

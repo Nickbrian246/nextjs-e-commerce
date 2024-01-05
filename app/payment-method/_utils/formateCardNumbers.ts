@@ -1,5 +1,4 @@
 export function formateCardNumbers(numbers: string): string {
-  console.log(numbers.length);
   if (numbers.length <= 4) {
     return numbers;
   }

@@ -196,7 +196,6 @@ export default function ProductResumeCard(props: Props) {
         token.token_access
       );
       dispatch(updateShoppingCartCounter({ count: counter }));
-      console.log(response);
     } catch (error) {
       dispatch(
         activeWarning({

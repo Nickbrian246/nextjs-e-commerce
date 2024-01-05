@@ -105,8 +105,6 @@ export default function ProductPage({
         dispatch(updateShoppingCartCounter({ count: counter }));
         return;
       } catch (error) {
-        console.log(error);
-
         return dispatch(
           activeWarning({
             isActiveWarning: true,

@@ -22,8 +22,6 @@ export default function CardForm({ setValue, value }: Props) {
     const filterOnlyNumbers = value.replace(/[^\d]/g, "");
 
     if (name === "cvv" && value.length >= 4) {
-      console.log("entrando");
-
       return setValue((prevValue) => {
         return { ...prevValue, [name]: prevValue[name] };
       });

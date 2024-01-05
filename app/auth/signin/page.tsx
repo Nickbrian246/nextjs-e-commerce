@@ -11,6 +11,7 @@ import { UserSignin } from "@/redux/thunks/auth/signinUserThunk";
 import { useRouter } from "next/navigation";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { updateShoppingCartUserLogged } from "@/utils/shoppingCartForUserLogged/updateShoppingCartUserLogged";
+import { updateShoppingCartCounter } from "@/redux/slices/ShoppingCart";
 
 export default function SigninPage() {
   const [signinUser, setSigninUser] = useState<Signin>({
@@ -18,25 +19,30 @@ export default function SigninPage() {
     password: "",
   });
   const [showPass, setShowPass] = useState<boolean>(false);
+  //@ts-ignore
   const { isLoading, isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
   const router = useRouter();
 
   useEffect(() => {
     if (isLogged) {
-      updateShoppingCartUserLogged().catch((err) => {
-        dispatch(
-          activeWarning({
-            isActiveWarning: true,
-            severity: "error",
-            warningMessage: `${err}`,
-            duration: 4000,
-            warningSubMessage: "",
-          })
-        );
-      });
+      updateShoppingCartUserLogged()
+        .then((res) => {
+          dispatch(updateShoppingCartCounter({ count: res }));
+        })
+        .catch((err) => {
+          dispatch(
+            activeWarning({
+              isActiveWarning: true,
+              severity: "error",
+              warningMessage: `${err}`,
+              duration: 4000,
+              warningSubMessage: "",
+            })
+          );
+        });
 
-      router.replace("/");
+      router.back();
     }
   }, [isLogged]);
 

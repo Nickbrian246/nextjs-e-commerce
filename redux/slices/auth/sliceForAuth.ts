@@ -23,6 +23,7 @@ export const loggedUser = createSlice({
   reducers: {
     logOut: (state) => {
       removeEntityInLocalStorage("userToken");
+      removeEntityInLocalStorage("shoppingCart");
       return {
         ...state,
         isLogged: false,

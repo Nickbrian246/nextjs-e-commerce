@@ -102,13 +102,11 @@ export function useShoppingCart() {
     try {
       if (isLogged && quantity) {
         getProductById(id).then((res) => {
-          console.log(res);
           const addQuantity: ProductWithQuantity = { ...res, quantity };
           const adaptToArray = new Array(addQuantity);
           const groupOfCartProducts = checkOfferAndAdaptPrice(adaptToArray);
           const totalPrice = calculateTotalPrice(groupOfCartProducts);
           const shippingCost = calculateShippingCost(groupOfCartProducts);
-          console.log(groupOfCartProducts);
 
           setShippingCost(shippingCost);
           setTotalPrice(totalPrice);

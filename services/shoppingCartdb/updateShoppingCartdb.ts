@@ -20,12 +20,9 @@ export async function updateShoppingCartForUserLogged(
       products,
       config
     );
-    console.log(createShoppingCart.data);
 
     return createShoppingCart.data;
   } catch (error) {
-    console.log(error);
-
     throw error;
   }
 }

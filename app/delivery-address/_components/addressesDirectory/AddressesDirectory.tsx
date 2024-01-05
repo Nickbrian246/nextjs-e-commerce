@@ -19,6 +19,7 @@ export default function AddressesDirectory({
     <div className="flex flex-col gap-4">
       {deliveryAddresses.map((address) => (
         <AddressCard
+          key={address.deliveryAddressId}
           addressIdSelected={addressIdSelected}
           addressSelected={addressSelected}
           editAddressId={editAddressId}

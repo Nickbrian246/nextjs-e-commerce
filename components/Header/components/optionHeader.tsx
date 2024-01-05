@@ -6,16 +6,20 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { checkShoppingCart } from "@/redux/slices/ShoppingCart";
 import { logOut } from "@/redux/slices/auth/sliceForAuth";
+
 export default function OptionHeader(props: Props) {
   const { titleEn, titleEs, icon, route, id } = props;
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(checkShoppingCart({ key: "shoppingCart" }));
   }, []);
+
   const handleLogOut = (title: string) => {
     if (title === "Cerrar sesión") dispatch(logOut());
   };
+
   return (
     <Link href={route}>
       <button onClick={() => handleLogOut(titleEs)}>

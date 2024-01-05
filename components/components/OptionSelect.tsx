@@ -16,8 +16,6 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   className,
   ...selectProps
 }) => {
-  console.log(optionLabel);
-
   return (
     <div>
       <label htmlFor={optionLabel}>{optionLabel}</label>

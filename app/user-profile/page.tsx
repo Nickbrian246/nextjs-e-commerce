@@ -52,7 +52,6 @@ export default function UserProfilePage() {
 
       const status = await deleteUserAddress(id, token.token_access);
       handleSpinner();
-      console.log(status);
     } catch (error) {
       dispatch(
         activeWarning({
