@@ -15,6 +15,7 @@ import AddAddress from "./_components/addAddress/AddAddress";
 import AddressesDirectory from "./_components/addressesDirectory/AddressesDirectory";
 import EditAddress from "./_components/editAddress/EditAddress";
 import { useSearchParams } from "next/navigation";
+import Loading from "./loading";
 
 type ModalType = "Edit" | "addone";
 
@@ -96,82 +97,88 @@ export default function DeliveryAddressPage() {
   };
   return (
     <>
-      <section className="p-2 lg:p-5 shadow-xl h-fit lg:w-[900px]">
-        <h2 className="text-4xl font-medium text-center mb-7">
-          {isLogged
-            ? thereIsAddressData
-              ? "Seleccione la dirección de envío"
-              : "Formulario de envío"
-            : " Inicie sesión para continuar."}
-        </h2>
-        {isLogged
-          ? addressUserData &&
-            addressUserData?.length >= 1 && (
-              <p className=" text-center mb-7 font-normal text-xl">
-                {isEditable
-                  ? "Por favor, confirme la información de envío. "
-                  : "Por favor, llene los campos para continuar con su pedido."}
-              </p>
-            )
-          : ""}
-        {isLogged && addressUserData && addressUserData?.length >= 1 ? (
-          <AddressesDirectory
-            addressSelected={handleAddressSelected}
-            editAddressId={handleEditAddress}
-            deliveryAddresses={addressUserData}
-            addressIdSelected={addressIdSelected}
-          />
-        ) : (
-          <ShippingForm setIsEditable={setIsEditable} />
-        )}
-
-        {isLogged && thereIsAddressData && (
-          <div className="w-full flex justify-end">
-            <Button className="mt-5 ">Continuar</Button>
-          </div>
-        )}
-
-        {isOpenModal && addressDataToEdit && (
-          <Modal
-            handleCloseModal={handleCloseModal}
-            className="flex justify-center items-center"
-          >
-            {isOpenModal && modalType === "Edit" && (
-              <EditAddress
-                UserAddress={addressDataToEdit}
-                handleCloseModal={handleCloseModal}
+      {addressUserData && addressUserData?.length >= 1 ? (
+        <>
+          <section className="p-2 lg:p-5 shadow-xl h-fit lg:w-[900px]">
+            <h2 className="text-4xl font-medium text-center mb-7">
+              {isLogged
+                ? thereIsAddressData
+                  ? "Seleccione la dirección de envío"
+                  : "Formulario de envío"
+                : " Inicie sesión para continuar."}
+            </h2>
+            {isLogged
+              ? addressUserData &&
+                addressUserData?.length >= 1 && (
+                  <p className=" text-center mb-7 font-normal text-xl">
+                    {isEditable
+                      ? "Por favor, confirme la información de envío. "
+                      : "Por favor, llene los campos para continuar con su pedido."}
+                  </p>
+                )
+              : ""}
+            {isLogged && addressUserData && addressUserData?.length >= 1 ? (
+              <AddressesDirectory
+                addressSelected={handleAddressSelected}
+                editAddressId={handleEditAddress}
+                deliveryAddresses={addressUserData}
+                addressIdSelected={addressIdSelected}
               />
+            ) : (
+              <ShippingForm setIsEditable={setIsEditable} />
             )}
-          </Modal>
-        )}
-        {isOpenModal && modalType === "addone" && (
-          <Modal className="flex justify-center items-center">
-            <AddAddress handleCloseModal={handleCloseModal} />
-          </Modal>
-        )}
 
-        {isLogged && (
-          <div className="flex w-full justify-end mt-4">
-            <button
-              className="scale-125 flex items-center gap-1 "
-              title="Agregar otra dirección"
-              onClick={() => handleOpenAddAddressModal("addone")}
-            >
-              Agregar dirección
-              <span className="text-4xl text-science-blue-600">
-                <MdAddCircle />
-              </span>
-            </button>
-          </div>
-        )}
-      </section>
-      <Button
-        onClick={handleContinueBtn}
-        disabled={!addressIdSelected}
-        className="h-fit min-[200px]"
-      >
-        Continuar
-      </Button>
+            {isLogged && thereIsAddressData && (
+              <div className="w-full flex justify-end">
+                <Button className="mt-5 ">Continuar</Button>
+              </div>
+            )}
+
+            {isOpenModal && addressDataToEdit && (
+              <Modal
+                handleCloseModal={handleCloseModal}
+                className="flex justify-center items-center"
+              >
+                {isOpenModal && modalType === "Edit" && (
+                  <EditAddress
+                    UserAddress={addressDataToEdit}
+                    handleCloseModal={handleCloseModal}
+                  />
+                )}
+              </Modal>
+            )}
+            {isOpenModal && modalType === "addone" && (
+              <Modal className="flex justify-center items-center">
+                <AddAddress handleCloseModal={handleCloseModal} />
+              </Modal>
+            )}
+
+            {isLogged && (
+              <div className="flex w-full justify-end mt-4">
+                <button
+                  className="scale-125 flex items-center gap-1 "
+                  title="Agregar otra dirección"
+                  onClick={() => handleOpenAddAddressModal("addone")}
+                >
+                  Agregar dirección
+                  <span className="text-4xl text-science-blue-600">
+                    <MdAddCircle />
+                  </span>
+                </button>
+              </div>
+            )}
+          </section>
+          <Button
+            onClick={handleContinueBtn}
+            disabled={!addressIdSelected}
+            className="h-fit min-[200px]"
+          >
+            Continuar
+          </Button>
+        </>
+      ) : (
+        <Loading />
+      )}
     </>
   );
 }

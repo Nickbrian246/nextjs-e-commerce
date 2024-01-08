@@ -15,22 +15,22 @@ export default function OptionsForHeaderMenu(props: Props) {
       {isLogged
         ? menuOptionsForLoggedUserGroup.map((option) => (
             <OptionHeader
+              key={option.id}
               isLogged={option.isLogged}
               titleEn={option.titleEn}
               titleEs={option.titleEs}
               icon={option.icon}
-              key={option.titleEn}
               route={option.route}
               id={option.id}
             />
           ))
         : menuOptionsForNotLoggedUserGroup.map((option) => (
             <OptionHeader
+              key={option.id}
               isLogged={option.isLogged}
               titleEn={option.titleEn}
               titleEs={option.titleEs}
               icon={option.icon}
-              key={option.titleEn}
               route={option.route}
               id={option.id}
             />

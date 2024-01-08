@@ -3,8 +3,8 @@ import ContentLoader from "react-content-loader";
 
 export default function Loading() {
   return (
-    <div className="flex w-full h-screen justify-center items-start">
-      <ContentLoader viewBox="0 0 800 400" height={1000} width={800}>
+    <div>
+      <ContentLoader viewBox="0 0 800 400" height={400} width={800}>
         <circle cx="472" cy="159" r="7" />
         <rect x="487" y="154" rx="5" ry="5" width="220" height="10" />
         <circle cx="472" cy="190" r="7" />

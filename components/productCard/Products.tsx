@@ -22,20 +22,18 @@ export default async function Products() {
         Productos Mas vendidos
       </h2>
       <div className="w-full flex flex-wrap gap-9 md:gap-6     items-center mt-5">
-        <Suspense fallback={<ProductsCardLoading />}>
-          {groupOfProducts.map((product) => (
-            <ProductCard
-              category={product.category}
-              description={product.description}
-              id={product.id}
-              image={product.image}
-              price={product.price}
-              title={product.title}
-              rating={product.rating}
-              key={product.id}
-            />
-          ))}
-        </Suspense>
+        {groupOfProducts.map((product) => (
+          <ProductCard
+            category={product.category}
+            description={product.description}
+            id={product.id}
+            image={product.image}
+            price={product.price}
+            title={product.title}
+            rating={product.rating}
+            key={product.id}
+          />
+        ))}
       </div>
     </div>
   );

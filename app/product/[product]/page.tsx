@@ -26,6 +26,7 @@ import { adapterForAddProductForAmount } from "./_adapter";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { addProductToShippingCartByAmount } from "@/services/shoppingCartdb/addProductToShoppingCartByAmount";
+import Loading from "./loading";
 export default function ProductPage({
   params,
 }: {
@@ -130,7 +131,10 @@ export default function ProductPage({
   };
   return (
     <>
-      {groupOfProducts?.length > 1 ? (
+      {groupOfProducts?.length > 1 &&
+      extractThreeImages?.length > 1 &&
+      groupOfProductsByCategory?.length > 1 &&
+      truncateGroupOfProductsTo15?.length > 1 ? (
         <ErrorBoundary errorComponent={<Error />}>
           <div className=" w-full flex flex-col md:flex-row items-start lg:max-w-6xl mt-5">
             {extractThreeImages?.length > 1 && (
@@ -183,7 +187,7 @@ export default function ProductPage({
           </div>
         </ErrorBoundary>
       ) : (
-        <p>hola</p>
+        <Loading />
       )}
     </>
   );

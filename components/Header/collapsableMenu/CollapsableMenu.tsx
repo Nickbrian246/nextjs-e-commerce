@@ -35,7 +35,7 @@ export default function CollapsableMenu({
       <ul className="flex  flex-col gap-4  text-sm text-white  uppercase">
         {isLogged
           ? menuOptionsForLoggedUserGroup.map((option) => (
-              <Link href={option.route}>
+              <Link href={option.route} key={option.id}>
                 <button onClick={() => handleLogOut(option.titleEs)}>
                   <div className=" flex gap-4 p-2 items-center">
                     <div
@@ -61,7 +61,7 @@ export default function CollapsableMenu({
               </Link>
             ))
           : menuOptionsForNotLoggedUserGroup.map((option) => (
-              <Link href={option.route}>
+              <Link href={option.route} key={option.id}>
                 <button onClick={() => handleLogOut(option.titleEs)}>
                   <div className=" flex gap-4 p-2 items-center">
                     <div

@@ -81,7 +81,10 @@ export default function MyOrdersPage() {
       </div>
       <div className="  md:hidden flex flex-col gap-4 w-full border-t-2 border-[#1f2937]">
         {groupOfOrders?.map((order) => (
-          <div className="flex  flex-col gap-2 p-1  border-b-2 border-[#1f2937]">
+          <div
+            className="flex  flex-col gap-2 p-1  border-b-2 border-[#1f2937]"
+            key={order.uniqueId}
+          >
             <div className="flex justify-between items-center">
               <p className="text-left font-bold">Fecha:</p>
               <p>{order.date}</p>

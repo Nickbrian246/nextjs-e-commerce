@@ -1,5 +1,4 @@
 "use client";
-import React, { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import CollapsableCategoryBar from "./collapsableBar/CollapsableCategoryBar";
 interface Props {
