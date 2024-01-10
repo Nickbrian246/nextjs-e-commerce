@@ -12,6 +12,7 @@ import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneri
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
+import LoadingSpinner from "@/components/components/LoadingSpinner";
 interface Props {
   handleCloseModal: () => void;
 }
@@ -29,11 +30,12 @@ export default function AddAddress(props: Props) {
   const [zipCode, setZipCode] = useState<string>("");
   const [stateSelected, setStateSelected] = useState("Tabasco");
   const [readOnly, setReadOnly] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsLoading(true);
     const deliveryAddresses: AddressDb = {
       city,
       colony,
@@ -54,7 +56,10 @@ export default function AddAddress(props: Props) {
       },
       token.token_access
     )
-      .then((res) => handleCloseModal())
+      .then((res) => {
+        setIsLoading(false);
+        handleCloseModal();
+      })
       .catch((err) => {
         dispatch(
           activeWarning({
@@ -105,7 +110,10 @@ export default function AddAddress(props: Props) {
   };
 
   const handleZipCode = (e: ChangeEvent<HTMLInputElement>) => {
-    setZipCode(e.target.value);
+    const value = e.target.value;
+    const filterLetters = value.replace(/[a-zA-Z]/gi, "");
+    if (value.length >= 6) return;
+    setZipCode(filterLetters);
   };
 
   const handleOptionSelect = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -244,6 +252,11 @@ export default function AddAddress(props: Props) {
         </div>
         <Button className="bg-[#059669]">Agregar dirección</Button>
       </form>
+      {isLoading && (
+        <div className="absolute flex w-full h-full  justify-center items-center top-0 left-0">
+          <LoadingSpinner className="text-[#0891b2] text-4xl" />
+        </div>
+      )}
     </div>
   );
 }

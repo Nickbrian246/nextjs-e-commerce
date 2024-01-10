@@ -98,7 +98,7 @@ export default function CardForm({ setValue, value }: Props) {
         </label>
         <input
           value={value.expirationDate}
-          className="rounded-lg max-w-[60px] p-1"
+          className="rounded-lg max-w-[70px] p-1"
           type="text"
           placeholder="12/23"
           id="expirationForm"

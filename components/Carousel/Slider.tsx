@@ -70,7 +70,7 @@ export default function Slider({
         <div className="relative w-full flex flex-row overflow-hidden max-w-3xl aspect-[30/20] ">
           <Image
             onLoad={() => setLoaded(true)}
-            className={`object-fit ${
+            className={`object-contain ${
               loaded ? "opacity-100" : "opacity-0"
             } transition-all duration-500  `}
             fill

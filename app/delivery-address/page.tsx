@@ -16,14 +16,13 @@ import AddressesDirectory from "./_components/addressesDirectory/AddressesDirect
 import EditAddress from "./_components/editAddress/EditAddress";
 import { useSearchParams } from "next/navigation";
 import Loading from "./loading";
-import EmptyAddress from "../user-profile/_components/EmptyAddress";
 
 type ModalType = "Edit" | "addone";
 
 export default function DeliveryAddressPage() {
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [thereIsAddressData, setThereIsAddressData] = useState<boolean>(false);
+  const [thereIsAddressData, setThereIsAddressData] = useState<boolean>(true);
   const [addressIdSelected, setAddressIdSelected] = useState<string>("");
   const [modalType, setModalType] = useState<ModalType>("Edit");
   const [addressUserData, setAddressUserData] = useState<AddressDb[]>();
@@ -42,13 +41,10 @@ export default function DeliveryAddressPage() {
       const token = getEntityInLocalStorage("userToken");
       getUserAddress(token.token_access)
         .then((res) => {
-          console.log(res);
-
+          if (res.length === 0) setThereIsAddressData(false);
           setAddressUserData(res);
         })
         .catch((err) => {
-          console.log(err.response);
-
           if (err.response.data.status === 404) {
             setThereIsAddressData(false);
             return;
@@ -138,11 +134,11 @@ export default function DeliveryAddressPage() {
               />
             )}
 
-            {isLogged && thereIsAddressData && (
+            {/* {isLogged && thereIsAddressData && (
               <div className="w-full flex justify-end">
                 <Button className="mt-5 ">Continuar</Button>
               </div>
-            )}
+            )} */}
 
             {isOpenModal && addressDataToEdit && (
               <Modal

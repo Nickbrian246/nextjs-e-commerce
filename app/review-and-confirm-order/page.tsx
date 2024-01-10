@@ -19,6 +19,7 @@ import AddressCardReadOnly from "@/components/Address/AddressCard/AddressCardRea
 import { adapterFromPriceAndShippingToMyOrder } from "./_adapter/adapterFromPriceAndShippingToMyOrder";
 import { getTodayDateInFormatMMDDYYYY } from "@/utils/date";
 import { MyOrderProduct } from "./_interfaces/myOrderProduct";
+import Loading from "./loading";
 interface CardInfo {
   name: string;
   cardNumber: string;
@@ -102,51 +103,57 @@ export default function ReviewAndConfirmOderPage() {
   }, [groupOfProducts]);
 
   return (
-    <section className="flex flex-wrap gap-4 justify-center">
-      <div className="flex flex-col gap-5 flex-wrap">
-        {myOrderProducts && (
-          <GroupOfProducts groupOfProducts={myOrderProducts} />
-        )}
-        {userAddress && (
-          <>
-            <h2 className="text-2xl text-center font-medium">
-              Dirección de envío
+    <>
+      {myOrderProducts && myOrderProducts?.length >= 1 ? (
+        <section className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-col gap-5 flex-wrap">
+            {myOrderProducts && (
+              <GroupOfProducts groupOfProducts={myOrderProducts} />
+            )}
+            {userAddress && (
+              <>
+                <h2 className="text-2xl text-center font-medium">
+                  Dirección de envío
+                </h2>
+                <AddressCardReadOnly address={userAddress} />
+              </>
+            )}
+          </div>
+          <div>
+            <SaleResume
+              totalProducts={productsInShoppingCart}
+              shippingCost={shippingCost}
+              totalPrice={totalPrice}
+            />
+            <h2 className="sm:text-2xl  text-xl text-center mt-9">
+              Método de pago seleccionado.
             </h2>
-            <AddressCardReadOnly address={userAddress} />
-          </>
-        )}
-      </div>
-      <div>
-        <SaleResume
-          totalProducts={productsInShoppingCart}
-          shippingCost={shippingCost}
-          totalPrice={totalPrice}
-        />
-        <h2 className="sm:text-2xl  text-xl text-center mt-9">
-          Método de pago seleccionado.
-        </h2>
-        <BankCard value={paymentMethodDetails} />
+            <BankCard value={paymentMethodDetails} />
 
-        <ButtonRouter
-          onClick={() => setIsOpenModal(true)}
-          className="mt-10 w-full"
-        >
-          Realizar compra.
-        </ButtonRouter>
-      </div>
-      {isOpenModal && userAddress && myOrderProducts && cartInfo && (
-        <Modal className="flex  justify-center items-center">
-          <PurchaseSuccessful
-            totalCost={totalCost}
-            totalProducts={productsInShoppingCart}
-            totalShippingPrice={shippingCostFormatted}
-            address={userAddress}
-            groupOfCardProducts={myOrderProducts}
-            paymentMethod={cartInfo?.cardNumber}
-            paymentMethodNameOwner={cartInfo?.name}
-          />
-        </Modal>
+            <ButtonRouter
+              onClick={() => setIsOpenModal(true)}
+              className="mt-10 w-full"
+            >
+              Realizar compra.
+            </ButtonRouter>
+          </div>
+          {isOpenModal && userAddress && myOrderProducts && cartInfo && (
+            <Modal className="flex  justify-center items-center">
+              <PurchaseSuccessful
+                totalCost={totalCost}
+                totalProducts={productsInShoppingCart}
+                totalShippingPrice={shippingCostFormatted}
+                address={userAddress}
+                groupOfCardProducts={myOrderProducts}
+                paymentMethod={cartInfo?.cardNumber}
+                paymentMethodNameOwner={cartInfo?.name}
+              />
+            </Modal>
+          )}
+        </section>
+      ) : (
+        <Loading />
       )}
-    </section>
+    </>
   );
 }

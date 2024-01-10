@@ -11,6 +11,7 @@ import { getOneMyOrder } from "@/services/myOrders/getOneOrder";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Loading from "./loading";
 
 export default function OrderPage() {
   const [deliveryAddress, setDeliveryAddress] = useState<AddressDb>();
@@ -50,37 +51,43 @@ export default function OrderPage() {
     }
   }, []);
   return (
-    <section className="flex justify-center flex-col items-center">
-      <h2 className="text-center  text-4xl text-science-blue-700 font-semibold">
-        Fecha: {date}
-      </h2>
-      <Divider className="mt-5" />
-      <div className="flex flex-wrap gap-4 justify-center">
-        <div className="flex flex-col gap-4">
-          <GroupOfProducts groupOfProducts={groupOfProducts} />
-          {deliveryAddress && (
-            <>
-              <h2 className="text-center text-2xl font-bold">
-                Dirección de envío
-              </h2>
-              <AddressCardReadOnly address={deliveryAddress} />
-            </>
-          )}
-        </div>
-        <div>
-          {totalProducts && (
-            <TotalCostResume
-              totalProducts={Number(totalProducts)}
-              shippingCost={totalShippingPrice}
-              totalPrice={totalCost}
-            />
-          )}
-          <h2 className="text-2xl text-center mt-9">
-            Método de pago seleccionado.
+    <>
+      {groupOfProducts && groupOfProducts.length >= 1 ? (
+        <section className="flex justify-center flex-col items-center">
+          <h2 className="text-center  text-4xl text-science-blue-700 font-semibold">
+            Fecha: {date}
           </h2>
-          <BankCardReadOnly value={paymentMethodDetails} />
-        </div>
-      </div>
-    </section>
+          <Divider className="mt-5" />
+          <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-col gap-4">
+              <GroupOfProducts groupOfProducts={groupOfProducts} />
+              {deliveryAddress && (
+                <>
+                  <h2 className="text-center text-2xl font-bold">
+                    Dirección de envío
+                  </h2>
+                  <AddressCardReadOnly address={deliveryAddress} />
+                </>
+              )}
+            </div>
+            <div>
+              {totalProducts && (
+                <TotalCostResume
+                  totalProducts={Number(totalProducts)}
+                  shippingCost={totalShippingPrice}
+                  totalPrice={totalCost}
+                />
+              )}
+              <h2 className="text-2xl text-center mt-9">
+                Método de pago seleccionado.
+              </h2>
+              <BankCardReadOnly value={paymentMethodDetails} />
+            </div>
+          </div>
+        </section>
+      ) : (
+        <Loading />
+      )}
+    </>
   );
 }

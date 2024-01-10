@@ -12,6 +12,7 @@ import EmptyAddress from "./_components/EmptyAddress";
 import { User } from "./_interfaces/user";
 import { getUserInfo } from "./_services/getuserInfo";
 import ChangePassword from "./_components/ChangePassword";
+import Loading from "./loading";
 
 export default function UserProfilePage() {
   const [userInfo, setUserInfo] = useState<User>();
@@ -19,6 +20,7 @@ export default function UserProfilePage() {
   const [addressUserData, setAddressUserData] = useState<AddressDb>();
   const [isSpinnerActive, setIsActiveSpinner] = useState<boolean>(false);
   const [isAddAddress, setIsAddAddress] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isChangePassModalOpen, setIsChangePassModalOpen] =
     useState<boolean>(false);
   const [isOpenEditAddressModal, setIsOpenEditAddressModal] =
@@ -81,63 +83,71 @@ export default function UserProfilePage() {
 
   return (
     <>
-      <section className="w-full max-w-2xl mx-auto bg-white p-6 shadow-md rounded-md">
-        <h2 className="text-2xl font-bold mb-4">Datos Personales</h2>
-        <Divider className="mb-5" />
-        <div className="flex  flex-col gap-4 ">
-          <div className="flex justify-between px-3 items-center">
-            <label className=" font-medium">Nombre:</label>
-            <input
-              readOnly={true}
-              value={userInfo?.firstName}
-              className="w-3/4 border-2 border-[#71717a] outline-none  rounded-md px-3 py-2"
-            />
-          </div>
-          <div className="flex justify-between px-3 items-center">
-            <label className=" font-medium">Apellidos:</label>
-            <input
-              readOnly={true}
-              value={userInfo?.lastName}
-              className="w-3/4 border-2 border-[#71717a] outline-none  rounded-md px-3 py-2"
-            />
-          </div>
-          <div className="flex justify-between px-3 items-center">
-            <label className=" font-medium">Email:</label>
-            <input
-              readOnly={true}
-              value={userInfo?.email}
-              className="w-3/4 border-2 border-[#71717a] outline-none rounded-md px-3 py-2"
-            />
-          </div>
-          <div className="flex justify-end">
-            <Button onClick={handlePassModal}>Cambiar Contraseña</Button>
-          </div>
-          {isChangePassModalOpen && (
-            <Modal className="flex justify-center items-center p-1">
-              <ChangePassword handlePassModal={handlePassModal} />
-            </Modal>
+      {(addresses && addresses.length >= 1) || userInfo ? (
+        <>
+          <section className="w-full max-w-2xl mx-auto bg-white p-6 shadow-md rounded-md">
+            <h2 className="text-2xl font-bold mb-4">Datos Personales</h2>
+            <Divider className="mb-5" />
+            <div className="flex  flex-col gap-4 ">
+              <div className="flex justify-between px-3 items-center">
+                <label className=" font-medium">Nombre:</label>
+                <input
+                  readOnly={true}
+                  value={userInfo?.firstName}
+                  className="w-3/4 border-2 border-[#71717a] outline-none  rounded-md px-3 py-2"
+                />
+              </div>
+              <div className="flex justify-between px-3 items-center">
+                <label className=" font-medium">Apellidos:</label>
+                <input
+                  readOnly={true}
+                  value={userInfo?.lastName}
+                  className="w-3/4 border-2 border-[#71717a] outline-none  rounded-md px-3 py-2"
+                />
+              </div>
+              <div className="flex justify-between px-3 items-center">
+                <label className=" font-medium">Email:</label>
+                <input
+                  readOnly={true}
+                  value={userInfo?.email}
+                  className="w-3/4 border-2 border-[#71717a] outline-none rounded-md px-3 py-2"
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button onClick={handlePassModal}>Cambiar Contraseña</Button>
+              </div>
+              {isChangePassModalOpen && (
+                <Modal className="flex justify-center items-center p-1">
+                  <ChangePassword handlePassModal={handlePassModal} />
+                </Modal>
+              )}
+            </div>
+          </section>
+          {addresses?.length === 0 ? (
+            <section className=" w-full flex justify-center items-center relative">
+              <EmptyAddress
+                handleAddressModal={handleAddAddressModal}
+                isAddAddress={isAddAddress}
+              />
+            </section>
+          ) : (
+            addresses && (
+              <Addresses
+                addressUserData={addressUserData}
+                addresses={addresses}
+                deleteAddress={deleteAddress}
+                handleEditAddressId={handleEditAddressId}
+                handleAddAddressModal={handleAddAddressModal}
+                handleEditAddressModal={handleEditAddressModal}
+                isAddAddress={isAddAddress}
+                isOpenEditAddressModal={isOpenEditAddressModal}
+                isSpinnerActive={isSpinnerActive}
+              />
+            )
           )}
-        </div>
-      </section>
-      {addresses?.length === 0 ? (
-        <EmptyAddress
-          handleAddressModal={handleAddAddressModal}
-          isAddAddress={isAddAddress}
-        />
+        </>
       ) : (
-        addresses && (
-          <Addresses
-            addressUserData={addressUserData}
-            addresses={addresses}
-            deleteAddress={deleteAddress}
-            handleEditAddressId={handleEditAddressId}
-            handleAddAddressModal={handleAddAddressModal}
-            handleEditAddressModal={handleEditAddressModal}
-            isAddAddress={isAddAddress}
-            isOpenEditAddressModal={isOpenEditAddressModal}
-            isSpinnerActive={isSpinnerActive}
-          />
-        )
+        <Loading />
       )}
     </>
   );
