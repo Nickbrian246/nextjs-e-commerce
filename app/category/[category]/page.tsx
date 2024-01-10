@@ -8,13 +8,12 @@ import { categoryNameSelected } from "./_utils";
 export default async function CategoryPage({
   params,
 }: {
-  params: { category: number };
+  params: { category: string };
 }) {
   const groupOfProducts = await getProductsByCategory(params.category);
-  const { category } = groupOfProducts[0];
-  const { name } = category;
+
   //@ts-ignore
-  const categoryName = categoryNameSelected[name.toLowerCase()];
+  const categoryName = categoryNameSelected[params.category.toLowerCase()];
 
   return (
     <>
@@ -30,7 +29,7 @@ export default async function CategoryPage({
         font-medium
         "
         >
-          {categoryName}
+          {categoryName ?? "fail to get the category name"}
         </h2>
         <Divider />
         <div className="  flex flex-wrap max-w-5xl items-center justify-start  w-full">
@@ -39,10 +38,11 @@ export default async function CategoryPage({
               category={product.category}
               description={product.description}
               id={product.id}
-              images={product.images}
+              image={product.image}
               price={product.price}
               title={product.title}
               key={product.id}
+              rating={product.rating}
             />
           ))}
         </div>

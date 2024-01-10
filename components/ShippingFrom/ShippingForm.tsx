@@ -3,7 +3,7 @@ import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { createUserAddress } from "@/services/address/createUserAddress";
 import { AddressDb } from "@/services/address/interfaces";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { twMerge } from "tailwind-merge";
@@ -13,10 +13,15 @@ import { FormList } from "./interfaces/formList";
 import { addHyphensToPhoneNumber } from "./utils";
 import { formList } from "./utils/formList/formList";
 import { mexicoStatesList } from "./utils/stateList";
+
 interface Props {
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
+  setFirstAddressAdded: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function ShippingForm({ setIsEditable }: Props) {
+export default function ShippingForm({
+  setIsEditable,
+  setFirstAddressAdded,
+}: Props) {
   const [shippingForm, setShippingForm] = useState<ShippingForm>({
     Nombre: "",
     Apellidos: "",
@@ -31,6 +36,9 @@ export default function ShippingForm({ setIsEditable }: Props) {
   const [readOnly, setReadOnly] = useState<boolean>(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const product = searchParams.get("product");
+  const quantity = searchParams.get("quantity");
 
   useEffect(() => {
     const localStorageData = getEntityInLocalStorage("shippingFormData");
@@ -73,7 +81,9 @@ export default function ShippingForm({ setIsEditable }: Props) {
       },
       token.token_access
     )
-      .then((res) => router.push(`/paymentMethod/${"noauth"}`))
+      .then((res) => {
+        setFirstAddressAdded(true);
+      })
       .catch((err) => {
         dispatch(
           activeWarning({
@@ -133,6 +143,7 @@ export default function ShippingForm({ setIsEditable }: Props) {
     setReadOnly(false);
     setIsEditable(false);
   };
+
   return (
     <form
       className="flex flex-wrap max-w-4xl gap-y-10 gap-x-4"
@@ -276,7 +287,7 @@ export default function ShippingForm({ setIsEditable }: Props) {
       `
         )}
       >
-        Guardar y continuar
+        Guardar
       </button>
       {/* {readOnly && (
         <button

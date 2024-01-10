@@ -16,6 +16,7 @@ import AddressesDirectory from "./_components/addressesDirectory/AddressesDirect
 import EditAddress from "./_components/editAddress/EditAddress";
 import { useSearchParams } from "next/navigation";
 import Loading from "./loading";
+import EmptyAddress from "../user-profile/_components/EmptyAddress";
 
 type ModalType = "Edit" | "addone";
 
@@ -27,6 +28,7 @@ export default function DeliveryAddressPage() {
   const [modalType, setModalType] = useState<ModalType>("Edit");
   const [addressUserData, setAddressUserData] = useState<AddressDb[]>();
   const [addressDataToEdit, setAddressDataToEdit] = useState<AddressDb>();
+  const [firstAddressAdded, setFirstAddressAdded] = useState<boolean>(false);
   //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
@@ -40,17 +42,21 @@ export default function DeliveryAddressPage() {
       const token = getEntityInLocalStorage("userToken");
       getUserAddress(token.token_access)
         .then((res) => {
+          console.log(res);
+
           setAddressUserData(res);
         })
         .catch((err) => {
-          if (err.response.data.message.split(":")[1].trim() === "no data") {
+          console.log(err.response);
+
+          if (err.response.data.status === 404) {
             setThereIsAddressData(false);
             return;
           }
           dispatch(
             activeWarning({
               isActiveWarning: true,
-              warningMessage: `${err.data.message}`,
+              warningMessage: `${err.response.data.message.split(":")[1]}`,
               duration: 4000,
               severity: "error",
             })
@@ -59,7 +65,7 @@ export default function DeliveryAddressPage() {
       return;
     }
     router.push("/auth/signin");
-  }, [isOpenModal, isLogged]);
+  }, [isOpenModal, isLogged, firstAddressAdded]);
 
   const handleAddressSelected = (id: string) => {
     setAddressIdSelected(id);
@@ -97,7 +103,8 @@ export default function DeliveryAddressPage() {
   };
   return (
     <>
-      {addressUserData && addressUserData?.length >= 1 ? (
+      {(addressUserData && addressUserData?.length >= 1) ||
+      !thereIsAddressData ? (
         <>
           <section className="p-2 lg:p-5 shadow-xl h-fit lg:w-[900px]">
             <h2 className="text-4xl font-medium text-center mb-7">
@@ -125,7 +132,10 @@ export default function DeliveryAddressPage() {
                 addressIdSelected={addressIdSelected}
               />
             ) : (
-              <ShippingForm setIsEditable={setIsEditable} />
+              <ShippingForm
+                setIsEditable={setIsEditable}
+                setFirstAddressAdded={setFirstAddressAdded}
+              />
             )}
 
             {isLogged && thereIsAddressData && (
@@ -153,14 +163,14 @@ export default function DeliveryAddressPage() {
               </Modal>
             )}
 
-            {isLogged && (
+            {isLogged && addressUserData && addressUserData?.length >= 1 && (
               <div className="flex w-full justify-end mt-4">
                 <button
                   className="scale-125 flex items-center gap-1 "
                   title="Agregar otra dirección"
                   onClick={() => handleOpenAddAddressModal("addone")}
                 >
-                  Agregar dirección
+                  Agregar otra dirección
                   <span className="text-4xl text-science-blue-600">
                     <MdAddCircle />
                   </span>

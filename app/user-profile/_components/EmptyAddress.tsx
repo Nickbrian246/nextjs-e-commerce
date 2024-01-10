@@ -5,7 +5,6 @@ import React from "react";
 import { FaTruck } from "react-icons/fa";
 interface Props {
   handleAddressModal: () => void;
-
   isAddAddress: boolean;
 }
 export default function EmptyAddress(props: Props) {
