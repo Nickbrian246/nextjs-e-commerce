@@ -22,6 +22,7 @@ export async function decreaseOneItemToShoppingCart(
     );
     return addProduct.data;
   } catch (error) {
+    //@ts-ignore
     throw error.response.data.message;
   }
 }

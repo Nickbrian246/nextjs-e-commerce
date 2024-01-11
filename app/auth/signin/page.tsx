@@ -62,6 +62,7 @@ export default function SigninPage() {
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    //@ts-ignore
     dispatch(UserSignin(signinUser));
   };
   return (

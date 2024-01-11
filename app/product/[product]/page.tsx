@@ -41,6 +41,7 @@ export default function ProductPage({
     Product[]
   >([]);
   const [quantity, setQuantity] = useState(1);
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -110,6 +111,7 @@ export default function ProductPage({
           activeWarning({
             isActiveWarning: true,
             severity: "error",
+            //@ts-ignore
             warningMessage: `${error.response.data.message}`,
           })
         );
@@ -135,6 +137,7 @@ export default function ProductPage({
       extractThreeImages?.length > 1 &&
       groupOfProductsByCategory?.length > 1 &&
       truncateGroupOfProductsTo15?.length > 1 ? (
+        //@ts-ignore
         <ErrorBoundary errorComponent={<Error />}>
           <div className=" w-full flex flex-col md:flex-row items-start lg:max-w-6xl mt-5">
             {extractThreeImages?.length > 1 && (

@@ -50,6 +50,7 @@ export default function ProductResumeCard(props: Props) {
   const [productQuantity, setProductQuantity] = useState<number>(1);
   const [debounce, setDebounce] = useState<number>(1);
   const router = useRouter();
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
 
   useEffect(() => {

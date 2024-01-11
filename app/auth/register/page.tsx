@@ -31,6 +31,7 @@ export default function RegisterPage() {
     hasOneEspecialCharacter,
     isLengthCorrect,
   } = useCheckPassword();
+  //@ts-ignore
   const { isLogged, isLoading } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -108,6 +109,7 @@ export default function RegisterPage() {
       hasOneEspecialCharacter &&
       isLengthCorrect
     )
+      //@ts-ignore
       dispatch(UserRegister(registerUser));
   };
   return (

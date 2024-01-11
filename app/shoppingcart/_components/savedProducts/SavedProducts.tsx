@@ -23,6 +23,7 @@ export default function SavedProducts() {
   const [updateGroupOfProducts, setUpdateGroupOfProducts] =
     useState<boolean>(false);
   const [images, setImages] = useState<AdapterForPriceAndFreeShipping[]>();
+  //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
   const dispatch = useDispatch();
   const productsRef = useRef([]);
@@ -39,6 +40,7 @@ export default function SavedProducts() {
         //@ts-ignore
 
         if (Array.isArray(savedProducts)) {
+          //@ts-ignore
           getProductsWithPromiseAll(savedProducts).then((products) => {
             //@ts-ignore
             const addQuantity = addQuantityOfCartItems(savedProducts, products);

@@ -101,6 +101,7 @@ export default function ChangePassword(props: Props) {
       }
     } catch (error) {
       if (
+        //@ts-ignore
         error.response.data.message ===
         "ForbiddenException: Contraseña incorrecta"
       ) {
@@ -109,6 +110,7 @@ export default function ChangePassword(props: Props) {
           activeWarning({
             isActiveWarning: true,
             severity: "error",
+            //@ts-ignore
             warningMessage: `${error.response.data.message.split(":")[1]}`,
           })
         );

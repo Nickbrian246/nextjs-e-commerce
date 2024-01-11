@@ -16,11 +16,14 @@ import Loading from "./loading";
 
 export default function ShoppingCart() {
   const router = useRouter();
+  //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const { isActiveLoadingSpinner } = useSelector(
+    //@ts-ignore
     (state) => state.globalSpinner
-  );
+  ); //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
   const { calculateShoppingCart, groupOfProducts, shippingCost, totalPrice } =

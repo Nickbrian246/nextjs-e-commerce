@@ -36,6 +36,7 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
   const [priceWithOffer, setPriceWithOffer] = useState<number>();
   const [itHasFreeShipping, setItHasFreeShipping] = useState<boolean>(false);
   const [quantity, setQuantity] = useState(1);
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
 
@@ -99,6 +100,7 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
           activeWarning({
             isActiveWarning: true,
             severity: "error",
+            //@ts-ignore
             warningMessage: `${error.response.data.message}`,
           })
         );
