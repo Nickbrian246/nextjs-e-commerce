@@ -3,8 +3,10 @@ import MobileCategories from "@/components/Categories/MobileCategories";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Products from "@/components/productCard/Products";
+import { getProducts } from "@/services";
 
-export default function Home() {
+export default async function Home() {
+  const groupOfProducts = await getProducts();
   return (
     <>
       <header className="w-full bg-base-color md:flex md:justify-between  ">
@@ -23,7 +25,7 @@ export default function Home() {
       >
         <MobileCategories />
         <Categories />
-        <Products />
+        <Products groupOfProducts={groupOfProducts} />
       </section>
       <footer className="w-full bg-black">
         <Footer />

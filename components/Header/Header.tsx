@@ -16,14 +16,17 @@ import CollapsableMenu from "./collapsableMenu/CollapsableMenu";
 export default function Header() {
   const [isOpenCollapsableMenu, setIsOpenCollapsableMenu] =
     useState<boolean>(false);
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
+
   const {
     duration,
     severity,
     warningMessage,
     warningSubMessage,
     isActiveWarning,
+    //@ts-ignore
   } = useSelector((state) => state.globalWarning);
 
   // disable global warning

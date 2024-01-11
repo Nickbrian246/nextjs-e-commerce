@@ -4,10 +4,13 @@ import { extractImageAndIdFromGroupOFProducts } from "../Carousel/utils/filterDa
 import ProductCard from "./components/ProductCard";
 import { Suspense } from "react";
 import ProductsCardLoading from "./components/loading";
+import { Product } from "@/interfaces/product";
 
-export default async function Products() {
-  const groupOfProducts = await getProducts();
-
+export default async function Products({
+  groupOfProducts,
+}: {
+  groupOfProducts: Product[];
+}) {
   const groupOfProductsForCarousel = groupOfProducts.slice(0, 8);
   const filterDataForCarousel = extractImageAndIdFromGroupOFProducts(
     groupOfProductsForCarousel
