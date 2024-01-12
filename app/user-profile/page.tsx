@@ -11,7 +11,7 @@ import Addresses from "./_components/Addresses";
 import EmptyAddress from "./_components/EmptyAddress";
 import { User } from "./_interfaces/user";
 //@ts-ignore
-import { getUserInfo } from "./_services/getuserInfo";
+import { getUserInfo } from "./_services/getUserInfo";
 import ChangePassword from "./_components/ChangePassword";
 import Loading from "./loading";
 
