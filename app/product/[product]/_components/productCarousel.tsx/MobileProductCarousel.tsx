@@ -12,7 +12,6 @@ export default function MobileProductCarousel(props: Props) {
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const imageRefs = images.map(() => useRef<HTMLDivElement>(null));
-  console.log(imageRefs);
 
   const handleIndexChange = (index: number) => {
     setCurrentIndex(index);
