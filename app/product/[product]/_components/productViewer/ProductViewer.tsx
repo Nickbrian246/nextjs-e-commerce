@@ -41,6 +41,7 @@ function ProductViewerOptions(props: ProductViewerProps) {
     <div className=" flex flex-col gap-2 ">
       {images.map((image, index) => (
         <div
+          key={index}
           onClick={() => {
             handleChangeImg(index);
           }}
