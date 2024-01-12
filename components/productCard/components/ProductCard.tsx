@@ -22,6 +22,7 @@ export default function ProductCard(props: Product) {
   const [savedMoney, setSavedMoney] = useState<number>(0);
   const [itHasFreeShipping, setItHasFreeShipping] = useState<boolean>();
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
 
@@ -44,6 +45,7 @@ export default function ProductCard(props: Product) {
     if (isLogged) {
       const token = getEntityInLocalStorage("userToken");
       dispatch(
+        //@ts-ignore
         addOneItemProductToShoppingCartInDb({
           productId: id,
           quantity: 1,

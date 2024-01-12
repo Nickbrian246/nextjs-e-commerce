@@ -1,3 +1,4 @@
+"use client";
 import { configureStore } from "@reduxjs/toolkit";
 import shoppingCart from "./slices/ShoppingCart";
 import loggedUser from "./slices/auth/sliceForAuth";

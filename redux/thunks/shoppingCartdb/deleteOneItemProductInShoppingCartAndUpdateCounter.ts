@@ -32,6 +32,7 @@ export const deleteOneItemProductToShoppingCartInDb = createAsyncThunk(
       dispatch(
         activeWarning({
           severity: "error",
+          //@ts-ignore
           warningMessage: `${error.response.data.message}`,
           isActiveWarning: true,
         })

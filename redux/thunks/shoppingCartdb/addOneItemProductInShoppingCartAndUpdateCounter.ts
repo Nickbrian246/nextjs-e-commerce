@@ -31,6 +31,7 @@ export const addOneItemProductToShoppingCartInDb = createAsyncThunk(
       dispatch(
         activeWarning({
           severity: "error",
+          //@ts-ignore
           warningMessage: `${error.response.data.message}`,
           isActiveWarning: true,
         })

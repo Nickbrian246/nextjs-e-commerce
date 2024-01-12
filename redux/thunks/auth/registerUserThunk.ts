@@ -27,6 +27,7 @@ export const UserRegister = createAsyncThunk(
           duration: 5000,
           isActiveWarning: true,
           severity: "error",
+          //@ts-ignore
           warningMessage: `${error.response.data.message}`,
         })
       );

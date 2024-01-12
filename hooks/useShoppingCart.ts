@@ -118,6 +118,7 @@ export function useShoppingCart() {
         activeWarning({
           isActiveWarning: true,
           severity: "error",
+          //@ts-ignore
           warningMessage: `${error.response.data.message}`,
         })
       );

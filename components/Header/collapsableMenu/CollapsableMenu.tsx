@@ -17,6 +17,7 @@ export default function CollapsableMenu({
   isOpenCollapsableMenu,
   isLogged,
 }: Props) {
+  //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
   const dispatch = useDispatch();
 

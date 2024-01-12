@@ -9,6 +9,7 @@ import { logOut } from "@/redux/slices/auth/sliceForAuth";
 
 export default function OptionHeader(props: Props) {
   const { titleEn, titleEs, icon, route, id } = props;
+  //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
   const dispatch = useDispatch();
 

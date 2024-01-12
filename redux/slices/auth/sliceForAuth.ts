@@ -1,3 +1,4 @@
+"use client";
 import { RegisterUser } from "@/app/auth/register/_interfaces/register";
 import { UserRegister } from "@/redux/thunks/auth/registerUserThunk";
 import {

@@ -27,6 +27,7 @@ export default function ProductQuantityBox({
 }: Props) {
   //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
+  //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   useEffect(() => {
     if (!isLogged) {
