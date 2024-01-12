@@ -12,22 +12,22 @@ export default function MobileProductCarousel(props: Props) {
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const imageRefs = images.map(() => useRef<HTMLDivElement>(null));
+  console.log(imageRefs);
 
   const handleIndexChange = (index: number) => {
     setCurrentIndex(index);
   };
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        setCurrentIndex(index);
-      }
+    entries.forEach((entry) => {
+      const index = imageRefs.findIndex((ref) => ref.current === entry.target);
+      if (entry.isIntersecting) setCurrentIndex(index);
     });
   };
 
   useEffect(() => {
     const options = {
-      threshold: 0.5,
+      threshold: 0.2,
     };
 
     const observer = new IntersectionObserver(handleIntersection, options);
@@ -37,11 +37,8 @@ export default function MobileProductCarousel(props: Props) {
         observer.observe(ref.current);
       }
     });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [imageRefs]);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-w-[300px] md:hidden w-full relative flex gap-2  bg-base-white overflow-hidden">
@@ -49,11 +46,7 @@ export default function MobileProductCarousel(props: Props) {
         {`${currentIndex + 1} / ${images.length}`}
       </div>
 
-      <SwipeableViews
-        index={currentIndex}
-        onChangeIndex={handleIndexChange}
-        enableMouseEvents
-      >
+      <div className="w-full flex gap-2  md:hidden  overflow-hidden overflow-x-auto">
         {images.map((image, index) => (
           <div
             key={index}
@@ -63,7 +56,7 @@ export default function MobileProductCarousel(props: Props) {
             <Image src={image} alt="product" fill={true} objectFit="contain" />
           </div>
         ))}
-      </SwipeableViews>
+      </div>
     </div>
   );
 }
