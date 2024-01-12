@@ -1,4 +1,3 @@
-"use client";
 import { RegisterUser } from "@/app/auth/register/_interfaces/register";
 import { UserRegister } from "@/redux/thunks/auth/registerUserThunk";
 import {
@@ -13,7 +12,7 @@ interface InitialState {
   error: null;
 }
 const initialState: InitialState = {
-  isLogged: !!getEntityInLocalStorage("userToken"),
+  isLogged: false,
   isLoading: false,
   error: null,
 };
@@ -29,6 +28,9 @@ export const loggedUser = createSlice({
         ...state,
         isLogged: false,
       };
+    },
+    isLogged: (state) => {
+      state.isLogged = !!getEntityInLocalStorage("userToken");
     },
     signin: (
       state,
@@ -61,4 +63,4 @@ export const loggedUser = createSlice({
 
 export default loggedUser.reducer;
 
-export const { logOut, signin } = loggedUser.actions;
+export const { logOut, signin, isLogged } = loggedUser.actions;

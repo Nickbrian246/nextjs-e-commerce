@@ -1,48 +1,34 @@
 import React from "react";
 import Link from "next/link";
+import ContentLoader from "react-content-loader";
 export default function HomeProductCardSkeleton() {
+  const arr = new Array(20).fill(".");
   return (
-    <div
-      className="
-    w-full
-    shadow-md 
-    p-1 
-    sm:max-w-[290px] 
-    md:max-w-[200px]  
-    lg:max-w-[320px]  
-    flex flex-col 
-    gap-1 
-    items-center
-    animate-pulse" // Add the animate-pulse class for the skeleton effect
-    >
-      <div className="w-full flex flex-row justify-between">
-        <div className="w-1/2">
-          <div className="bg-gray-300 rounded-md h-12 w-12"></div>
-        </div>
-        <div className="w-1/2">
-          <div className="bg-gray-300 rounded-md h-12 w-12"></div>
-        </div>
-      </div>
-      <Link href="/product/placeholder">
-        <div className="min-w-[208px] relative min-h-[208px] bg-gray-300 rounded-md"></div>
-      </Link>
-      <div className="">
-        <h2 className="bg-gray-300 h-6 w-3/4 mb-2"></h2>
-        <h3 className="bg-gray-300 h-4 w-1/2"></h3>
-      </div>
-      <div className="font-bold flex items-start w-full gap-2">
-        <span className="bg-gray-300 h-6 w-1/3"></span>
-        <span className="bg-gray-300 h-4 w-1/4"></span>
-      </div>
-      <button
-        title="agregar al carrito"
-        className="self-start font-medium rounded-sm text-white flex items-center w-[190px] gap-2 p-2 bg-[#4b98e5] transition-all duration-300 opacity-0"
-      >
-        <div className="text-white bg-gray-300 rounded-md h-6 w-6">
-          {/* Icon placeholder */}
-        </div>
-        <span className="bg-gray-300 h-6 w-1/2"></span>
-      </button>
-    </div>
+    <>
+      <section className="flex flex-wrap w-[1016px] ">
+        {arr.map(() => {
+          return (
+            <ContentLoader
+              speed={1}
+              width={450}
+              height={400}
+              viewBox="0 0 450 400"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#ecebeb"
+            >
+              <rect x="172" y="53" rx="0" ry="0" width="2" height="300" />
+              <rect x="386" y="55" rx="0" ry="0" width="2" height="300" />
+              <rect x="171" y="53" rx="0" ry="0" width="216" height="2" />
+              <rect x="171" y="353" rx="0" ry="0" width="216" height="2" />
+              <circle cx="277" cy="147" r="44" />
+              <rect x="174" y="53" rx="0" ry="0" width="216" height="41" />
+              <rect x="198" y="207" rx="0" ry="0" width="160" height="9" />
+              <rect x="231" y="236" rx="0" ry="0" width="92" height="9" />
+              <rect x="206" y="324" rx="0" ry="0" width="146" height="51" />
+            </ContentLoader>
+          );
+        })}
+      </section>
+    </>
   );
 }
