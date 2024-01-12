@@ -5,7 +5,7 @@ import {
   newPriceWithDiscount,
 } from "@/components/productCard/utils/hasOffer";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, RefObject, useEffect, useState } from "react";
 import { BiSolidOffer } from "react-icons/bi";
 import { FaShippingFast } from "react-icons/fa";
 import { sliceText } from "../../utils";
@@ -28,7 +28,7 @@ interface CarouselProductCardProps {
   description: string;
   price: number;
   id: number;
-  reference?: HTMLDivElement;
+  reference?: RefObject<HTMLDivElement>;
 }
 export default function CarouselProductCard(props: CarouselProductCardProps) {
   const { description, image, title, price, id, reference } = props;
@@ -117,7 +117,7 @@ export default function CarouselProductCard(props: CarouselProductCardProps) {
   return (
     <>
       <div
-        {...(reference ? { ref: reference as HTMLDivElement } : null)}
+        {...(reference ? { ref: reference } : null)}
         className="flex flex-col gap-1 min-w-[278px] p-3 h-auto shadow-md justify-between"
       >
         <Link href={`/product/${id}`}>

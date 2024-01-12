@@ -98,7 +98,6 @@ export default function Carousel({
                   title={product.title}
                   price={product.price}
                   id={product.id}
-                  //@ts-ignore
                   reference={firsElement}
                   key={product.id}
                 />
@@ -112,7 +111,6 @@ export default function Carousel({
                   price={product.price}
                   id={product.id}
                   key={product.id}
-                  //@ts-ignore
                   reference={lastElement}
                 />
               );
@@ -125,7 +123,6 @@ export default function Carousel({
                   price={product.price}
                   id={product.id}
                   key={product.id}
-                  //@ts-ignore
                   reference={lastElement}
                 />
               );
