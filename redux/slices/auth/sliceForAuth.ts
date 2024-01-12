@@ -30,7 +30,7 @@ export const loggedUser = createSlice({
       };
     },
     isLogged: (state) => {
-      state.isLogged = !!getEntityInLocalStorage("userToken");
+      return { ...state, isLogged: !!getEntityInLocalStorage("userToken") };
     },
     signin: (
       state,

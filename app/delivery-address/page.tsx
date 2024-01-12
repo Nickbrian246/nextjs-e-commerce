@@ -45,7 +45,7 @@ export default function DeliveryAddressPage() {
           setAddressUserData(res);
         })
         .catch((err) => {
-          if (err.response.data.status === 404) {
+          if (err.response.data.statusCode === 404) {
             setThereIsAddressData(false);
             return;
           }

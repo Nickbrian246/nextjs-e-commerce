@@ -5,20 +5,16 @@ import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Products from "@/components/productCard/Products";
 import { Product } from "@/interfaces/product";
-import { getProducts } from "@/services";
-import { error } from "console";
-import { useEffect, useState } from "react";
 import globalWarning from "@/redux/slices/globalWarning/globalWarning";
+import { getProducts } from "@/services";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-
-import { isLogged } from "@/redux/slices/auth/sliceForAuth";
 import Loading from "./loading";
 
 export default function Home() {
   const [groupOfProducts, setGroupOfProduct] = useState<Product[]>();
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(isLogged());
     getProducts()
       .then((res) => setGroupOfProduct(res))
       .catch(() => {

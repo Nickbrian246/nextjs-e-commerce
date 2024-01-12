@@ -12,7 +12,7 @@ import Warning from "../components/Warning";
 import OptionsForHeaderMenu from "./components/optionsForMenu/OptionsForHeaderMenu";
 import { getShoppingCartCounter } from "./services/getShoppingCartCounter";
 import CollapsableMenu from "./collapsableMenu/CollapsableMenu";
-
+import { isLogged as checkIsUserLogged } from "@/redux/slices/auth/sliceForAuth";
 export default function Header() {
   const [isOpenCollapsableMenu, setIsOpenCollapsableMenu] =
     useState<boolean>(false);
@@ -40,11 +40,14 @@ export default function Header() {
 
   // once user is logged get the counter for shopping cart
   useEffect(() => {
+    dispatch(checkIsUserLogged());
+
     if (isLogged) {
       const token = getEntityInLocalStorage("userToken");
 
       getShoppingCartCounter(token.token_access)
         .then((res) => {
+          console.log(res);
           dispatch(updateShoppingCartCounter({ count: res }));
         })
         .catch((err) => {
@@ -57,7 +60,7 @@ export default function Header() {
           );
         });
     }
-  }, []);
+  }, [isLogged]);
 
   return (
     <>

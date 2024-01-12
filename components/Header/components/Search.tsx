@@ -52,6 +52,12 @@ export default function Search() {
     e.preventDefault();
   };
 
+  const handleBlur = () => {
+    setTimeout(() => {
+      setIsSearching(false);
+    }, 110);
+  };
+
   const inputFocus = () => {
     if (search.length >= 1) {
       setIsSearching(true);
@@ -69,9 +75,7 @@ export default function Search() {
     <form
       className="flex relative w-fit"
       onSubmit={handleSearchFormSubmit}
-      onBlur={() => {
-        setIsSearching(false);
-      }}
+      onBlur={handleBlur}
       onFocus={inputFocus}
     >
       <input

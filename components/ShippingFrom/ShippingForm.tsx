@@ -100,6 +100,7 @@ export default function ShippingForm({
     name: string
   ) => {
     const value = e.target.value;
+
     setShippingForm((prevValue) => {
       if (name === "Teléfono") {
         const filterOnlyNumbers = value.replace(/[^\d]/g, "");
@@ -133,7 +134,11 @@ export default function ShippingForm({
   };
 
   const handleZipCode = (e: ChangeEvent<HTMLInputElement>) => {
-    setZipCode(e.target.value);
+    const value = e.target.value;
+    const filterLetters = value.replace(/ [a-z]/gi, "");
+    setZipCode((prevValue) =>
+      prevValue.length === 5 ? prevValue : filterLetters
+    );
   };
 
   const handleOptionSelect = (event: ChangeEvent<HTMLSelectElement>) => {
