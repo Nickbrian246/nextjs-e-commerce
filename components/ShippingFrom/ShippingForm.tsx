@@ -135,10 +135,8 @@ export default function ShippingForm({
 
   const handleZipCode = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const filterLetters = value.replace(/ [a-z]/gi, "");
-    setZipCode((prevValue) =>
-      prevValue.length === 5 ? prevValue : filterLetters
-    );
+    const filterLetters = value.replace(/[a-zA-Z]/gi, "");
+    setZipCode((prevValue) => (value.length === 5 ? prevValue : filterLetters));
   };
 
   const handleOptionSelect = (event: ChangeEvent<HTMLSelectElement>) => {

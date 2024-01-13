@@ -26,6 +26,7 @@ import { adapterForAddProductForAmount } from "./_adapter";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { addProductToShippingCartByAmount } from "@/services/shoppingCartdb/addProductToShoppingCartByAmount";
+
 import Loading from "./loading";
 export default function ProductPage({
   params,
@@ -48,22 +49,36 @@ export default function ProductPage({
 
   useEffect(() => {
     const getData = async () => {
-      const product = await getProduct(params.product);
-      setProduct(product);
+      try {
+        const product = await getProduct(params.product);
+        setProduct(product);
 
-      const groupProducts = await getProducts();
-      setGroupOfProducts(groupProducts);
+        const groupProducts = await getProducts();
+        setGroupOfProducts(groupProducts);
 
-      const { category } = product;
-      const groupOfProductsByCategory = await getProductsByCategory(category);
-      setGroupOfProductsByCategory(groupOfProductsByCategory);
+        const { category } = product;
+        const groupOfProductsByCategory = await getProductsByCategory(category);
+        setGroupOfProductsByCategory(groupOfProductsByCategory);
 
-      const randomImages = groupProducts.map((product) => product.image);
-      const extractThreeImages = randomImages.slice(0, 2).concat(product.image);
-      setExtractThreeImages(extractThreeImages);
+        const randomImages = groupProducts.map((product) => product.image);
+        const extractThreeImages = randomImages
+          .slice(0, 2)
+          .concat(product.image);
+        setExtractThreeImages(extractThreeImages);
 
-      const truncateGroupOfProductsTo15 = groupProducts.slice(15, 30);
-      setTruncateGroupOfProductsTo15(truncateGroupOfProductsTo15);
+        const truncateGroupOfProductsTo15 = groupProducts.slice(15, 30);
+        setTruncateGroupOfProductsTo15(truncateGroupOfProductsTo15);
+      } catch (error) {
+        dispatch(
+          //@ts-ignore
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            //@ts-ignore
+            warningMessage: `${error.response.data.message}`,
+          })
+        );
+      }
     };
     getData();
   }, []);
@@ -190,7 +205,9 @@ export default function ProductPage({
           </div>
         </ErrorBoundary>
       ) : (
-        <Loading />
+        <section className=" w-full h-screen flex flex-col justify-start items-center  ">
+          <Loading />
+        </section>
       )}
     </>
   );
