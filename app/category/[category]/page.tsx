@@ -5,6 +5,20 @@ import ProductCard from "@/components/productCard/components/ProductCard";
 import Divider from "@/components/Divider/Divider";
 import { categoryNameSelected } from "./_utils";
 
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { category: string };
+}): Promise<Metadata> {
+  //@ts-ignore
+  const categoryName = categoryNameSelected[params.category.toLowerCase()];
+  return {
+    title: categoryName,
+  };
+}
+
 export default async function CategoryPage({
   params,
 }: {
@@ -14,7 +28,7 @@ export default async function CategoryPage({
 
   //@ts-ignore
   const categoryName = categoryNameSelected[params.category.toLowerCase()];
-
+  await generateMetadata({ params });
   return (
     <>
       <aside>

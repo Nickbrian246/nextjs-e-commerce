@@ -5,7 +5,9 @@ import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Products from "@/components/productCard/Products";
 import { Product } from "@/interfaces/product";
-import globalWarning from "@/redux/slices/globalWarning/globalWarning";
+import globalWarning, {
+  activeWarning,
+} from "@/redux/slices/globalWarning/globalWarning";
 import { getProducts } from "@/services";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -20,7 +22,7 @@ export default function Home() {
       .catch(() => {
         dispatch(
           //@ts-ignore
-          globalWarning({
+          activeWarning({
             isActiveWarning: true,
             severity: "error",
             warningMessage: "Error al cargar los productos",

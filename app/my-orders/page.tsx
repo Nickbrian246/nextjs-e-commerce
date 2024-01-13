@@ -3,7 +3,7 @@ import { getAllOrders } from "@/services/myOrders/getOrders";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { useEffect, useState } from "react";
 import { Order } from "@/services/myOrders/interfaces";
-import { FaCreditCard } from "react-icons/fa";
+import { FaCreditCard, FaShoppingBag } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
@@ -13,18 +13,23 @@ import Loading from "./loading";
 
 export default function MyOrdersPage() {
   const [groupOfOrders, setGroupOfOrders] = useState<Order[]>();
+  const [thereIsOrder, setThereIsOrder] = useState<boolean>();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const token = getEntityInLocalStorage("userToken");
     getAllOrders(token.token_access)
-      .then((res) => setGroupOfOrders(res))
+      .then((res) => {
+        setThereIsOrder(true);
+        setGroupOfOrders(res);
+      })
       .catch((err) => {
+        setThereIsOrder(false);
         return dispatch(
           activeWarning({
             isActiveWarning: true,
             severity: "error",
-            warningMessage: `${err.data}`,
+            warningMessage: `${err.response.data.message}`,
           })
         );
       });
@@ -32,7 +37,7 @@ export default function MyOrdersPage() {
 
   return (
     <>
-      {groupOfOrders && groupOfOrders.length >= 1 ? (
+      {groupOfOrders && groupOfOrders.length >= 1 && thereIsOrder ? (
         <>
           <div className="overflow-x-auto hidden md:flex">
             <table className="min-w-full bg-white border rounded-lg overflow-hidden">
@@ -130,9 +135,28 @@ export default function MyOrdersPage() {
             ))}
           </div>
         </>
+      ) : thereIsOrder !== null ? (
+        <NoOrders />
       ) : (
         <Loading />
       )}
+    </>
+  );
+}
+
+function NoOrders() {
+  return (
+    <>
+      <div className=" lg:min-w-[580px] flex  gap-3 min-h-[200px] p-4 flex-col  justify-center items-center shadow-lg">
+        <p className="text-lg font-semibold text-center ">
+          Aún no tienes pedidos registrados. <br />
+          Hagamos algunos.
+        </p>
+        <span className="text-4xl ">
+          <FaShoppingBag />
+        </span>
+        <LinkButton href={"/"}>Vamos !!!</LinkButton>
+      </div>
     </>
   );
 }

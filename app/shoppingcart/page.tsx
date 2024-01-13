@@ -71,6 +71,10 @@ export default function ShoppingCart() {
             </Button>
           </aside>
         </>
+      ) : groupOfProducts.length === 0 ? (
+        <section className="w-full flex justify-center items-start">
+          <NoProduct />
+        </section>
       ) : (
         <Loading />
       )}
@@ -80,7 +84,7 @@ export default function ShoppingCart() {
 function NoProduct() {
   return (
     <>
-      <div className=" lg:min-w-[580px] flex  gap-3 min-h-[200px] p-4 flex-col  justify-center items-center">
+      <div className=" lg:min-w-[580px] flex  gap-3 min-h-[200px] p-4 flex-col  justify-center items-center shadow-lg">
         <p className="text-lg font-semibold text-center ">
           Aún no tienes productos en tu carrito de compras. <br />
           Te invitamos a que agregues algunos.

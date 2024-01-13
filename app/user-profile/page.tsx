@@ -34,7 +34,15 @@ export default function UserProfilePage() {
         setUserInfo(res.user);
         setAddresses(res.addresses);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        dispatch(
+          activeWarning({
+            isActiveWarning: true,
+            severity: "error",
+            warningMessage: `${err.response.data.message}`,
+          })
+        );
+      });
   }, [isOpenEditAddressModal, isSpinnerActive, isAddAddress]);
 
   const handleEditAddressId = (id: string) => {

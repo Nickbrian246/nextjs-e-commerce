@@ -1,11 +1,34 @@
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import { getProductById } from "@/services/getProductById";
+import { Metadata, ResolvingMetadata } from "next";
 
-export default function ProdLayout({
-  children, // will be a page or nested layout
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { product: string };
+}): Promise<Metadata> {
+  const product = await getProductById(Number(params.product));
+
+  return {
+    title: product.title,
+  };
+}
+
+export default async function ProdLayout({
+  children,
+  params, // will be a page or nested layout
 }: {
   children: React.ReactNode;
+  params: { product: string };
 }) {
+  await generateMetadata({ params });
+
   return (
     <>
       <header>
