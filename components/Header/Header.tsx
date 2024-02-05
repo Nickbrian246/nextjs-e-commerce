@@ -13,13 +13,14 @@ import OptionsForHeaderMenu from "./components/optionsForMenu/OptionsForHeaderMe
 import { getShoppingCartCounter } from "./services/getShoppingCartCounter";
 import CollapsableMenu from "./collapsableMenu/CollapsableMenu";
 import { isLogged as checkIsUserLogged } from "@/redux/slices/auth/sliceForAuth";
+import { useRouter } from "next/navigation";
 export default function Header() {
   const [isOpenCollapsableMenu, setIsOpenCollapsableMenu] =
     useState<boolean>(false);
   //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const {
     duration,
     severity,
@@ -51,11 +52,20 @@ export default function Header() {
           dispatch(updateShoppingCartCounter({ count: res }));
         })
         .catch((err) => {
+          if (err.response.data.message === "Unauthorized") {
+            return dispatch(
+              activeWarning({
+                isActiveWarning: true,
+                severity: "error",
+                warningMessage: `Session expirada por favor inicie sesión`,
+              })
+            );
+          }
           return dispatch(
             activeWarning({
               isActiveWarning: true,
               severity: "error",
-              warningMessage: `${err.message}`,
+              warningMessage: `${err.response.data.message}`,
             })
           );
         });

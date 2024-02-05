@@ -27,10 +27,12 @@ export function useShoppingCart() {
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
   //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   function calculateShoppingCart() {
     if (isLogged) {
+      setIsLoading(true);
       const token = getEntityInLocalStorage("userToken");
       getShoppingCartProductsDb(token.token_access)
         .then((res) => {
@@ -54,6 +56,7 @@ export function useShoppingCart() {
           });
         })
         .catch((err) => {
+          setIsLoading(true);
           if (err.response.data.message === "Unauthorized") {
             dispatch(
               activeWarning({
@@ -67,6 +70,7 @@ export function useShoppingCart() {
           }
         });
     } else {
+      setIsLoading(true);
       const productFromLocalStorage =
         getEntityProductsFromLocalStorage("shoppingCart");
       if (Array.isArray(productFromLocalStorage)) {
@@ -85,8 +89,10 @@ export function useShoppingCart() {
             setShippingCost(shippingCost);
             setTotalPrice(totalPrice);
             setGroupOfProducts(groupOfCartProducts);
+            setIsLoading(false);
           })
           .catch((error) => {
+            setIsLoading(false);
             dispatch(
               activeWarning({
                 isActiveWarning: true,
@@ -100,6 +106,7 @@ export function useShoppingCart() {
   }
   function calculateShoppingCartForOneProduct(id: number, quantity: number) {
     try {
+      setIsLoading(true);
       if (isLogged && quantity) {
         getProductById(id).then((res) => {
           const addQuantity: ProductWithQuantity = { ...res, quantity };
@@ -111,9 +118,12 @@ export function useShoppingCart() {
           setShippingCost(shippingCost);
           setTotalPrice(totalPrice);
           setGroupOfProducts(groupOfCartProducts);
+          setIsLoading(false);
         });
       }
     } catch (error) {
+      setIsLoading(false);
+
       dispatch(
         activeWarning({
           isActiveWarning: true,
@@ -132,5 +142,6 @@ export function useShoppingCart() {
     productsInShoppingCart,
     calculateShoppingCart,
     calculateShoppingCartForOneProduct,
+    isLoading,
   };
 }

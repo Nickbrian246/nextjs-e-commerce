@@ -18,7 +18,6 @@ export default function ShoppingCart() {
   const router = useRouter();
   //@ts-ignore
   const { productsInShoppingCart } = useSelector((state) => state.shoppingCart);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { isActiveLoadingSpinner } = useSelector(
     //@ts-ignore
@@ -26,8 +25,13 @@ export default function ShoppingCart() {
   ); //@ts-ignore
   const { isLogged } = useSelector((state) => state.loggedUser);
   const dispatch = useDispatch();
-  const { calculateShoppingCart, groupOfProducts, shippingCost, totalPrice } =
-    useShoppingCart();
+  const {
+    calculateShoppingCart,
+    groupOfProducts,
+    shippingCost,
+    totalPrice,
+    isLoading,
+  } = useShoppingCart();
 
   useEffect(() => {
     calculateShoppingCart();
@@ -71,7 +75,7 @@ export default function ShoppingCart() {
             </Button>
           </aside>
         </>
-      ) : groupOfProducts.length === 0 ? (
+      ) : groupOfProducts.length === 0 && !isLoading ? (
         <section className="w-full flex justify-center items-start">
           <NoProduct />
         </section>
