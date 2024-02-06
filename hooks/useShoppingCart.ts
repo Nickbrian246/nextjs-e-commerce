@@ -53,10 +53,11 @@ export function useShoppingCart() {
             setShippingCost(shippingCost);
             setTotalPrice(totalPrice);
             setGroupOfProducts(groupOfCartProducts);
+            setIsLoading(false);
           });
         })
         .catch((err) => {
-          setIsLoading(true);
+          setIsLoading(false);
           if (err.response.data.message === "Unauthorized") {
             dispatch(
               activeWarning({
