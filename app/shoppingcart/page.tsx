@@ -1,17 +1,15 @@
 "use client";
 import { Button } from "@/components/components/Button";
-import { LinkButton } from "@/components/components/LinkButton";
 import LoadingSpinner from "@/components/components/LoadingSpinner";
 import { useShoppingCart } from "@/hooks/useShoppingCart";
 import { disableGlobalSpinner } from "@/redux/slices/globalSpinner/globalSpinner";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FaShoppingBag } from "react-icons/fa";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import NoProduct from "./_components/noProduct/NoProduct";
 import ProductResume from "./_components/productResume/ProductResume";
 import SavedProducts from "./_components/savedProducts/SavedProducts";
 import SaleResume from "./_components/shoppingProductCard/SaleResume";
-
 import Loading from "./loading";
 
 export default function ShoppingCart() {
@@ -82,22 +80,6 @@ export default function ShoppingCart() {
       ) : (
         <Loading />
       )}
-    </>
-  );
-}
-function NoProduct() {
-  return (
-    <>
-      <div className=" lg:min-w-[580px] flex  gap-3 min-h-[200px] p-4 flex-col  justify-center items-center shadow-lg">
-        <p className="text-lg font-semibold text-center ">
-          Aún no tienes productos en tu carrito de compras. <br />
-          Te invitamos a que agregues algunos.
-        </p>
-        <span className="text-4xl ">
-          <FaShoppingBag />
-        </span>
-        <LinkButton href={"/"}>Vamos de compras!!!</LinkButton>
-      </div>
     </>
   );
 }

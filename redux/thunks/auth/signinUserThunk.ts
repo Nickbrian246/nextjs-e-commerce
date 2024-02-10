@@ -40,7 +40,8 @@ export const UserSignin = createAsyncThunk(
           duration: 5000,
           isActiveWarning: true,
           severity: "error",
-          warningMessage: `${error}`,
+          //@ts-ignore
+          warningMessage: `${error.response.data.message}`,
         })
       );
       dispatch(
