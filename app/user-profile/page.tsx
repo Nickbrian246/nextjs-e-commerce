@@ -13,10 +13,11 @@ import { User } from "./_interfaces/user";
 import { getUserInfo } from "./_services/getUserInfo";
 import ChangePassword from "./_components/ChangePassword";
 import Loading from "./loading";
-
+import { SessionMethod } from "./_interfaces";
 export default function UserProfilePage() {
   const [userInfo, setUserInfo] = useState<User>();
   const [addresses, setAddresses] = useState<AddressDb[]>();
+  const [sessionMethod, setSessionMethod] = useState<SessionMethod>();
   const [addressUserData, setAddressUserData] = useState<AddressDb>();
   const [isSpinnerActive, setIsActiveSpinner] = useState<boolean>(false);
   const [isAddAddress, setIsAddAddress] = useState<boolean>(false);
@@ -33,6 +34,7 @@ export default function UserProfilePage() {
       .then((res) => {
         setUserInfo(res.user);
         setAddresses(res.addresses);
+        setSessionMethod(res.sessionMethod);
       })
       .catch((err) => {
         dispatch(
@@ -121,8 +123,21 @@ export default function UserProfilePage() {
                   className="w-3/4 border-2 border-[#71717a] outline-none rounded-md px-3 py-2"
                 />
               </div>
-              <div className="flex justify-end">
-                <Button onClick={handlePassModal}>Cambiar Contraseña</Button>
+              <div className="flex  items-center justify-between">
+                {sessionMethod !== "own" && (
+                  <p className="text-red-500">
+                    Esta informacion es proporcionada por terceros (Facebook,
+                    google) por lo que no es posible realizar cambios.
+                  </p>
+                )}
+                <Button
+                  disabled={sessionMethod !== "own"}
+                  onClick={handlePassModal}
+                  className="py-1"
+                  title="Cambiar contraseña"
+                >
+                  Cambiar Contraseña
+                </Button>
               </div>
               {isChangePassModalOpen && (
                 <Modal className="flex justify-center items-center p-1">

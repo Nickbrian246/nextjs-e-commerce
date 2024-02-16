@@ -74,8 +74,9 @@ export function useShoppingCart() {
       setIsLoading(true);
       const productFromLocalStorage =
         getEntityProductsFromLocalStorage("shoppingCart");
+
       if (Array.isArray(productFromLocalStorage)) {
-        getProductsWithPromiseAll(productFromLocalStorage)
+        return getProductsWithPromiseAll(productFromLocalStorage)
           .then((res) => {
             const addQuantityToEachProduct = addQuantityOfCartItems(
               productFromLocalStorage,
@@ -103,6 +104,7 @@ export function useShoppingCart() {
             );
           });
       }
+      setIsLoading(false);
     }
   }
   function calculateShoppingCartForOneProduct(id: number, quantity: number) {

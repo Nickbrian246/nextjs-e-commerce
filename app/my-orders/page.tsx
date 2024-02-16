@@ -9,7 +9,7 @@ import NoOrders from "./_components/NoOrders/NoOrders";
 import MobileOrdersTable from "./_components/mobileTable/MobileOrdersTable";
 import OrdersTable from "./_components/table/OrdersTable";
 import Loading from "./loading";
-
+import { sortOrdersByAscendingDate } from "./_utils";
 export default function MyOrdersPage() {
   const [groupOfOrders, setGroupOfOrders] = useState<Order[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,7 +21,8 @@ export default function MyOrdersPage() {
     getAllOrders(token.token_access)
       .then((res) => {
         setIsLoading(false);
-        setGroupOfOrders(res);
+        const sortOrdersByDate = sortOrdersByAscendingDate(res);
+        setGroupOfOrders(sortOrdersByDate);
       })
       .catch((err) => {
         setIsLoading(false);

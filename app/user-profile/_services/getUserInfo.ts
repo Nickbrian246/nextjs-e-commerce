@@ -1,5 +1,6 @@
 import axios from "axios";
 import { UserInfo } from "../_interfaces/getUser";
+import { AssociatedUser } from "../_interfaces";
 
 const BASE_URL = process.env.NEXT_PUBLIC_NESTAPI_BASE_URL;
 

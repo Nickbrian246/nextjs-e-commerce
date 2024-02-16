@@ -1,16 +1,15 @@
 "use client";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import {
   addItemToEntityInLocalStorage,
+  addProductsByAmountToEntityInLocalStorage,
   createEntityLikeArrayOfIdsInLocalStorage,
-  deleteEntityFromLocalStorage,
   deleteItemFromEntityInLocalStorage,
   getEntityProductsFromLocalStorage,
   subtractItemFromEntityInLocalStorage,
-  addProductsByAmountToEntityInLocalStorage,
 } from "@/utils/localStorage/localStorage";
-import { ShoppingCartProduct } from "@/utils/localStorage/interfaces";
 import { quantityOfItemsInShoppingCart } from "@/utils/localStorage/utils";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
   productsInShoppingCart: 0,
@@ -56,9 +55,13 @@ export const ShoppingCart = createSlice({
       const { key } = action.payload;
 
       const groupOfProducts = getEntityProductsFromLocalStorage(key);
-      const itemsInShoppingCart =
-        quantityOfItemsInShoppingCart(groupOfProducts);
-      state.productsInShoppingCart = itemsInShoppingCart;
+      if (groupOfProducts === "entity not found") {
+        state.productsInShoppingCart = 0;
+      } else {
+        const itemsInShoppingCart =
+          quantityOfItemsInShoppingCart(groupOfProducts);
+        state.productsInShoppingCart = itemsInShoppingCart;
+      }
     },
     addOneItemToProductInShoppingCart: (
       state,

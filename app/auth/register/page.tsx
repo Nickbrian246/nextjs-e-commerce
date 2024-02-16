@@ -12,6 +12,7 @@ import { GrHide } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
 import { useCheckPassword } from "./_hooks/useCheckPassword";
 import { RegisterUser } from "./_interfaces/register";
+import GoogleOauth from "../_components/googleOauth/GoogleOauth";
 
 export default function RegisterPage() {
   const [isWriting, setIsWriting] = useState<boolean>(false);
@@ -113,128 +114,138 @@ export default function RegisterPage() {
       dispatch(UserRegister(registerUser));
   };
   return (
-    <form
-      className="p-4 shadow-lg flex flex-col  lg:gap-2 gap-1 relative"
-      onSubmit={handleSubmit}
-    >
-      <h2 className="text-3xl font-bold text-center">Registrate</h2>
-      <h2 className="text-center ">Es rápido y fácil.</h2>
-      <div className="flex items-center p-4 gap-7  flex-wrap">
-        <label htmlFor="firstName">Nombre</label>
-        <input
-          className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
-          id="firstName"
-          placeholder="Nombre"
-          type="text"
-          name="firstName"
-          onChange={handleInputs}
-          value={registerUser.firstName}
-        />
-      </div>
-      <div className="flex items-center p-4 gap-7 flex-wrap">
-        <label htmlFor="lastName">Apellido</label>
-        <input
-          className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
-          id="lastName"
-          placeholder="Apellidos"
-          type="text"
-          name="lastName"
-          onChange={handleInputs}
-          value={registerUser.lastName}
-        />
-      </div>
-      <div className="flex items-center p-4 gap-7 flex-wrap">
-        <label htmlFor="email">Correo</label>
-        <input
-          className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
-          id="email"
-          placeholder="Correo"
-          type="email"
-          name="email"
-          onChange={handleInputs}
-          value={registerUser.email}
-        />
-      </div>
-      <div className="flex flex-col items-center p-4 gap-7 flex-wrap">
-        <div className="flex gap-4 items-center relative">
-          <label htmlFor="password">Contraseña</label>
+    <section className="p-4 shadow-lg flex flex-col  lg:gap-2 gap-1 relative">
+      <form
+        className="p-4  flex flex-col  lg:gap-2 gap-1 relative"
+        onSubmit={handleSubmit}
+      >
+        <h2 className="text-3xl font-bold text-center">Registrate</h2>
+        <h2 className="text-center ">Es rápido y fácil.</h2>
+        <div className="flex items-center p-4 gap-7  flex-wrap">
+          <label htmlFor="firstName">Nombre</label>
           <input
             className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
-            id="password"
-            placeholder="Contraseña"
-            type={showPass ? "text" : "password"}
+            id="firstName"
+            placeholder="Nombre"
+            type="text"
+            name="firstName"
             onChange={handleInputs}
-            name="password"
-            value={registerUser.password}
+            value={registerUser.firstName}
           />
-          <div
-            onClick={handleShowPass}
-            className="scale-150 absolute  lg:-right-5 right-2 bg-white"
-          >
-            {showPass ? <BiShow /> : <GrHide />}
+        </div>
+        <div className="flex items-center p-4 gap-7 flex-wrap">
+          <label htmlFor="lastName">Apellido</label>
+          <input
+            className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
+            id="lastName"
+            placeholder="Apellidos"
+            type="text"
+            name="lastName"
+            onChange={handleInputs}
+            value={registerUser.lastName}
+          />
+        </div>
+        <div className="flex items-center p-4 gap-7 flex-wrap">
+          <label htmlFor="email">Correo</label>
+          <input
+            className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
+            id="email"
+            placeholder="Correo"
+            type="email"
+            name="email"
+            onChange={handleInputs}
+            value={registerUser.email}
+          />
+        </div>
+        <div className="flex flex-col items-center p-4 gap-7 flex-wrap">
+          <div className="flex gap-4 items-center relative">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
+              id="password"
+              placeholder="Contraseña"
+              type={showPass ? "text" : "password"}
+              onChange={handleInputs}
+              name="password"
+              value={registerUser.password}
+            />
+            <div
+              onClick={handleShowPass}
+              className="scale-150 absolute  lg:-right-5 right-2 bg-white"
+            >
+              {showPass ? <BiShow /> : <GrHide />}
+            </div>
+          </div>
+          <div className="flex  flex-wrap max-w-[400px]">
+            <span
+              className={`text-sm  ${
+                isWriting
+                  ? isLengthCorrect
+                    ? "text-[#22c55e]"
+                    : "text-red-600"
+                  : "text-textGray"
+              }`}
+            >
+              * La contraseña debe tener al menos 8 caracteres.
+            </span>
+            <span
+              className={`text-sm  ${
+                isWriting
+                  ? atLeastOneUppercase
+                    ? "text-[#22c55e]"
+                    : "text-red-600"
+                  : "text-textGray"
+              }`}
+            >
+              * La contraseña debe contener al menos una letra mayúscula.
+            </span>
+            <span
+              className={`text-sm  ${
+                isWriting
+                  ? hasOneEspecialCharacter
+                    ? "text-[#22c55e]"
+                    : "text-red-600"
+                  : "text-textGray"
+              }`}
+            >
+              * La contraseña debe contener al menos un carácter especial como
+              ?*.
+            </span>
+            <span
+              className={`text-sm  ${
+                isWriting
+                  ? hasNoWhiteSpace
+                    ? "text-[#22c55e]"
+                    : "text-red-600"
+                  : "text-textGray"
+              }`}
+            >
+              * La contraseña no debe contener espacios.
+            </span>
           </div>
         </div>
-        <div className="flex  flex-wrap max-w-[400px]">
-          <span
-            className={`text-sm  ${
-              isWriting
-                ? isLengthCorrect
-                  ? "text-[#22c55e]"
-                  : "text-red-600"
-                : "text-textGray"
-            }`}
+        <Button
+          disabled={!isAvailableToSubmit}
+          className="m-auto tracking-wider"
+        >
+          Registrarse
+        </Button>
+        <span>
+          {"Ya tienes cuenta?  "}
+          <Link
+            href={"/auth/signin"}
+            className="text-science-blue-500 underline"
           >
-            * La contraseña debe tener al menos 8 caracteres.
-          </span>
-          <span
-            className={`text-sm  ${
-              isWriting
-                ? atLeastOneUppercase
-                  ? "text-[#22c55e]"
-                  : "text-red-600"
-                : "text-textGray"
-            }`}
-          >
-            * La contraseña debe contener al menos una letra mayúscula.
-          </span>
-          <span
-            className={`text-sm  ${
-              isWriting
-                ? hasOneEspecialCharacter
-                  ? "text-[#22c55e]"
-                  : "text-red-600"
-                : "text-textGray"
-            }`}
-          >
-            * La contraseña debe contener al menos un carácter especial como ?*.
-          </span>
-          <span
-            className={`text-sm  ${
-              isWriting
-                ? hasNoWhiteSpace
-                  ? "text-[#22c55e]"
-                  : "text-red-600"
-                : "text-textGray"
-            }`}
-          >
-            * La contraseña no debe contener espacios.
-          </span>
-        </div>
-      </div>
-      <Button disabled={!isAvailableToSubmit} className="m-auto tracking-wider">
-        Registrarse
-      </Button>
-      <span>
-        {"Ya tienes cuenta?  "}
-        <Link href={"/auth/signin"} className="text-science-blue-500 underline">
-          Iniciar sesión
-        </Link>
-      </span>
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-opacity-75 bg-gray-300">
-          <LoadingSpinner className="text-3xl text-science-blue-400" />
-        </div>
-      )}
-    </form>
+            Iniciar sesión
+          </Link>
+        </span>
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-opacity-75 bg-gray-300">
+            <LoadingSpinner className="text-3xl text-science-blue-400" />
+          </div>
+        )}
+      </form>
+      <GoogleOauth />
+    </section>
   );
 }

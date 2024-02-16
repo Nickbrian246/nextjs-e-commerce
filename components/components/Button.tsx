@@ -28,7 +28,7 @@ export function Button({
       ${disabled ? "bg-textGray opacity-50" : "bg-science-blue-500"}
       font-semibold
       text-white
-      active:bg-science-blue-700
+      ${!disabled && "active:bg-science-blue-700"}
       `,
         className
       )}

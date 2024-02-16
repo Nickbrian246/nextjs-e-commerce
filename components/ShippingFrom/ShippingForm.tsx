@@ -3,7 +3,6 @@ import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { createUserAddress } from "@/services/address/createUserAddress";
 import { AddressDb } from "@/services/address/interfaces";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
-import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { twMerge } from "tailwind-merge";
@@ -34,11 +33,7 @@ export default function ShippingForm({
   const [zipCode, setZipCode] = useState<string>("");
   const [stateSelected, setStateSelected] = useState("Tabasco");
   const [readOnly, setReadOnly] = useState<boolean>(false);
-  const router = useRouter();
   const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const product = searchParams.get("product");
-  const quantity = searchParams.get("quantity");
 
   useEffect(() => {
     const localStorageData = getEntityInLocalStorage("shippingFormData");
@@ -136,7 +131,7 @@ export default function ShippingForm({
   const handleZipCode = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const filterLetters = value.replace(/[a-zA-Z]/gi, "");
-    setZipCode((prevValue) => (value.length === 5 ? prevValue : filterLetters));
+    setZipCode((prevValue) => (value.length === 6 ? prevValue : filterLetters));
   };
 
   const handleOptionSelect = (event: ChangeEvent<HTMLSelectElement>) => {

@@ -5,9 +5,7 @@ import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Products from "@/components/productCard/Products";
 import { Product } from "@/interfaces/product";
-import globalWarning, {
-  activeWarning,
-} from "@/redux/slices/globalWarning/globalWarning";
+import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
 import { getProducts } from "@/services";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
