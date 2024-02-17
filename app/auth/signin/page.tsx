@@ -14,6 +14,7 @@ import { GrHide } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
 import GoogleOauth from "../_components/googleOauth/GoogleOauth";
 import { Signin } from "./_interfaces/signin";
+import FacebookOauth from "../_components/facebookOauth/FacebookOauth";
 export default function SigninPage() {
   const [signinUser, setSigninUser] = useState<Signin>({
     email: "",
@@ -141,6 +142,7 @@ export default function SigninPage() {
         )}
       </form>
       <GoogleOauth />
+      <FacebookOauth />
     </section>
   );
 }

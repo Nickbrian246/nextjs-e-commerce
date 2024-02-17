@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useCheckPassword } from "./_hooks/useCheckPassword";
 import { RegisterUser } from "./_interfaces/register";
 import GoogleOauth from "../_components/googleOauth/GoogleOauth";
+import FacebookOauth from "../_components/facebookOauth/FacebookOauth";
 
 export default function RegisterPage() {
   const [isWriting, setIsWriting] = useState<boolean>(false);
@@ -246,6 +247,7 @@ export default function RegisterPage() {
         )}
       </form>
       <GoogleOauth />
+      <FacebookOauth />
     </section>
   );
 }
