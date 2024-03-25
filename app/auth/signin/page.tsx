@@ -15,7 +15,11 @@ import { useDispatch, useSelector } from "react-redux";
 import GoogleOauth from "../_components/googleOauth/GoogleOauth";
 import { Signin } from "./_interfaces/signin";
 import FacebookOauth from "../_components/facebookOauth/FacebookOauth";
+import { languageSigninEn,languageSigninEs } from "./_language/language-for-signin";
+import useContextLanguage from "@/hooks/useContextLanguage";
+
 export default function SigninPage() {
+  const [currentLanguage] = useContextLanguage()
   const [signinUser, setSigninUser] = useState<Signin>({
     email: "",
     password: "",
@@ -27,6 +31,8 @@ export default function SigninPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const accessToken = searchParams.get("token");
+  
+  const language = currentLanguage ==="en" ? languageSigninEn : languageSigninEs 
 
   useEffect(() => {
     if (isLogged) {
@@ -89,15 +95,15 @@ export default function SigninPage() {
         className="sm:p-4 p-2   flex flex-col  sm:gap-2 gap-1 relative"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-3xl font-bold text-center">Iniciar sesión</h2>
-        <h2 className="text-center ">Es rápido y fácil.</h2>
+        <h2 className="text-3xl font-bold text-center">{language.title}</h2>
+        <h2 className="text-center ">{language.subTitle}</h2>
         <div className="flex items-center sm:p-4 p-2 sm:gap-7 gap-2 flex-wrap">
-          <label htmlFor="email">Correo</label>
+          <label htmlFor="email">{language.inputEmailLabel}</label>
           <input
             required={true}
             className="sm:w-[380px] w-[200px] border border-borderGray p-2 rounded-sm"
             id="email"
-            placeholder="Correo"
+            placeholder={language.inputEmailLabel}
             type="email"
             name="email"
             onChange={handleInputs}
@@ -106,12 +112,12 @@ export default function SigninPage() {
         </div>
         <div className="flex flex-col items-center sm:p-4 p-1 sm:gap-7 gap-1  flex-wrap">
           <div className="flex sm:gap-4 gap-2 items-center relative">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">{language.inputPasswordLabel}</label>
             <input
               required={true}
               className="sm:w-[380px] w-[200px] border border-borderGray p-2 rounded-sm"
               id="password"
-              placeholder="Contraseña"
+              placeholder={language.inputPasswordLabel}
               type={showPass ? "text" : "password"}
               onChange={handleInputs}
               name="password"
@@ -125,14 +131,14 @@ export default function SigninPage() {
             </div>
           </div>
         </div>
-        <Button className="m-auto">Iniciar sesión</Button>
+        <Button className="m-auto">{language.logInButtonText}</Button>
         <span>
-          {"No tienes cuenta?  "}
+          {language.doNotHaveAccountSpanText}
           <Link
             href={"/auth/register"}
             className="text-science-blue-500 underline"
           >
-            Registrarse
+            {language.registerLinkText}
           </Link>
         </span>
         {isLoading && (

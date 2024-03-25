@@ -9,7 +9,7 @@ export const registerPageLanguageEn :RegisterPageLanguageInterface={
   inputPasswordLabel:"Password",
   logInLinkText:"Log in",
   registerButtonText:"Register",
-  logInSpanText:"Already have a count? "
+  logInSpanText:"Already have account? "
 }
 
 export const registerPageLanguageEs: RegisterPageLanguageInterface = {
