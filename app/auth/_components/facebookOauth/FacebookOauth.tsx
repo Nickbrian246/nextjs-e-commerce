@@ -1,7 +1,9 @@
 import React from "react";
 const BASE_URL = process.env.NEXT_PUBLIC_NESTAPI_BASE_URL;
 import { ImFacebook2 } from "react-icons/im";
+import useContextLanguage from "@/hooks/useContextLanguage";
 export default function FacebookOauth() {
+  const [currentLanguage] = useContextLanguage()
   const handleClick = async () => {
     window.location.href = `${BASE_URL}/auth/facebook/login`;
   };
@@ -24,7 +26,8 @@ export default function FacebookOauth() {
       <span className="text-xl text-science-blue-500">
         <ImFacebook2 />
       </span>
-      Iniciar sesión con Facebook
+      {currentLanguage ==="en" ? "Log in with Facebook" :"Iniciar sesión con Facebook"}
     </button>
   );
 }
+

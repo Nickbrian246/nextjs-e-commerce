@@ -1,4 +1,9 @@
 import React from "react";
+import useContextLanguage from "@/hooks/useContextLanguage";
+import { 
+  passwordValidationMessagesLanguageEn,
+  passwordValidationMessagesLanguageEs,
+  } from "./Language/language-for-password-validation-messages";
 interface Props {
   isWriting: boolean;
   isLengthCorrect: boolean;
@@ -7,6 +12,7 @@ interface Props {
   hasNoWhiteSpace: boolean;
 }
 export default function PasswordValidationMessages(props: Props) {
+  const [currentLanguage] = useContextLanguage()
   const {
     hasNoWhiteSpace,
     hasOneEspecialCharacter,
@@ -14,6 +20,7 @@ export default function PasswordValidationMessages(props: Props) {
     isWriting,
     atLeastOneUppercase,
   } = props;
+  const language = currentLanguage ==="en" ?  passwordValidationMessagesLanguageEn: passwordValidationMessagesLanguageEs
   return (
     <div className="flex  flex-wrap max-w-[400px]">
       <span
@@ -25,7 +32,7 @@ export default function PasswordValidationMessages(props: Props) {
             : "text-textGray"
         }`}
       >
-        * La contraseña debe tener al menos 8 caracteres.
+      {language.atLeast8Characters}
       </span>
       <span
         className={`text-sm  ${
@@ -36,7 +43,7 @@ export default function PasswordValidationMessages(props: Props) {
             : "text-textGray"
         }`}
       >
-        * La contraseña debe contener al menos una letra mayúscula.
+            {language.atLeastOneUpperCase}
       </span>
       <span
         className={`text-sm  ${
@@ -47,7 +54,7 @@ export default function PasswordValidationMessages(props: Props) {
             : "text-textGray"
         }`}
       >
-        * La contraseña debe contener al menos un carácter especial como ?*.
+            {language.atLeastOneANormalCharacter}
       </span>
       <span
         className={`text-sm  ${
@@ -58,7 +65,7 @@ export default function PasswordValidationMessages(props: Props) {
             : "text-textGray"
         }`}
       >
-        * La contraseña no debe contener espacios.
+              {language.mustNotContainWhiteSpaces}
       </span>
     </div>
   );

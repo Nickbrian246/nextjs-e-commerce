@@ -1,4 +1,5 @@
 "use client";
+import { ChangeEvent, FormEvent, useEffect, useState , useContext} from "react";
 import { Button } from "@/components/components/Button";
 import LoadingSpinner from "@/components/components/LoadingSpinner";
 import { activeWarning } from "@/redux/slices/globalWarning/globalWarning";
@@ -6,20 +7,27 @@ import { UserRegister } from "@/redux/thunks/auth/registerUserThunk";
 import { updateShoppingCartUserLogged } from "@/utils/shoppingCartForUserLogged/updateShoppingCartUserLogged";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { BiShow } from "react-icons/bi";
 import { GrHide } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
+import FacebookOauth from "../_components/facebookOauth/FacebookOauth";
+import GoogleOauth from "../_components/googleOauth/GoogleOauth";
 import { useCheckPassword } from "./_hooks/useCheckPassword";
 import { RegisterUser } from "./_interfaces/register";
-import GoogleOauth from "../_components/googleOauth/GoogleOauth";
-import FacebookOauth from "../_components/facebookOauth/FacebookOauth";
+import { registerPageLanguageEn, registerPageLanguageEs } from "./language/registerPageLanguage";
+import useContextLanguage from "@/hooks/useContextLanguage";
+import PasswordValidationMessages from "@/components/PasswordValidationMessages/PasswordValidationMessages";
 
 export default function RegisterPage() {
+  const [currentLanguage] = useContextLanguage()
   const [isWriting, setIsWriting] = useState<boolean>(false);
   const [showPass, setShowPass] = useState<boolean>(false);
   const [isAvailableToSubmit, setIsAvailableToSubmit] =
     useState<boolean>(false);
+      //@ts-ignore
+  const { isLogged, isLoading } = useSelector((state) => state.loggedUser);
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [registerUser, setRegisterUser] = useState<RegisterUser>({
     email: "",
     firstName: "",
@@ -33,10 +41,7 @@ export default function RegisterPage() {
     hasOneEspecialCharacter,
     isLengthCorrect,
   } = useCheckPassword();
-  //@ts-ignore
-  const { isLogged, isLoading } = useSelector((state) => state.loggedUser);
-  const dispatch = useDispatch();
-  const router = useRouter();
+
 
   useEffect(() => {
     if (
@@ -73,6 +78,8 @@ export default function RegisterPage() {
     }
   }, [isLogged]);
 
+  const language = currentLanguage ==="en" ? registerPageLanguageEn : registerPageLanguageEs
+  
   const handleInputs = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     const name = e.target.name;
@@ -120,14 +127,14 @@ export default function RegisterPage() {
         className="p-4  flex flex-col  lg:gap-2 gap-1 relative"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-3xl font-bold text-center">Registrate</h2>
-        <h2 className="text-center ">Es rápido y fácil.</h2>
+        <h2 className="text-3xl font-bold text-center">{language.title}</h2>
+        <h2 className="text-center ">{language.subTitle}</h2>
         <div className="flex items-center p-4 gap-7  flex-wrap">
-          <label htmlFor="firstName">Nombre</label>
+          <label htmlFor="firstName">{language.inputNameLabel}</label>
           <input
             className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
             id="firstName"
-            placeholder="Nombre"
+            placeholder={language.inputNameLabel}
             type="text"
             name="firstName"
             onChange={handleInputs}
@@ -135,11 +142,11 @@ export default function RegisterPage() {
           />
         </div>
         <div className="flex items-center p-4 gap-7 flex-wrap">
-          <label htmlFor="lastName">Apellido</label>
+          <label htmlFor="lastName">{language.inputLastNameLabel}</label>
           <input
             className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
             id="lastName"
-            placeholder="Apellidos"
+            placeholder={language.inputLastNameLabel}
             type="text"
             name="lastName"
             onChange={handleInputs}
@@ -147,24 +154,25 @@ export default function RegisterPage() {
           />
         </div>
         <div className="flex items-center p-4 gap-7 flex-wrap">
-          <label htmlFor="email">Correo</label>
+          <label htmlFor="email">{language.inputEmailLabel}</label>
           <input
             className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
             id="email"
-            placeholder="Correo"
+            placeholder={language.inputEmailLabel}
             type="email"
             name="email"
             onChange={handleInputs}
             value={registerUser.email}
           />
         </div>
+
         <div className="flex flex-col items-center p-4 gap-7 flex-wrap">
           <div className="flex gap-4 items-center relative">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">{language.inputPasswordLabel}</label>
             <input
               className="lg:w-[380px] w-[200px] border border-borderGray p-2 rounded-md"
               id="password"
-              placeholder="Contraseña"
+              placeholder={language.inputPasswordLabel}
               type={showPass ? "text" : "password"}
               onChange={handleInputs}
               name="password"
@@ -177,67 +185,27 @@ export default function RegisterPage() {
               {showPass ? <BiShow /> : <GrHide />}
             </div>
           </div>
-          <div className="flex  flex-wrap max-w-[400px]">
-            <span
-              className={`text-sm  ${
-                isWriting
-                  ? isLengthCorrect
-                    ? "text-[#22c55e]"
-                    : "text-red-600"
-                  : "text-textGray"
-              }`}
-            >
-              * La contraseña debe tener al menos 8 caracteres.
-            </span>
-            <span
-              className={`text-sm  ${
-                isWriting
-                  ? atLeastOneUppercase
-                    ? "text-[#22c55e]"
-                    : "text-red-600"
-                  : "text-textGray"
-              }`}
-            >
-              * La contraseña debe contener al menos una letra mayúscula.
-            </span>
-            <span
-              className={`text-sm  ${
-                isWriting
-                  ? hasOneEspecialCharacter
-                    ? "text-[#22c55e]"
-                    : "text-red-600"
-                  : "text-textGray"
-              }`}
-            >
-              * La contraseña debe contener al menos un carácter especial como
-              ?*.
-            </span>
-            <span
-              className={`text-sm  ${
-                isWriting
-                  ? hasNoWhiteSpace
-                    ? "text-[#22c55e]"
-                    : "text-red-600"
-                  : "text-textGray"
-              }`}
-            >
-              * La contraseña no debe contener espacios.
-            </span>
-          </div>
+          <PasswordValidationMessages
+          atLeastOneUppercase={atLeastOneUppercase}
+          hasNoWhiteSpace={hasNoWhiteSpace}
+          hasOneEspecialCharacter={hasOneEspecialCharacter}
+          isLengthCorrect={isLengthCorrect}
+          isWriting={isWriting}
+          />
         </div>
         <Button
           disabled={!isAvailableToSubmit}
           className="m-auto tracking-wider"
         >
-          Registrarse
+          {language.registerButtonText}
         </Button>
         <span>
-          {"Ya tienes cuenta?  "}
+              {language.logInSpanText}
           <Link
             href={"/auth/signin"}
             className="text-science-blue-500 underline"
           >
-            Iniciar sesión
+            {language.logInLinkText}
           </Link>
         </span>
         {isLoading && (
@@ -248,6 +216,7 @@ export default function RegisterPage() {
       </form>
       <GoogleOauth />
       <FacebookOauth />
+  
     </section>
   );
 }

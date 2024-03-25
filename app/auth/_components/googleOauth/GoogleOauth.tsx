@@ -1,8 +1,10 @@
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { getGoogleCredentials } from "./services/getGoogleCredentials";
+import useContextLanguage from "@/hooks/useContextLanguage";
 const BASE_URL = process.env.NEXT_PUBLIC_NESTAPI_BASE_URL;
 export default function GoogleOauth() {
+  const [currentLanguage] = useContextLanguage()
   const handleClick = async () => {
     window.location.href = `${BASE_URL}/auth/google/login`;
   };
@@ -26,7 +28,7 @@ export default function GoogleOauth() {
         {" "}
         <FcGoogle />{" "}
       </span>
-      Iniciar sesión con Google
+      {currentLanguage ==="en" ? "Log in with Google" : "Iniciar sesión con Google"}
     </button>
   );
 }
