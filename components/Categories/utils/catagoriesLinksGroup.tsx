@@ -1,24 +1,14 @@
 import { Link } from "@/interfaces";
+import { BsMouse2 } from "react-icons/bs";
 import {
   GiClothes,
-  GiConverseShoe,
-  GiShinyApple,
-  GiDiamondRing,
+  GiDiamondRing
 } from "react-icons/gi";
-import { BsMouse2 } from "react-icons/bs";
-import { BiSolidWatch, BiSolidBook } from "react-icons/bi";
-import {
-  MdChair,
-  MdKitchen,
-  MdOutlineHealthAndSafety,
-  MdOutlineSportsTennis,
-  MdOutlineSmartToy,
-} from "react-icons/md";
 
 export const catagoriesLinksGroup: Link[] = [
   {
     titleEs: "ropa de caballeros", //check
-    titlesEn: "clothes",
+    titlesEn: "gentlemen's clothing",
     route: "",
     description: "this route takes  you to accessories page",
     icon: <GiClothes />,
@@ -26,7 +16,7 @@ export const catagoriesLinksGroup: Link[] = [
   },
   {
     titleEs: "ropa de damas", //check
-    titlesEn: "clothes",
+    titlesEn: "women's clothing",
     route: "",
     description: "this route takes  you to accessories page",
     icon: <GiClothes />,

@@ -14,6 +14,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   //@ts-ignore
   const categoryName = categoryNameSelected[params.category.toLowerCase()];
+
+  
   return {
     title: categoryName,
   };
@@ -32,7 +34,7 @@ export default async function CategoryPage({
   return (
     <>
       <aside>
-        <Categories title="Mas Categoriás" />
+        <Categories />
       </aside>
       <section className="  flex flex-col ">
         <h2

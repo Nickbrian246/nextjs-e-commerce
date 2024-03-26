@@ -1,11 +1,11 @@
 "use client";
 import { AiOutlineMenu } from "react-icons/ai";
 import CollapsableCategoryBar from "./collapsableBar/CollapsableCategoryBar";
-interface Props {
-  title?: string;
-}
-export default function Categories(props: Props) {
-  const { title } = props;
+import useContextLanguage from "@/hooks/useContextLanguage";
+
+export default function Categories() {
+  const [currentLanguage] = useContextLanguage()
+  
   return (
     <div
       className="
@@ -30,7 +30,7 @@ export default function Categories(props: Props) {
         <span className="text-white font-extrabold text-2xl">
           <AiOutlineMenu />
         </span>
-        <p className="uppercase">{title ? title : "CATEGORIÁS"}</p>
+        <p className="uppercase">{currentLanguage ==="en" ? "CATEGORIES" : "CATEGORIÁS"}</p>
         <CollapsableCategoryBar />
       </div>
     </div>

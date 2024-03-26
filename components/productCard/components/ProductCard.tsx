@@ -8,6 +8,7 @@ import { VscAdd } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import { getEntityInLocalStorage } from "@/utils/localStorage/localStorageGeneric";
 import { addOneItemProductToShoppingCartInDb } from "@/redux/thunks/shoppingCartdb/addOneItemProductInShoppingCartAndUpdateCounter";
+import useContextLanguage from "@/hooks/useContextLanguage";
 import {
   discountAmount,
   hasFreeShipping,
@@ -17,6 +18,7 @@ import {
 
 export default function ProductCard(props: Product) {
   const { category, description, id, image, price, title } = props;
+  const [currentLanguage] = useContextLanguage()
   const [hasDiscount, setHasDiscount] = useState<boolean>(false);
   const [priceWithDiscount, setPriceWithDiscount] = useState<number>();
   const [savedMoney, setSavedMoney] = useState<number>(0);
@@ -148,7 +150,7 @@ export default function ProductCard(props: Product) {
         onClick={() => {
           handleAddCartBtn("shoppingCart", id);
         }}
-        title="agregar al carrito"
+        title={currentLanguage ==="en" ? "add to cart" : "agregar al carrito"}
         className={`
         self-start
         font-medium 
@@ -168,7 +170,7 @@ export default function ProductCard(props: Product) {
         <div className="text-white">
           <VscAdd />
         </div>
-        <span>Agregar al carrito </span>
+        <span>{currentLanguage ==="en" ? "Add to cart" :"Agregar al carrito"} </span>
       </button>
     </div>
   );

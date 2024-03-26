@@ -1,7 +1,9 @@
 import React from "react";
 import { catagoriesLinksGroup } from "../utils/catagoriesLinksGroup";
 import Link from "next/link";
+import useContextLanguage from "@/hooks/useContextLanguage";
 export default function CollapsableCategoryBar() {
+  const [currentLanguage] = useContextLanguage()
   return (
     <>
       <nav
@@ -40,7 +42,7 @@ export default function CollapsableCategoryBar() {
               <span className="m-0 p-0 text-xl h-12 flex items-center ">
                 {category.icon}
               </span>
-              <Link href={`/category/${category.id}`}>{category.titleEs}</Link>
+              <Link href={`/category/${category.id}`}>{currentLanguage ==="en" ?   category.titlesEn  :category.titleEs}</Link>
             </li>
           ))}
         </ul>
